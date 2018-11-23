@@ -17,9 +17,8 @@ export async function createUser(req, res) {
                 return res.status(208).end()
             }
         });
-        user = await User.create(user);
 
-        Subject.findOne({ desc: req.subject }, function(err, foundSubject){
+        await Subject.findOne({ desc: req.subject }, function(err, foundSubject){
             if (err){
                 return res.status(400).end()
             }
@@ -28,7 +27,9 @@ export async function createUser(req, res) {
             }
         });
 
-        return res.status(201).json(user)
+        user = await User.create(user);
+
+        return res.status(201)
 
     } catch(err) {
         res.status(500).end()
@@ -45,7 +46,7 @@ export async function getByType(req, res) {
 
         let users = await User.find({ type: req.params.type });
 
-        return res.json(
+        return res.status(200).json(
             users
         );
 
@@ -108,9 +109,9 @@ export async function updateUser(req, res) {
             });
         }
 
-        await User.update({_id: req.params.id}, {$set: user});
+        user = await User.update({_id: req.params.id}, {$set: user});
 
-        return res.status(204).end()
+        return res.status(200).json(user);
 
     } catch (error) {
         return res.status(500).end()
