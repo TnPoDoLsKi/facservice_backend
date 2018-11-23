@@ -1,0 +1,56 @@
+Get Users by type:
+ GET api/users/:type
+   Headers:
+      "Content-Type": "application/json"
+      "authorization": "bearer token"
+   Response:
+       Status Code: 200
+       [ users ]
+       
+       
+
+Create User:
+ POST  api/users
+   Headers:
+      "Content-Type": "application/json"
+   Body:
+      firstName: String,
+      lastName: String,
+      email: String required,
+      password: String required,
+      subject: String,
+      type: String(‘admin’,’student’,’prof’) required,
+      bookmarked:[],
+      avatar: String
+   Response:
+        Status Code: 201
+
+
+
+Update User
+ PUT api/users/:id
+   Headers: 
+      "Content-Type": "application/json"
+   Body:
+      firstName: String,
+      lastName: String,
+      email: String,
+      password: String,
+      subject: String,
+      type: String(‘admin’,’student’,’prof’),
+      bookmarked:[],
+      avatar: String  
+   Response:
+        Status Code: 204
+        
+
+
+
+Delete User:
+ DELETE api/users/:id
+   Headers: 
+      "Content-Type": "application/json"
+   Body:
+      _id: String,
+   Response:
+      Status Code: 204
