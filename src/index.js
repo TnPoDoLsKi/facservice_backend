@@ -2,7 +2,7 @@ import express from 'express'
 import http from 'http'
 import routes from './config/routes'
 import bodyParser from 'body-parser'
-
+import './config/database'
 
 const app = express()
 const server = http.createServer(app)
