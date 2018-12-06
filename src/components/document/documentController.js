@@ -45,7 +45,7 @@ export async function create(req, res) {
     );
 
     document = await Document.create(document);
-
+    console.log("mriguel");
     return res.json({
       document
     });
