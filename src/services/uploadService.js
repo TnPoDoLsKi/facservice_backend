@@ -3,6 +3,7 @@ import path from "path";
 
 //upload
 const config = {
+  //storage
   uploadDir: path.join(__dirname, "..", "uploads"),
   maxFileSize: 10 * 1024 * 1024,
   multiple: true
