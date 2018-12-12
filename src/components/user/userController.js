@@ -106,7 +106,8 @@ export async function signIn(req, res) {
             user.comparePassword(req.body.hashedPassword, function (err, equal) {
                 if(equal && !err){
                     let token = jwt.sign(user.toJSON(), SECRET, {expiresIn: 250000});
-                    res.json({"JWT": token})
+                    //req.session.
+                    return res.json({"JWT": token})
                 }
                 else{
                     return res.status(400).end()

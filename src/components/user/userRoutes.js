@@ -1,6 +1,5 @@
 import { getByType, createUser, updateUser, deleteUser, signIn, signOut } from "./userController";
-import { isLoggedIn } from "../../services/middlewares/isLoggedIn";
-import { isAdmin } from "../../services/middlewares/isAdmin";
+import { isLoggedIn, isAdmin } from "../../services/middlewares";
 
 export default function(router) {
     router.get("/api/users/:type",isLoggedIn, isAdmin, getByType);
