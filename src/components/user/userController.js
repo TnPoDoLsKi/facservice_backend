@@ -18,16 +18,8 @@ export async function createUser(req, res) {
                 return res.status(208).end()
             }
         });
-        await Major.findOne({ desc: req.body.major }, function(err, foundMajor){
-            if (err){
-                return res.status(400).end()
-            }
-            else{
-                user.major = foundMajor;
-            }
-        });
 
-        await User.create(user);
+        await User.create(user).populate('major').exec();
 
         return res.status(201).end()
 
@@ -49,6 +41,21 @@ export async function getByType(req, res) {
         );
 
     } catch(err) {
+        return res.status(500).end()
+    }
+}
+
+export async function getAll(req, res) {
+    try {
+
+        let users = await User.find().populate('major').exec();
+
+        return res.status(200).json(
+            users
+        );
+
+    } catch(err) {
+        console.log(err);
         return res.status(500).end()
     }
 }
