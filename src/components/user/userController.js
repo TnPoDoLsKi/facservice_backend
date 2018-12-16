@@ -22,8 +22,9 @@ export async function createUser(req, res) {
         return res.status(208).end();
       }
     });
-    await Major.findOne({ desc: req.body.major }, function(err, foundMajor) {
+    await Major.findOne({ description: req.body.major }, function(err, foundMajor) {
       if (err) {
+        console.log(err);
         return res.status(400).end();
       } else {
         user.major = foundMajor;

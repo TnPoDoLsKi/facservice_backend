@@ -1,4 +1,6 @@
+/* eslint-disable prettier/prettier */
 import mongoose from "mongoose";
+import mongoose_delete from "mongoose-delete";
 import bcrypt from "bcrypt";
 
 const userSchema = new mongoose.Schema(
@@ -8,25 +10,27 @@ const userSchema = new mongoose.Schema(
       required: true,
       unique: true
     },
-    hashedPassword: {
-      type: String,
-      required: true
-    },
-    type: {
-      type: String
-    },
     firstName: {
       type: String
     },
     lastName: {
       type: String
     },
-    major: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Major"
+    hashedPassword: {
+      type: String,
+      required: true
+    },
+    type: {
+      type: String,
+      enum: ['admin', 'prof', 'student'],
+      default: 'student'
     },
     avatar: {
       type: String
+    },
+    major: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Major"
     }
   },
   {
@@ -60,5 +64,7 @@ userSchema.methods.comparePassword = function(password, callback) {
     callback(null, equal);
   });
 };
+
+userSchema.plugin(mongoose_delete,{overrideMethods:'all',deletedAt:true,deletedBy:true});
 
 export default mongoose.model("User", userSchema);
