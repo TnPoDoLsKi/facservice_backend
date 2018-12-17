@@ -144,9 +144,7 @@ export async function signIn(req, res) {
 
 export async function signOut(req, res) {
   try {
-    console.log(req.session);
     req.session.destroy();
-    console.log(req.session);
     return res.status(200).end();
   } catch (err) {
     return res.status(500).end();
