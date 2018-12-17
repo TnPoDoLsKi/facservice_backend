@@ -2,19 +2,21 @@ import express from "express";
 import http from "http";
 import routes from "./config/routes";
 import bodyParser from "body-parser";
-import session from 'express-session'
+import session from "express-session";
 import "./config/database";
 import { SECRET } from "./config/env";
 
 const app = express();
 const server = http.createServer(app);
 
-app.use(session({
+app.use(
+  session({
     secret: SECRET,
     resave: false,
     saveUninitialized: true,
     cookie: { secure: true }
-}));
+  })
+);
 
 app.use(
   bodyParser.json({
