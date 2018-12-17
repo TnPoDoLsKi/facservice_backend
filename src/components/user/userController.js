@@ -121,7 +121,16 @@ export async function signIn(req, res) {
       user.comparePassword(req.body.hashedPassword, function(err, equal) {
         if (equal && !err) {
           let token = jwt.sign(user.toJSON(), SECRET, { expiresIn: 250000 });
-          //req.session.
+          req.session.token = token;
+          req.session.userData = _.pick(
+            user,
+            "firstName",
+            "lastName",
+            "email",
+            "type",
+            "major",
+            "avatar"
+          );
           return res.json({ JWT: token });
         } else {
           return res.status(400).end();
@@ -133,4 +142,11 @@ export async function signIn(req, res) {
   }
 }
 
-export async function signOut(req, res) {}
+export async function signOut(req, res) {
+  try {
+    req.session.destroy();
+    return res.status(200).end();
+  } catch (err) {
+    return res.status(500).end();
+  }
+}
