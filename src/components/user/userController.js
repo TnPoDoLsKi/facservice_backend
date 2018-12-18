@@ -1,37 +1,5 @@
-import { User, Major } from "../../config/models";
+import { User } from "../../config/models";
 import _ from "lodash";
-import { SECRET } from "../../config/env";
-import jwt from "jsonwebtoken";
-
-export async function createUser(req, res) {
-  try {
-    let user = _.pick(
-      req.body,
-      "email",
-      "hashedPassword",
-      "type",
-      "firstName",
-      "lastName",
-      "avatar"
-    );
-
-    await User.findOne({ email: user.email }, function(err, user) {
-      if (err) {
-        return res.status(500).end();
-      } else if (user) {
-        return res.status(208).end();
-      }
-    });
-
-    await User.create(user)
-      .populate("major")
-      .exec();
-
-    return res.status(201).end();
-  } catch (err) {
-    res.status(500).end();
-  }
-}
 
 export async function getByType(req, res) {
   try {
@@ -60,12 +28,11 @@ export async function getAll(req, res) {
 
     return res.status(200).json(users);
   } catch (err) {
-    console.log(err);
     return res.status(500).end();
   }
 }
 
-export async function updateUser(req, res) {
+export async function update(req, res) {
   try {
     if (!req.params.id) {
       return res.status(400).end();
@@ -81,26 +48,23 @@ export async function updateUser(req, res) {
       "avatar"
     );
 
-    if (req.body.major) {
-      await Major.findOne({ desc: req.body.major }, function(err, foundMajor) {
-        if (err) {
-          return res.status(400).end();
-        } else {
-          user.major = foundMajor._id;
-        }
-      });
-    }
+    await User.findOne({ email: user.email }, (err, user) => {
+      if (err) {
+        return res.status(500).end();
+      } else if (!user) {
+        return res.status(400).end();
+      }
+    });
 
-    user = await User.update({ _id: req.params.id }, { $set: user });
+    await User.update({ _id: req.params.id }, { $set: user });
 
     return res.status(200).end();
   } catch (error) {
-    console.log(error);
     return res.status(500).end();
   }
 }
 
-export async function deleteUser(req, res) {
+export async function remove(req, res) {
   try {
     if (!req.params.id) return res.status(400).end();
 
@@ -108,45 +72,6 @@ export async function deleteUser(req, res) {
 
     return res.status(204).end();
   } catch (error) {
-    return res.status(500).end();
-  }
-}
-
-export async function signIn(req, res) {
-  try {
-    await User.findOne({ email: req.body.email }, function(err, user) {
-      if (!user) {
-        return res.status(400).end();
-      }
-      user.comparePassword(req.body.hashedPassword, function(err, equal) {
-        if (equal && !err) {
-          let token = jwt.sign(user.toJSON(), SECRET, { expiresIn: 250000 });
-          req.session.token = token;
-          req.session.userData = _.pick(
-            user,
-            "firstName",
-            "lastName",
-            "email",
-            "type",
-            "major",
-            "avatar"
-          );
-          return res.json({ JWT: token });
-        } else {
-          return res.status(400).end();
-        }
-      });
-    });
-  } catch (err) {
-    return res.status(500).end();
-  }
-}
-
-export async function signOut(req, res) {
-  try {
-    req.session.destroy();
-    return res.status(200).end();
-  } catch (err) {
     return res.status(500).end();
   }
 }
