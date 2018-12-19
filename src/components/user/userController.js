@@ -60,12 +60,11 @@ export async function getAll(req, res) {
 
     return res.status(200).json(users);
   } catch (err) {
-    console.log(err);
     return res.status(500).end();
   }
 }
 
-export async function updateUser(req, res) {
+export async function update(req, res) {
   try {
     if (!req.params.id) {
       return res.status(400).end();
@@ -112,25 +111,14 @@ export async function deleteUser(req, res) {
   }
 }
 
-export async function signIn(req, res) {
+export async function remove(req, res) {
   try {
-    await User.findOne({ email: req.body.email }, function(err, user) {
-      if (!user) {
-        return res.status(400).end();
-      }
-      user.comparePassword(req.body.hashedPassword, function(err, equal) {
-        if (equal && !err) {
-          let token = jwt.sign(user.toJSON(), SECRET, { expiresIn: 250000 });
-          //req.session.
-          return res.json({ JWT: token });
-        } else {
-          return res.status(400).end();
-        }
-      });
-    });
-  } catch (err) {
+    if (!req.params.id) return res.status(400).end();
+
+    await User.remove({ _id: req.params.id });
+
+    return res.status(204).end();
+  } catch (error) {
     return res.status(500).end();
   }
 }
-
-export async function signOut(req, res) {}
