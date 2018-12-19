@@ -1,37 +1,5 @@
 import { User, Major } from "../../config/models";
 import _ from "lodash";
-import { SECRET } from "../../config/env";
-import jwt from "jsonwebtoken";
-
-export async function createUser(req, res) {
-  try {
-    let user = _.pick(
-      req.body,
-      "email",
-      "hashedPassword",
-      "type",
-      "firstName",
-      "lastName",
-      "avatar"
-    );
-
-    await User.findOne({ email: user.email }, function(err, user) {
-      if (err) {
-        return res.status(500).end();
-      } else if (user) {
-        return res.status(208).end();
-      }
-    });
-
-    await User.create(user)
-      .populate("major")
-      .exec();
-
-    return res.status(201).end();
-  } catch (err) {
-    res.status(500).end();
-  }
-}
 
 export async function getByType(req, res) {
   try {

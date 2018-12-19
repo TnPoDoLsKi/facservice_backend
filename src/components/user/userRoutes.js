@@ -1,4 +1,4 @@
-import { getAll, getByType, create, update, remove } from "./userController";
+import { getAll, getByType, update, remove } from "./userController";
 import { isLoggedIn, isAdmin } from "../../services/middlewares";
 
 export default function(router) {
