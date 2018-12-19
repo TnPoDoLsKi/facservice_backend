@@ -4,7 +4,6 @@ import morgan from "morgan";
 import routes from "./config/routes";
 import bodyParser from "body-parser";
 import session from "express-session";
-import morgan from "morgan";
 import "./config/database";
 import { SECRET } from "./config/env";
 
