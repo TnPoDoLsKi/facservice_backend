@@ -1,7 +1,7 @@
 import _ from 'lodash'
-import Formation from './formation'
+import Level from './level'
 
-export async function create(req, res) {
+export async function create(req,res) {
     try {
         if (!req.body.name )
         return res.status(400).json({
@@ -14,13 +14,13 @@ export async function create(req, res) {
            code: 126,
            error: 'description is required !'
         })
-        
-        let formation = _.pick(req.body, 'name', 'description')
 
-        formation = await Formation.create(formation)
+        let level = _.pick(req.body, 'name', 'description')
+
+        level = await Level.create(level)
 
         return res.json(
-            formation
+            level
         )
 
     } catch (error) {
@@ -31,10 +31,10 @@ export async function create(req, res) {
 export async function getAll(req, res) {
     try {
 
-        let formations = await Formation.find()
+        let levels = await Level.find()
 
         return res.json(
-            formations
+           levels
         )
 
     } catch (error) {
@@ -52,12 +52,12 @@ export async function getOne(req, res) {
                 error: 'id cannot be empty'
             })
 
-        let formation = await Formation.findById({
+        let level = await Level.findById({
             _id: req.params.id
         })
 
         return res.json(
-            formation
+            level
         )
 
     } catch (error) {
@@ -81,17 +81,17 @@ export async function update(req, res) {
         error: 'description is required !'
     })
          
-    let formation = await Formation.findOne({ _id: req.params.id})
-    if (!formation)
+    let level = await Level.findOne({ _id: req.params.id})
+    if (!level)
         return res.status(400).json({
             code: 126,
-            error: 'formation not found !'
+            error: 'level not found !'
         })
 
-    formation.description = req.body.description
-    formation.name = req.body.name
+    level.description = req.body.description
+    level.name = req.body.name
 
-    await formation.save()
+    await level.save()
 
     return res.status(200).end()
 
@@ -100,14 +100,14 @@ export async function update(req, res) {
         return res.status(500).end()
     }
 }
-export async function remove(req, res) {
+export async function remove(req,res) {
     try {
         if (!req.params.id)
         return res.status(400).json({
             code: 126,
             error: 'id cannot be empty'
         })
-    let formation = await Formation.deleteOne({
+    let level = await Level.deleteOne({
         _id: req.params.id
     }, {
         $set: {
@@ -117,10 +117,10 @@ export async function remove(req, res) {
     });
 
     return res.json(
-        formation
+        level
     )
-    } catch (error) {
-        console.log(error)
-        return res.status(500).end()
-    }
+     } catch (error) {
+         console.log(error)
+         return res.status(500).end()
+     }
 }

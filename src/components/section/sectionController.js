@@ -1,7 +1,7 @@
 import _ from 'lodash'
-import Formation from './formation'
+import Section from './section'
 
-export async function create(req, res) {
+export async function create(req,res) {
     try {
         if (!req.body.name )
         return res.status(400).json({
@@ -14,13 +14,13 @@ export async function create(req, res) {
            code: 126,
            error: 'description is required !'
         })
-        
-        let formation = _.pick(req.body, 'name', 'description')
 
-        formation = await Formation.create(formation)
+        let section = _.pick(req.body, 'name', 'description')
+
+        section = await Section.create(section)
 
         return res.json(
-            formation
+            section
         )
 
     } catch (error) {
@@ -31,10 +31,10 @@ export async function create(req, res) {
 export async function getAll(req, res) {
     try {
 
-        let formations = await Formation.find()
+        let section = await Section.find()
 
         return res.json(
-            formations
+           section
         )
 
     } catch (error) {
@@ -52,12 +52,12 @@ export async function getOne(req, res) {
                 error: 'id cannot be empty'
             })
 
-        let formation = await Formation.findById({
+        let section = await Section.findById({
             _id: req.params.id
         })
 
         return res.json(
-            formation
+            section
         )
 
     } catch (error) {
@@ -68,7 +68,6 @@ export async function getOne(req, res) {
 }
 export async function update(req, res) {
     try {
-
         if (!req.body.name )
         return res.status(400).json({
             code: 126,
@@ -81,17 +80,17 @@ export async function update(req, res) {
         error: 'description is required !'
     })
          
-    let formation = await Formation.findOne({ _id: req.params.id})
-    if (!formation)
+    let section = await Section.findOne({ _id: req.params.id})
+    if (!section)
         return res.status(400).json({
             code: 126,
-            error: 'formation not found !'
+            error: 'section not found !'
         })
 
-    formation.description = req.body.description
-    formation.name = req.body.name
+    section.description = req.body.description
+    section.name = req.body.name
 
-    await formation.save()
+    await section.save()
 
     return res.status(200).end()
 
@@ -100,14 +99,14 @@ export async function update(req, res) {
         return res.status(500).end()
     }
 }
-export async function remove(req, res) {
+export async function remove(req,res) {
     try {
         if (!req.params.id)
         return res.status(400).json({
             code: 126,
             error: 'id cannot be empty'
         })
-    let formation = await Formation.deleteOne({
+    let section = await Section.deleteOne({
         _id: req.params.id
     }, {
         $set: {
@@ -117,10 +116,10 @@ export async function remove(req, res) {
     });
 
     return res.json(
-        formation
+        section
     )
-    } catch (error) {
-        console.log(error)
-        return res.status(500).end()
-    }
+     } catch (error) {
+         console.log(error)
+         return res.status(500).end()
+     }
 }
