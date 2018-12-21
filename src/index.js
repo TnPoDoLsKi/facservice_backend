@@ -1,8 +1,9 @@
 import express from "express";
 import http from "http";
 import morgan from "morgan";
-import routes from "./config/routes";
 import bodyParser from "body-parser";
+
+import routes from "./config/routes";
 import "./config/database";
 
 const app = express();
