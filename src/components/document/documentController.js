@@ -1,11 +1,13 @@
 import _ from "lodash";
-import Document from "./document";
+import Document from "../../config/models";
+import mongooseDelete from "mongoose-delete";
+import { Upload } from "../../services/uploadService";
 
 export async function getAll(req, res) {
   try {
-    let Documents = await Document.find();
+    let documents = await Document.find();
 
-    return res.json(Documents);
+    return res.json(documents);
   } catch (error) {
     console.log(error);
     return res.status(500).end();
@@ -24,9 +26,7 @@ export async function getOne(req, res) {
       _id: req.params.id
     });
 
-    return res.json({
-      document
-    });
+    return res.json(document);
   } catch (error) {
     console.log(error);
     return res.status(500).end();
@@ -41,14 +41,19 @@ export async function create(req, res) {
       "type",
       "semestre",
       "major",
-      "subject"
+      "subject",
+      "year",
+      "approved",
+      "NBDowloads",
+      "verifiedByProf",
+      "user",
+      "session",
+      "profName "
     );
 
     document = await Document.create(document);
     console.log("mriguel");
-    return res.json({
-      document
-    });
+    return res.json(document);
   } catch (error) {
     console.log(error);
     return res.status(500).end();
@@ -69,7 +74,14 @@ export async function update(req, res) {
       "type",
       "semestre",
       "major",
-      "subject"
+      "subject",
+      "year",
+      "approved",
+      "NBDowloads",
+      "verifiedByProf",
+      "user",
+      "session",
+      "profName "
     );
     await Document.update(
       {
@@ -102,6 +114,11 @@ export async function remove(req, res) {
 
     await Document.remove({
       _id: req.params.id
+    });
+    Document.plugin(mongooseDelete, {
+      overrideMethods: "all",
+      deletedAt: true,
+      deletedBy: true
     });
     return res.status(204).end();
   } catch (error) {
