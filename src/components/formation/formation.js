@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongoose from "mongoose";
 
 const formationSchema = new mongoose.Schema(
   {
@@ -8,6 +8,6 @@ const formationSchema = new mongoose.Schema(
   {
     timestamps: true
   }
-)
+);
 
-export default mongoose.model('formation', formationSchema)
+export default mongoose.model("formation", formationSchema);

@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongoose from "mongoose";
 
 const subjectSchema = new mongoose.Schema(
   {
@@ -8,6 +8,6 @@ const subjectSchema = new mongoose.Schema(
   {
     timestamps: true
   }
-)
+);
 
-export default mongoose.model('subject', subjectSchema)
+export default mongoose.model("subject", subjectSchema);

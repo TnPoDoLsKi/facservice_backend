@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongoose from "mongoose";
 
 const levelSchema = new mongoose.Schema(
   {
@@ -8,6 +8,6 @@ const levelSchema = new mongoose.Schema(
   {
     timestamps: true
   }
-)
+);
 
-export default mongoose.model('level', levelSchema)
+export default mongoose.model("level", levelSchema);

@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongoose from "mongoose";
 
 const sectionSchema = new mongoose.Schema(
   {
@@ -8,6 +8,6 @@ const sectionSchema = new mongoose.Schema(
   {
     timestamps: true
   }
-)
+);
 
-export default mongoose.model('section', sectionSchema)
+export default mongoose.model("section", sectionSchema);
