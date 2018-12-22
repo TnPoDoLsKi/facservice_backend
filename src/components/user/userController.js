@@ -10,7 +10,9 @@ export async function getByType(req, res) {
       return res.status(400).end();
     }
 
-    let users = await User.find({ type: req.params.type })
+    let users = await User.find({
+      type: req.params.type
+    })
       .populate("major")
       .exec();
 
@@ -49,16 +51,28 @@ export async function update(req, res) {
     );
 
     if (req.body.major) {
-      await Major.findOne({ desc: req.body.major }, function(err, foundMajor) {
-        if (err) {
-          return res.status(400).end();
-        } else {
-          user.major = foundMajor._id;
+      await Major.findOne(
+        {
+          desc: req.body.major
+        },
+        (err, foundMajor) => {
+          if (err) {
+            return res.status(400).end();
+          } else {
+            user.major = foundMajor._id;
+          }
         }
-      });
+      );
     }
 
-    user = await User.update({ _id: req.params.id }, { $set: user });
+    user = await User.update(
+      {
+        _id: req.params.id
+      },
+      {
+        $set: user
+      }
+    );
 
     return res.status(200).end();
   } catch (error) {
@@ -67,23 +81,13 @@ export async function update(req, res) {
   }
 }
 
-export async function deleteUser(req, res) {
-  try {
-    if (!req.params.id) return res.status(400).end();
-
-    await User.remove({ _id: req.params.id });
-
-    return res.status(204).end();
-  } catch (error) {
-    return res.status(500).end();
-  }
-}
-
 export async function remove(req, res) {
   try {
     if (!req.params.id) return res.status(400).end();
 
-    await User.remove({ _id: req.params.id });
+    await User.remove({
+      _id: req.params.id
+    });
 
     return res.status(204).end();
   } catch (error) {

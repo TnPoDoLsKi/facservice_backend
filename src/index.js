@@ -4,6 +4,7 @@ import morgan from "morgan";
 import routes from "./config/routes";
 import bodyParser from "body-parser";
 import session from "express-session";
+import cors from "cors";
 import "./config/database";
 import { SECRET } from "./config/env";
 
@@ -15,7 +16,9 @@ app.use(
     secret: SECRET,
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false }
+    cookie: {
+      secure: false
+    }
   })
 );
 
@@ -30,6 +33,7 @@ app.use(
   })
 );
 app.use(morgan("dev"));
+app.use(cors());
 app.use("/", routes);
 
 server.listen(3000, () => console.log("start in dev environment on port 3000"));
