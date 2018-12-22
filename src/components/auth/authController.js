@@ -64,7 +64,7 @@ export async function signIn(req, res) {
           });
           req.session.token = token;
           req.session.userData = userData;
-          return res.json({ JWT: token });
+          return res.json({ user: userData, token: token });
         } else {
           return res.status(400).end();
         }
