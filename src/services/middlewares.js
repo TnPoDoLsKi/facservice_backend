@@ -15,7 +15,11 @@ export function isLoggedIn(req, res, next) {
         });
       } else {
         jwt.verify(token, SECRET, (err, tokenDecoded) => {
-          if (err) return res.status(500).send();
+          if (err) {
+            return res.status(401).json({
+              error: err.name
+            });
+          }
           console.log(tokenDecoded);
           next();
         });
@@ -24,6 +28,7 @@ export function isLoggedIn(req, res, next) {
       return res.status(400).end();
     }
   } catch (err) {
+    console.log(err);
     return res.status(500).end();
   }
 }
