@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const subjectSchema = new mongoose.Schema(
+const levelSchema = new mongoose.Schema(
   {
     name: { type: String },
     description: { type: String }
@@ -10,4 +10,4 @@ const subjectSchema = new mongoose.Schema(
   }
 );
 
-export default mongoose.model("subject", subjectSchema);
+export default mongoose.model("level", levelSchema);

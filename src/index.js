@@ -2,12 +2,25 @@ import express from "express";
 import http from "http";
 import morgan from "morgan";
 import bodyParser from "body-parser";
-
 import routes from "./config/routes";
+import session from "express-session";
+import cors from "cors";
 import "./config/database";
+import { SECRET } from "./config/env";
 
 const app = express();
 const server = http.createServer(app);
+
+app.use(
+  session({
+    secret: SECRET,
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+      secure: false
+    }
+  })
+);
 
 app.use(
   bodyParser.json({
@@ -20,6 +33,7 @@ app.use(
   })
 );
 app.use(morgan("dev"));
+app.use(cors());
 app.use("/", routes);
 
 server.listen(3000, () => console.log("start in dev environment on port 3000"));
