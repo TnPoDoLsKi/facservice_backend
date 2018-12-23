@@ -4,6 +4,7 @@ import mongooseDelete from "mongoose-delete";
 const documentSchema = new mongoose.Schema(
   {
     title: { type: String },
+    filePath: { type: String },
     type: { type: String },
     semestre: { type: Number },
     major: { type: String },

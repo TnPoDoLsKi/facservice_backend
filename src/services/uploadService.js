@@ -8,7 +8,7 @@ const config = {
   maxFileSize: 10 * 1024 * 1024,
   multiple: true
 };
-export async function Upload(req, res, next) {
+export async function upload(req, res, next) {
   //abort handler
   const _abortHandler = () => {
     const error = new Error("request canceled");
@@ -40,6 +40,8 @@ export async function Upload(req, res, next) {
         mimetype: file.type
       }
     ];
+    const fileUrls = file.path;
+    return res.json(fileUrls);
   };
   /* 
      field handler 

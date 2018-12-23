@@ -1,6 +1,6 @@
 import _ from "lodash";
 import Document from "./document";
-import { Upload } from "../../services/uploadService";
+import { upload } from "../../services/uploadService";
 
 export async function getAll(req, res) {
   try {
@@ -37,6 +37,7 @@ export async function create(req, res) {
     let document = _.pick(
       req.body,
       "title",
+      "filePath",
       "type",
       "semestre",
       "major",
@@ -68,6 +69,7 @@ export async function create(req, res) {
         }
       }
     );
+    document.filePath = upload(req, res);
     document = await Document.create(document);
     console.log("mriguel");
     return res.json(document);
@@ -88,6 +90,7 @@ export async function update(req, res) {
     let document = _.pick(
       req.body,
       "title",
+      " filePath",
       "type",
       "semestre",
       "major",
