@@ -1,7 +1,6 @@
 import _ from "lodash";
-import Document from "../../config/models";
-import mongooseDelete from "mongoose-delete";
-import { Upload } from "../../services/uploadService";
+import Document from "./document";
+import { upload } from "../../services/uploadService";
 
 export async function getAll(req, res) {
   try {
@@ -38,6 +37,7 @@ export async function create(req, res) {
     let document = _.pick(
       req.body,
       "title",
+      "filePath",
       "type",
       "semestre",
       "major",
@@ -50,7 +50,26 @@ export async function create(req, res) {
       "session",
       "profName "
     );
-
+    await Document.findOne(
+      {
+        type: document.type,
+        semestre: document.semestre,
+        major: document.major,
+        subject: document.subject,
+        year: document.year,
+        session: document.session,
+        profName: document.profName
+      },
+      (err, document) => {
+        if (err) {
+          return res.status(500).end();
+        } else if (document) {
+          console.log("mawjoud");
+          return res.status(208).end();
+        }
+      }
+    );
+    document.filePath = upload(req, res);
     document = await Document.create(document);
     console.log("mriguel");
     return res.json(document);
@@ -71,6 +90,7 @@ export async function update(req, res) {
     let document = _.pick(
       req.body,
       "title",
+      " filePath",
       "type",
       "semestre",
       "major",
@@ -82,6 +102,24 @@ export async function update(req, res) {
       "user",
       "session",
       "profName "
+    );
+    await Document.findOne(
+      {
+        type: document.type,
+        semestre: document.semestre,
+        major: document.major,
+        subject: document.subject,
+        year: document.year,
+        session: document.session,
+        profName: document.profName
+      },
+      (err, document) => {
+        if (err) {
+          return res.status(500).end();
+        } else if (document) {
+          return res.status(208).end();
+        }
+      }
     );
     await Document.update(
       {
@@ -115,11 +153,7 @@ export async function remove(req, res) {
     await Document.remove({
       _id: req.params.id
     });
-    Document.plugin(mongooseDelete, {
-      overrideMethods: "all",
-      deletedAt: true,
-      deletedBy: true
-    });
+
     return res.status(204).end();
   } catch (error) {
     console.log(error);
