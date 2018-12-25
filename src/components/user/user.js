@@ -39,25 +39,25 @@ const userSchema = new mongoose.Schema(
 );
 
 userSchema.pre("save", function(next) {
-  let user = this;
-  bcrypt.genSalt(10, function(err, salt) {
-    if (err) {
-      console.log("generating salt failed");
-      return next(err);
-    }
-    bcrypt.hash(user.hashedPassword, salt, function(err, hash) {
-      if (err) {
-        console.log("Hashing failed");
-        return next(err);
-      }
-      user.hashedPassword = hash;
-      next();
+    let user = this;
+    bcrypt.genSalt(10, function(err, salt) {
+        if (err) {
+            console.log("generating salt failed");
+            return next(err);
+        }
+        bcrypt.hash(user.hashedPassword, salt, function(err, hash) {
+            if (err) {
+                console.log("Hashing failed");
+                return next(err);
+            }
+            user.hashedPassword = hash;
+            next();
+        });
     });
-  });
 });
 
 userSchema.methods.comparePassword = function(password, callback) {
-  bcrypt.compare(password, this.hashedPassword, function(err, equal) {
+  bcrypt.compare(password, this.hashedPassword, (err, equal) => {
     if (err) {
       return callback(err);
     }

@@ -1,5 +1,6 @@
 import { User, Major } from "../../config/models";
 import _ from "lodash";
+import bcrypt from "bcrypt";
 
 export async function getByType(req, res) {
   try {
@@ -13,6 +14,7 @@ export async function getByType(req, res) {
     let users = await User.find({
       type: req.params.type
     })
+      .select("-hashedPassword")
       .populate("major")
       .exec();
 
@@ -25,6 +27,7 @@ export async function getByType(req, res) {
 export async function getAll(req, res) {
   try {
     let users = await User.find()
+      .select("-hashedPassword")
       .populate("major")
       .exec();
 
@@ -65,14 +68,12 @@ export async function update(req, res) {
       );
     }
 
-    user = await User.update(
-      {
-        _id: req.params.id
-      },
-      {
-        $set: user
-      }
-    );
+    if (user.hashedPassword) {
+      let salt = bcrypt.genSaltSync(10);
+      user.hashedPassword = bcrypt.hashSync(user.hashedPassword, salt);
+    }
+
+    await User.update({ _id: req.params.id }, { $set: user });
 
     return res.status(200).end();
   } catch (error) {
