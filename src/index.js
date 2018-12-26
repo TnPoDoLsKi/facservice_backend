@@ -34,6 +34,6 @@ app.use(
 );
 app.use(morgan("dev"));
 app.use(cors());
-app.use("/", routes);
+app.use("/api", routes);
 
 server.listen(3000, () => console.log("start in dev environment on port 3000"));
