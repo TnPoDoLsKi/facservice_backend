@@ -3,8 +3,8 @@ import {
   create,
   update,
   remove,
-  getAll,
- /* addSubjects */
+  getAll
+  /* addSubjects */
 } from "./majorController";
 
 export default function(router) {
@@ -13,5 +13,5 @@ export default function(router) {
   router.post("/majors", create);
   router.put("/majors/:id", update); /* TO DO test */
   router.delete("/majors/:id", remove); /* TO DO test */
-/*  router.put("/majors/:id/subjects/", addSubjects); /* TO DO */
+  /*  router.put("/majors/:id/subjects/", addSubjects); /* TO DO */
 }
