@@ -25,7 +25,9 @@ export function isLoggedIn(req, res, next) {
         });
       }
     } else {
-      return res.status(400).end();
+      return res.status(401).json({
+        error: "Authorization required !"
+      });
     }
   } catch (err) {
     console.log(err);
@@ -59,7 +61,9 @@ export function isAdmin(req, res, next) {
         }
       }
     } else {
-      res.status(401).end();
+      res.status(401).json({
+        error: "Authorization required !"
+      });
     }
   } catch (error) {
     res.status(500).end();
