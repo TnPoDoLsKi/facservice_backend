@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import mongooseDelete from "mongoose-delete";
 
-const subjectSchema = new mongoose.Schema(
+const levelSchema = new mongoose.Schema(
   {
     name: { type: String },
     description: { type: String }
@@ -11,10 +11,10 @@ const subjectSchema = new mongoose.Schema(
   }
 );
 
-subjectSchema.plugin(mongooseDelete, {
+levelSchema.plugin(mongooseDelete, {
   overrideMethods: "all",
   deletedAt: true,
   deletedBy: true
 });
 
-export default mongoose.model("subject", subjectSchema);
+export default mongoose.model("level", levelSchema);

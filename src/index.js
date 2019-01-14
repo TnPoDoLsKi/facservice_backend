@@ -2,12 +2,25 @@ import express from "express";
 import http from "http";
 import morgan from "morgan";
 import bodyParser from "body-parser";
-
 import routes from "./config/routes";
+import session from "express-session";
+import cors from "cors";
 import "./config/database";
+import { SECRET, PORT, NODE_ENV } from "./config/env";
 
 const app = express();
 const server = http.createServer(app);
+
+app.use(
+  session({
+    secret: SECRET,
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+      secure: false
+    }
+  })
+);
 
 app.use(
   bodyParser.json({
@@ -20,18 +33,9 @@ app.use(
   })
 );
 app.use(morgan("dev"));
-//create a cors middleware
-app.use(function(req, res, next) {
-  //set headers to allow cross origin request.
-  res.header("Access-Control-Allow-Origin", "http://localhost:4200");
-  res.header("Access-Control-Allow-Methods", "PUT, GET, POST, DELETE, OPTIONS");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  );
-  next();
-});
+app.use(cors());
+app.use("/api", routes);
 
-app.use("/", routes);
-
-server.listen(3000, () => console.log("start in dev environment on port 3000"));
+server.listen(PORT, () =>
+  console.log(`start in ${NODE_ENV} environment on port ${PORT}`)
+);
