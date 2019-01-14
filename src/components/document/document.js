@@ -5,7 +5,7 @@ const documentSchema = new mongoose.Schema(
   {
     title: { type: String },
     filePath: { type: String },
-    type: { type:  },
+    type: { type: String, enum: ["Ds", "Examen", "Cour", "Td"], default: "Ds" },
     semestre: { type: Number },
     major: { type: String },
     subject: { type: String },
