@@ -20,6 +20,18 @@ app.use(
   })
 );
 app.use(morgan("dev"));
+//create a cors middleware
+app.use(function(req, res, next) {
+  //set headers to allow cross origin request.
+  res.header("Access-Control-Allow-Origin", "http://localhost:4200");
+  res.header("Access-Control-Allow-Methods", "PUT, GET, POST, DELETE, OPTIONS");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  next();
+});
+
 app.use("/", routes);
 
 server.listen(3000, () => console.log("start in dev environment on port 3000"));
