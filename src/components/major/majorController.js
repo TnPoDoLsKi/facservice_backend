@@ -128,12 +128,6 @@ export async function remove(req, res) {
     let major = await Major.deleteOne(
       {
         _id: req.params.id
-      },
-      {
-        $set: {
-          name: req.body.name,
-          description: req.body.description
-        }
       }
     );
 

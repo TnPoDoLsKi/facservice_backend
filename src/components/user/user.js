@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import mongoose from "mongoose";
 import mongoose_delete from "mongoose-delete";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
 const userSchema = new mongoose.Schema(
   {

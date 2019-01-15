@@ -39,6 +39,7 @@ export async function create(req, res) {
     return res.status(201).end();
   } catch (err) {
     res.status(500).end();
+    console.log(err);
   }
 }
 

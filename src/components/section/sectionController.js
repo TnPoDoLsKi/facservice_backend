@@ -95,12 +95,6 @@ export async function remove(req, res) {
     let section = await Section.deleteOne(
       {
         _id: req.params.id
-      },
-      {
-        $set: {
-          name: req.body.name,
-          description: req.body.description
-        }
       }
     );
 

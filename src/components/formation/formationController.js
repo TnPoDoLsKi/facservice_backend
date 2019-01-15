@@ -2,18 +2,20 @@ import _ from "lodash";
 import Formation from "./formation";
 
 export async function create(req, res) {
-  try {
+  try { 
+    console.log(req.body);
+    
     if (!req.body.name)
       return res.status(400).json({
         code: 126,
         error: "name is required !"
-      });
+      }); 
 
     if (!req.body.description)
       return res.status(400).json({
         code: 126,
         error: "description is required !"
-      });
+      }); 
 
     let formation = _.pick(req.body, "name", "description");
 
@@ -95,12 +97,6 @@ export async function remove(req, res) {
     let formation = await Formation.deleteOne(
       {
         _id: req.params.id
-      },
-      {
-        $set: {
-          name: req.body.name,
-          description: req.body.description
-        }
       }
     );
 

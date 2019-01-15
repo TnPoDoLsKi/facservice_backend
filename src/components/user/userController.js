@@ -1,6 +1,6 @@
 import { User, Major } from "../../config/models";
 import _ from "lodash";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
 export async function getByType(req, res) {
   try {
