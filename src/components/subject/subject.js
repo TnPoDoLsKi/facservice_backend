@@ -3,8 +3,14 @@ import mongooseDelete from "mongoose-delete";
 
 const subjectSchema = new mongoose.Schema(
   {
-    name: { type: String },
-    description: { type: String }
+    name: {
+      type: String
+    },
+    semestre: {
+      type: Number,
+      enum: [1, 2],
+      default: 1
+    }
   },
   {
     timestamps: true
