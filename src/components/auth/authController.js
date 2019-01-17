@@ -48,7 +48,7 @@ export async function signIn(req, res) {
       if (!user) {
         return res.status(400).end();
       }
-      user.comparePassword(req.body.hashedPassword, (err, equal) => {
+      user.comparePassword(req.body.password, (err, equal) => {
         if (equal && !err) {
           const userData = _.pick(
             user,
@@ -60,10 +60,11 @@ export async function signIn(req, res) {
             "avatar"
           );
           let token = jwt.sign(userData, SECRET, {
-            expiresIn: 250000
+            expiresIn: 604800
           });
           req.session.token = token;
           req.session.userData = userData;
+
           return res.json({ user: userData, token: token });
         } else {
           return res.status(400).end();
