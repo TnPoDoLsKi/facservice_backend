@@ -25,7 +25,7 @@ export async function create(req, res) {
     });
 
     if (req.body.major) {
-      await Major.findOne({ desc: req.body.major }, (err, foundMajor) => {
+      await Major.findOne({ name: req.body.major }, (err, foundMajor) => {
         if (err) {
           return res.status(400).end();
         } else {

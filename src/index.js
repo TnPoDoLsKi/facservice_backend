@@ -1,12 +1,12 @@
 import express from "express";
 import http from "http";
 import morgan from "morgan";
-import routes from "./config/routes";
 import bodyParser from "body-parser";
+import routes from "./config/routes";
 import session from "express-session";
 import cors from "cors";
 import "./config/database";
-import { SECRET } from "./config/env";
+import { SECRET, PORT, NODE_ENV } from "./config/env";
 
 const app = express();
 const server = http.createServer(app);
@@ -34,6 +34,8 @@ app.use(
 );
 app.use(morgan("dev"));
 app.use(cors());
-app.use("/", routes);
+app.use("/api", routes);
 
-server.listen(3000, () => console.log("start in dev environment on port 3000"));
+server.listen(PORT, () =>
+  console.log(`start in ${NODE_ENV} environment on port ${PORT}`)
+);

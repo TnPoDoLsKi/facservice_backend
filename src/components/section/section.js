@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import mongooseDelete from "mongoose-delete";
 
 const sectionSchema = new mongoose.Schema(
   {
@@ -9,5 +10,11 @@ const sectionSchema = new mongoose.Schema(
     timestamps: true
   }
 );
+
+sectionSchema.plugin(mongooseDelete, {
+  overrideMethods: "all",
+  deletedAt: true,
+  deletedBy: true
+});
 
 export default mongoose.model("section", sectionSchema);

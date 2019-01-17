@@ -20,12 +20,14 @@ export function isLoggedIn(req, res, next) {
               error: err.name
             });
           }
-          console.log(tokenDecoded);
+          console.log("here", tokenDecoded);
           next();
         });
       }
     } else {
-      return res.status(400).end();
+      return res.status(401).json({
+        error: "Authorization required !"
+      });
     }
   } catch (err) {
     console.log(err);
@@ -59,7 +61,9 @@ export function isAdmin(req, res, next) {
         }
       }
     } else {
-      res.status(401).end();
+      res.status(401).json({
+        error: "Authorization required !"
+      });
     }
   } catch (error) {
     res.status(500).end();
