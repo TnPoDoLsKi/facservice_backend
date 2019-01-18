@@ -17,8 +17,7 @@ export async function getOne(req, res) {
   try {
     if (!req.params.id)
       return res.status(400).json({
-        code: 126,
-        error: "id cannot be empty"
+        error: "Document id cannot be empty!"
       });
 
     let document = await Document.findById({
@@ -73,7 +72,6 @@ export async function create(req, res) {
     );
 
     document = await Document.create(document);
-    console.log("mriguel");
     return res.json(document);
   } catch (error) {
     console.log(error);
@@ -85,8 +83,7 @@ export async function update(req, res) {
   try {
     if (!req.params.id)
       return res.status(400).json({
-        code: 126,
-        error: "id cannot be empty"
+        error: "Document id cannot be empty!"
       });
 
     let document = _.pick(
@@ -105,7 +102,7 @@ export async function update(req, res) {
     );
     await Document.findOne(
       {
-        ype: document.type,
+        type: document.type,
         description: document.description,
         semestre: document.semestre,
         major: document.major,
@@ -149,8 +146,7 @@ export async function remove(req, res) {
   try {
     if (!req.params.id)
       return res.status(400).json({
-        code: 126,
-        error: "id cannot be empty"
+        error: "Document id cannot be empty!"
       });
 
     await Document.remove({
