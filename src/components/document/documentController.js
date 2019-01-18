@@ -1,6 +1,6 @@
 import _ from "lodash";
 import Document from "./document";
-import { upload } from "../../services/uploadService";
+//import { upload } from "../../services/uploadService";
 
 export async function getAll(req, res) {
   try {
@@ -37,28 +37,30 @@ export async function create(req, res) {
     let document = _.pick(
       req.body,
       "title",
+      "description",
       "filePath",
       "type",
       "semestre",
       "major",
       "subject",
       "year",
-      "approved",
-      "NBDowloads",
-      "verifiedByProf",
       "user",
       "session",
       "profName "
     );
+    //document.filePath = upload(req, res);
     await Document.findOne(
       {
         type: document.type,
+        description: document.description,
         semestre: document.semestre,
         major: document.major,
         subject: document.subject,
         year: document.year,
         session: document.session,
-        profName: document.profName
+        profName: document.profName,
+        title: document.title,
+        filePath: document.filePath
       },
       (err, document) => {
         if (err) {
@@ -69,7 +71,7 @@ export async function create(req, res) {
         }
       }
     );
-    document.filePath = upload(req, res);
+
     document = await Document.create(document);
     console.log("mriguel");
     return res.json(document);
@@ -90,28 +92,29 @@ export async function update(req, res) {
     let document = _.pick(
       req.body,
       "title",
-      " filePath",
+      "description",
+      "filePath",
       "type",
       "semestre",
       "major",
       "subject",
       "year",
-      "approved",
-      "NBDowloads",
-      "verifiedByProf",
       "user",
       "session",
       "profName "
     );
     await Document.findOne(
       {
-        type: document.type,
+        ype: document.type,
+        description: document.description,
         semestre: document.semestre,
         major: document.major,
         subject: document.subject,
         year: document.year,
         session: document.session,
-        profName: document.profName
+        profName: document.profName,
+        title: document.title,
+        filePath: document.filePath
       },
       (err, document) => {
         if (err) {

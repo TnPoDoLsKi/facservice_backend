@@ -11,38 +11,48 @@ const documentSchema = new mongoose.Schema(
     },
     type: {
       type: String,
-      enum: ["DS", "EX", , "C", "TD", "TP", "DS1", "DS2"],
+      enum: ["DS", "EX", "C", "TD", "TP", "DS1", "DS2"],
       default: "DS"
     },
     semestre: {
-      type: Number
+      type: Number,
+      enum: [1, 2],
+      default: 1
     },
     major: {
-      type: String
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Major"
     },
     subject: {
-      type: String
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Subject"
     },
     year: {
       type: Number
     },
     approved: {
-      type: Number
-    } /*boolean*/,
+      type: Boolean,
+      default: false
+    },
     NBDowloads: {
-      type: Number
+      type: Number,
+      default: 0
     },
     verifiedByProf: {
-      type: Number
-    } /*boolean*/,
+      type: Boolean,
+      default: false
+    },
     user: {
-      type: String
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Subject"
     },
     session: {
-      type: String
+      type: String,
+      enum: ["Principale", "Controle"],
+      default: "Principale"
     },
     profName: {
-      type: Number
+      type: String
     }
   },
   {

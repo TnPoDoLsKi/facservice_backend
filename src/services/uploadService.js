@@ -8,7 +8,8 @@ const config = {
   maxFileSize: 10 * 1024 * 1024,
   multiple: true
 };
-export async function upload(req, res, next) {
+export async function upload(req, res) {
+  var fileUrls;
   //abort handler
   const _abortHandler = () => {
     const error = new Error("request canceled");
@@ -31,17 +32,8 @@ export async function upload(req, res, next) {
         file: file meta 
     */
   const _fileHandler = (name, file) => {
-    req.form = req.form || {};
-    req.form.attachements = req.form.attachements || [];
-    req.form.attachements = [
-      ...req.form.attachements,
-      {
-        name: path.basename(file.path),
-        mimetype: file.type
-      }
-    ];
-    const fileUrls = file.path;
-    return res.json(fileUrls);
+    fileUrls = file.path;
+    return fileUrls;
   };
   /* 
      field handler 
@@ -61,6 +53,7 @@ export async function upload(req, res, next) {
     form.on("aborted", _abortHandler);
     form.on("end", () => {
       console.log("Reachead end");
+      res.json(fileUrls);
     });
   } catch (error) {
     console.log(error);
