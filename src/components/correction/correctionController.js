@@ -52,7 +52,7 @@ export async function create(req, res) {
     let correction = _.pick(req.body, "title", "filePath", "user", "document");
     await Correction.findOne(
       {
-        document: req.params.docID,
+        document: correction.document,
         title: correction.title,
         user: correction.user
       },
@@ -65,7 +65,7 @@ export async function create(req, res) {
       }
     );
     correction = await Correction.create(correction);
-    return res.json(correction);
+    return res.json(correction).end();
   } catch (error) {
     console.log(error);
     return res.status(500).end();
