@@ -4,8 +4,12 @@ import mongooseDelete from "mongoose-delete";
 const documentSchema = new mongoose.Schema(
   {
     title: { type: String },
-    filePath: { type: String },
-    type: { type: String, enum: ["Ds", "Examen", "Cour", "Td"], default: "Ds" },
+    description: { type: String },
+    filePath: {
+      type: String,
+      enum: ["DS", "EX", , "C", "TD", "TP", "DS1", "DS2"],
+      default: "DS"
+    },
     semestre: { type: Number },
     major: { type: String },
     subject: { type: String },
