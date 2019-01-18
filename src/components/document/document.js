@@ -25,7 +25,7 @@ const documentSchema = new mongoose.Schema(
     },
     subject: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Subject"
+      ref: "subject"
     },
     year: {
       type: Number
@@ -44,7 +44,7 @@ const documentSchema = new mongoose.Schema(
     },
     user: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Subject"
+      ref: "User"
     },
     session: {
       type: String,
@@ -53,7 +53,13 @@ const documentSchema = new mongoose.Schema(
     },
     profName: {
       type: String
-    }
+    },
+    corrections: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "correction"
+      }
+    ]
   },
   {
     timestamps: true

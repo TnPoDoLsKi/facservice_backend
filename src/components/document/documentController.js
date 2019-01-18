@@ -4,7 +4,12 @@ import Document from "./document";
 
 export async function getAll(req, res) {
   try {
-    let documents = await Document.find();
+    let documents = await Document.find()
+      .populate({
+        path: "corrections",
+        select: "-deleted"
+      })
+      .exec();
 
     return res.json(documents);
   } catch (error) {
@@ -22,7 +27,24 @@ export async function getOne(req, res) {
 
     let document = await Document.findById({
       _id: req.params.id
-    });
+    })
+      .populate({
+        path: "user",
+        select: "-major -avatar -hashedPassword"
+      })
+      .populate({
+        path: "major",
+        select: "-subjects -formation -level -section"
+      })
+      .populate({
+        path: "subject",
+        select: "-deleted"
+      })
+      .populate({
+        path: "corrections",
+        select: "-deleted"
+      })
+      .exec();
 
     return res.json(document);
   } catch (error) {
@@ -45,7 +67,7 @@ export async function create(req, res) {
       "year",
       "user",
       "session",
-      "profName "
+      "profName"
     );
     //document.filePath = upload(req, res);
     await Document.findOne(
@@ -65,12 +87,14 @@ export async function create(req, res) {
         if (err) {
           return res.status(500).end();
         } else if (document) {
-          console.log("mawjoud");
           return res.status(208).end();
         }
       }
     );
-
+    document.corrections = [];
+    for (let i = 0; i < req.body.corrections.length; ++i) {
+      document.corrections.push(req.body.corrections[i]);
+    }
     document = await Document.create(document);
     return res.json(document);
   } catch (error) {
