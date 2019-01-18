@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import mongoose from "mongoose";
 import mongoose_delete from "mongoose-delete";
 import bcrypt from "bcrypt";
@@ -22,8 +21,8 @@ const userSchema = new mongoose.Schema(
     },
     type: {
       type: String,
-      enum: ['admin', 'prof', 'student'],
-      default: 'student'
+      enum: ["admin", "prof", "student"],
+      default: "student"
     },
     avatar: {
       type: String
@@ -39,21 +38,21 @@ const userSchema = new mongoose.Schema(
 );
 
 userSchema.pre("save", function(next) {
-    let user = this;
-    bcrypt.genSalt(10, function(err, salt) {
-        if (err) {
-            console.log("generating salt failed");
-            return next(err);
-        }
-        bcrypt.hash(user.hashedPassword, salt, function(err, hash) {
-            if (err) {
-                console.log("Hashing failed");
-                return next(err);
-            }
-            user.hashedPassword = hash;
-            next();
-        });
+  let user = this;
+  bcrypt.genSalt(10, function(err, salt) {
+    if (err) {
+      console.log("generating salt failed");
+      return next(err);
+    }
+    bcrypt.hash(user.hashedPassword, salt, function(err, hash) {
+      if (err) {
+        console.log("Hashing failed");
+        return next(err);
+      }
+      user.hashedPassword = hash;
+      next();
     });
+  });
 });
 
 userSchema.methods.comparePassword = function(password, callback) {
@@ -65,6 +64,10 @@ userSchema.methods.comparePassword = function(password, callback) {
   });
 };
 
-userSchema.plugin(mongoose_delete,{overrideMethods:'all',deletedAt:true,deletedBy:true});
+userSchema.plugin(mongoose_delete, {
+  overrideMethods: "all",
+  deletedAt: true,
+  deletedBy: true
+});
 
 export default mongoose.model("User", userSchema);
