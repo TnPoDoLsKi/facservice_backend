@@ -9,7 +9,7 @@ const config = {
   multiple: true
 };
 export async function upload(req, res) {
-  var fileUrls;
+  var fileUrls = Array();
   //abort handler
   const _abortHandler = () => {
     const error = new Error("request canceled");
@@ -32,7 +32,7 @@ export async function upload(req, res) {
         file: file meta 
     */
   const _fileHandler = (name, file) => {
-    fileUrls = file.path;
+    fileUrls.push(file.path);
     return fileUrls;
   };
   /* 
