@@ -10,6 +10,16 @@ const subjectSchema = new mongoose.Schema(
       type: Number,
       enum: [1, 2],
       default: 1
+    },
+    documents: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Document"
+      }
+    ],
+    major: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Major"
     }
   },
   {

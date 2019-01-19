@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { Major, Level, Formation, Section ,Subject } from "../../config/models";
+import { Major, Level, Formation, Section, Subject } from "../../config/models";
 
 export async function create(req, res) {
   try {
@@ -28,27 +28,42 @@ export async function create(req, res) {
         error: "section is required !"
       });
     let major = _.pick(req.body, "name", "description");
-    await Formation.findOne({ name: req.body.formation }, (err, found) => {
-      if (err) {
-        return res.status(400).end();
-      } else {
-        major.formation = found._id;
+    await Formation.findOne(
+      {
+        name: req.body.formation
+      },
+      (err, found) => {
+        if (err) {
+          return res.status(400).end();
+        } else {
+          major.formation = found._id;
+        }
       }
-    });
-    await Level.findOne({ name: req.body.level }, (err, found) => {
-      if (err) {
-        return res.status(400).end();
-      } else {
-        major.level = found._id;
+    );
+    await Level.findOne(
+      {
+        name: req.body.level
+      },
+      (err, found) => {
+        if (err) {
+          return res.status(400).end();
+        } else {
+          major.level = found._id;
+        }
       }
-    });
-    await Section.findOne({ name: req.body.section }, (err, found) => {
-      if (err) {
-        return res.status(400).end();
-      } else {
-        major.section = found._id;
+    );
+    await Section.findOne(
+      {
+        name: req.body.section
+      },
+      (err, found) => {
+        if (err) {
+          return res.status(400).end();
+        } else {
+          major.section = found._id;
+        }
       }
-    });
+    );
     major = await Major.create(major);
     return res.json(major);
   } catch (error) {
@@ -58,7 +73,9 @@ export async function create(req, res) {
 }
 export async function getAll(req, res) {
   try {
-    let majors = await Major.find();
+    const majors = await Major.find()
+      .populate("subjects")
+      .exec();
 
     return res.json(majors);
   } catch (error) {
@@ -70,11 +87,10 @@ export async function getOne(req, res) {
   try {
     if (!req.params.id)
       return res.status(400).json({
-        code: 126,
-        error: "id cannot be empty"
+        error: "Major ID cannot be empty"
       });
 
-    let major = await Major.findById({
+    const major = await Major.findById({
       _id: req.params.id
     });
 
@@ -88,27 +104,80 @@ export async function update(req, res) {
   try {
     if (!req.body.name)
       return res.status(400).json({
-        code: 126,
-        error: "name is required !"
+        error: "Major name is required !"
       });
 
     if (!req.body.description)
       return res.status(400).json({
-        code: 126,
-        error: "description is required !"
+        error: "Major description is required !"
       });
+
+    if (!req.body.formation)
+      return res.status(400).json({
+        error: "Formation is required !"
+      });
+
+    if (!req.body.level)
+      return res.status(400).json({
+        error: "Level is required !"
+      });
+
+    if (!req.body.Section)
+      return res.status(400).json({
+        error: "Section is required !"
+      });
+
+    const NewMajor = _.pick(req.body, "name", "description");
+    await Formation.findOne(
+      {
+        name: req.body.formation
+      },
+      (err, found) => {
+        if (err) {
+          return res.status(400).end();
+        } else {
+          NewMajor.formation = found._id;
+        }
+      }
+    );
+    await Level.findOne(
+      {
+        name: req.body.level
+      },
+      (err, found) => {
+        if (err) {
+          return res.status(400).end();
+        } else {
+          NewMajor.level = found._id;
+        }
+      }
+    );
+    await Section.findOne(
+      {
+        name: req.body.section
+      },
+      (err, found) => {
+        if (err) {
+          return res.status(400).end();
+        } else {
+          NewMajor.section = found._id;
+        }
+      }
+    );
 
     let major = await Major.findOne({
       _id: req.params.id
     });
     if (!major)
       return res.status(400).json({
-        code: 126,
-        error: "major not found !"
+        error: "Major not found !"
       });
 
-    major.description = req.body.description;
-    major.name = req.body.name;
+    major.description = NewMajor.description;
+    major.name = NewMajor.name;
+    major.formation = NewMajor.formation;
+    major.level = NewMajor.level;
+    major.section = NewMajor.section;
 
     await major.save();
 
@@ -122,14 +191,11 @@ export async function remove(req, res) {
   try {
     if (!req.params.id)
       return res.status(400).json({
-        code: 126,
-        error: "id cannot be empty"
+        error: "Major id cannot be empty"
       });
-    let major = await Major.deleteOne(
-      {
-        _id: req.params.id
-      }
-    );
+    const major = await Major.deleteOne({
+      _id: req.params.id
+    });
 
     return res.json(major);
   } catch (error) {
@@ -140,33 +206,29 @@ export async function remove(req, res) {
 
 export async function addSubjects(req, res) {
   try {
-    
-    let major = await Major.findOne({
+    const major = await Major.findOne({
       _id: req.params.id
     });
     if (!major)
       return res.status(400).json({
-        code: 126,
         error: "major not found !"
       });
 
-      if (!req.body.SubjectName)
+    if (!req.body.subject)
       return res.status(400).json({
-        error: "SubjectName is required !"
+        error: "Subject is required !"
       });
 
-      let subject = await Subject.findOne({
-       name: req.body.SubjectName 
-      });
-      
-      if (!subject)
-        return res.status(400).json({
-          code: 126,
-          error: "subject not found !"
-        });
-      /*console.log(subject._id);*/  /*right ^^ */
+    const subject = await Subject.findOne({
+      name: req.body.SubjectName
+    });
 
-      await major.subjects.push(subject);
+    if (!subject)
+      return res.status(500).json({
+        error: "subject not found !"
+      });
+
+    await major.subjects.push(subject._id);
 
     await major.save();
 
