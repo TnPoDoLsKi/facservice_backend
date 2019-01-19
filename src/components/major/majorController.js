@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { Major, Level, Formation, Section } from "../../config/models";
+import { Major, Level, Formation, Section ,Subject } from "../../config/models";
 
 export async function create(req, res) {
   try {
@@ -132,6 +132,45 @@ export async function remove(req, res) {
     );
 
     return res.json(major);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).end();
+  }
+}
+
+export async function addSubjects(req, res) {
+  try {
+    
+    let major = await Major.findOne({
+      _id: req.params.id
+    });
+    if (!major)
+      return res.status(400).json({
+        code: 126,
+        error: "major not found !"
+      });
+
+      if (!req.body.SubjectName)
+      return res.status(400).json({
+        error: "SubjectName is required !"
+      });
+
+      let subject = await Subject.findOne({
+       name: req.body.SubjectName 
+      });
+      
+      if (!subject)
+        return res.status(400).json({
+          code: 126,
+          error: "subject not found !"
+        });
+      /*console.log(subject._id);*/  /*right ^^ */
+
+      await major.subjects.push(subject);
+
+    await major.save();
+
+    return res.status(200).end();
   } catch (error) {
     console.log(error);
     return res.status(500).end();
