@@ -13,12 +13,12 @@ export async function getAll(req, res) {
 
 export async function getDocCorrections(req, res) {
   try {
-    if (!req.params.docID)
+    if (!req.params.id)
       return res.status(400).json({
         error: "Document id cannot be empty!"
       });
     const corrections = await Correction.find({
-      document: req.params.docID
+      document: req.params.id
     });
     return res.json(corrections);
   } catch (error) {
@@ -29,15 +29,21 @@ export async function getDocCorrections(req, res) {
 
 export async function getOne(req, res) {
   try {
-    if (!req.params.corrID)
+    if (!req.params.id)
       return res.status(400).json({
         error: "Correction id cannot be empty!"
       });
-    const correction = await Correction.find({
-      _id: req.params.corrID
+    const correction = await Correction.findById({
+      _id: req.params.id
     })
-      .populate("document")
-      .populate("user")
+      .populate({
+        path: "user",
+        select: "-major -avatar -hashedPassword"
+      })
+      .populate({
+        path: "document",
+        select: "-approved"
+      })
       .exec();
 
     return res.json(correction);

@@ -19,7 +19,7 @@ const correctionSchema = new mongoose.Schema(
     },
     document: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Document"
+      ref: "document"
     },
     user: {
       type: mongoose.Schema.Types.ObjectId,
