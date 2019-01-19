@@ -1,7 +1,8 @@
 {
   "name": "project-archive",
   "version": "1.0.0",
-  "description": "",
+  "description": "Archive Web Apps for ISSATSo students",
+  "repository": "https://gitlab.com/igcforces/project-one-web-backend.git",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
