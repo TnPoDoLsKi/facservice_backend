@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import mongoose_delete from "mongoose-delete";
+import mongooseDelete from "mongoose-delete";
 import bcrypt from "bcrypt";
 
 const userSchema = new mongoose.Schema(
@@ -64,7 +64,7 @@ userSchema.methods.comparePassword = function(password, callback) {
   });
 };
 
-userSchema.plugin(mongoose_delete, {
+userSchema.plugin(mongooseDelete, {
   overrideMethods: "all",
   deletedAt: true,
   deletedBy: true
