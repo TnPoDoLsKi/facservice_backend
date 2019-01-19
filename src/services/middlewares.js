@@ -5,8 +5,8 @@ import atob from "atob";
 export function isLoggedIn(req, res, next) {
   try {
     if ("authorization" in req.headers) {
-      let bearer = req.headers["authorization"];
-      let token = bearer.split(" ")[1];
+      const bearer = req.headers["authorization"];
+      const token = bearer.split(" ")[1];
 
       if (!token) {
         return res.status(403).send({
@@ -38,9 +38,9 @@ export function isLoggedIn(req, res, next) {
 export function isAdmin(req, res, next) {
   try {
     if ("authorization" in req.headers) {
-      let bearer = req.headers["authorization"];
+      const bearer = req.headers["authorization"];
 
-      let token = bearer.split(" ")[1];
+      const token = bearer.split(" ")[1];
 
       if (!token) {
         return res.status(403).send({
@@ -48,11 +48,11 @@ export function isAdmin(req, res, next) {
           message: "No token provided"
         });
       } else {
-        let base64Url = token.split(".")[1];
+        const base64Url = token.split(".")[1];
 
-        let base64 = base64Url.replace("-", "+").replace("_", "/");
+        const base64 = base64Url.replace("-", "+").replace("_", "/");
 
-        let payload = JSON.parse(atob(base64));
+        const payload = JSON.parse(atob(base64));
 
         if (payload.type === "admin") {
           next();

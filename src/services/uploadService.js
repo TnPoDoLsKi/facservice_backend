@@ -1,16 +1,16 @@
 import formidable from "formidable";
 import path from "path";
 
-//upload
+// upload
 const config = {
-  //storage
+  // storage
   uploadDir: path.join(__dirname, "..", "uploads"),
   maxFileSize: 10 * 1024 * 1024,
   multiple: true
 };
 export async function upload(req, res) {
-  var fileUrls = Array();
-  //abort handler
+  const fileUrls = [];
+  // abort handler
   const _abortHandler = () => {
     const error = new Error("request canceled");
     res.status(444).send({
@@ -18,7 +18,7 @@ export async function upload(req, res) {
     });
   };
 
-  //error handler
+  // error handler
   const _errorHandler = error => {
     res.status(500).send({
       error
@@ -42,7 +42,7 @@ export async function upload(req, res) {
     req.form = req.form || {};
     req.form[name] = value;
   };
-  //midleware
+  // midleware
   try {
     const form = new formidable.IncomingForm(config);
     form.keepExtensions = true;
@@ -60,4 +60,4 @@ export async function upload(req, res) {
     res.status(500).send(error);
   }
 }
-//end
+// end

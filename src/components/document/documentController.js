@@ -1,10 +1,10 @@
 import _ from "lodash";
 import Document from "./document";
-//import { upload } from "../../services/uploadService";
+// import { upload } from "../../services/uploadService";
 
 export async function getAll(req, res) {
   try {
-    let documents = await Document.find()
+    const documents = await Document.find()
       .populate({
         path: "corrections",
         select: "-deleted"
@@ -25,7 +25,7 @@ export async function getOne(req, res) {
         error: "Document id cannot be empty!"
       });
 
-    let document = await Document.findById({
+    const document = await Document.findById({
       _id: req.params.id
     })
       .populate({
@@ -69,7 +69,7 @@ export async function create(req, res) {
       "session",
       "profName"
     );
-    //document.filePath = upload(req, res);
+    // document.filePath = upload(req, res);
     await Document.findOne(
       {
         type: document.type,
@@ -110,7 +110,7 @@ export async function update(req, res) {
         error: "Document id cannot be empty!"
       });
 
-    let document = _.pick(
+    const document = _.pick(
       req.body,
       "title",
       "description",
@@ -157,7 +157,7 @@ export async function update(req, res) {
     return res.status(204).end();
   } catch (error) {
     console.log(error);
-    if (error.name == "CastError")
+    if (error.name === "CastError")
       return res.status(400).json({
         error: error.message
       });
@@ -180,7 +180,7 @@ export async function remove(req, res) {
     return res.status(204).end();
   } catch (error) {
     console.log(error);
-    if (error.name == "CastError")
+    if (error.name === "CastError")
       return res.status(400).json({
         error: error.message
       });

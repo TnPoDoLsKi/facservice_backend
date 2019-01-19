@@ -38,7 +38,7 @@ const userSchema = new mongoose.Schema(
 );
 
 userSchema.pre("save", function(next) {
-  let user = this;
+  const user = this;
   bcrypt.genSalt(10, function(err, salt) {
     if (err) {
       console.log("generating salt failed");

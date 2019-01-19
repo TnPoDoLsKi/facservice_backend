@@ -27,7 +27,7 @@ export async function create(req, res) {
 }
 export async function getAll(req, res) {
   try {
-    let levels = await Level.find();
+    const levels = await Level.find();
 
     return res.json(levels);
   } catch (error) {
@@ -43,7 +43,7 @@ export async function getOne(req, res) {
         error: "id cannot be empty"
       });
 
-    let level = await Level.findById({
+    const level = await Level.findById({
       _id: req.params.id
     });
 
@@ -67,7 +67,7 @@ export async function update(req, res) {
         error: "description is required !"
       });
 
-    let level = await Level.findOne({ _id: req.params.id });
+    const level = await Level.findOne({ _id: req.params.id });
     if (!level)
       return res.status(400).json({
         code: 126,
@@ -92,11 +92,9 @@ export async function remove(req, res) {
         code: 126,
         error: "id cannot be empty"
       });
-    let level = await Level.deleteOne(
-      {
-        _id: req.params.id
-      }
-    );
+    const level = await Level.deleteOne({
+      _id: req.params.id
+    });
 
     return res.json(level);
   } catch (error) {

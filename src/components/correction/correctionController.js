@@ -3,7 +3,7 @@ import { Correction } from "../../config/models";
 
 export async function getAll(req, res) {
   try {
-    let corrections = await Correction.find();
+    const corrections = await Correction.find();
     return res.json(corrections);
   } catch (error) {
     console.log(error);
@@ -17,7 +17,7 @@ export async function getDocCorrections(req, res) {
       return res.status(400).json({
         error: "Document id cannot be empty!"
       });
-    let corrections = await Correction.find({
+    const corrections = await Correction.find({
       document: req.params.docID
     });
     return res.json(corrections);
@@ -33,7 +33,7 @@ export async function getOne(req, res) {
       return res.status(400).json({
         error: "Correction id cannot be empty!"
       });
-    let correction = await Correction.find({
+    const correction = await Correction.find({
       _id: req.params.corrID
     })
       .populate("document")
@@ -79,7 +79,13 @@ export async function update(req, res) {
         error: "Correction id cannot be empty!"
       });
 
-    let correction = _.pick(req.body, "title", "filePath", "user", "document");
+    const correction = _.pick(
+      req.body,
+      "title",
+      "filePath",
+      "user",
+      "document"
+    );
     await Correction.findOne(
       {
         title: correction.title,
@@ -107,7 +113,7 @@ export async function update(req, res) {
     return res.status(204).end();
   } catch (error) {
     console.log(error);
-    if (error.name == "CastError")
+    if (error.name === "CastError")
       return res.status(400).json({
         error: error.message
       });
@@ -130,7 +136,7 @@ export async function remove(req, res) {
     return res.status(204).end();
   } catch (error) {
     console.log(error);
-    if (error.name == "CastError")
+    if (error.name === "CastError")
       return res.status(400).json({
         error: error.message
       });

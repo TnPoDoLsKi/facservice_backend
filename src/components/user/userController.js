@@ -11,7 +11,7 @@ export async function getByType(req, res) {
       return res.status(400).end();
     }
 
-    let users = await User.find({
+    const users = await User.find({
       type: req.params.type
     })
       .select("-hashedPassword")
@@ -26,7 +26,7 @@ export async function getByType(req, res) {
 
 export async function getAll(req, res) {
   try {
-    let users = await User.find()
+    const users = await User.find()
       .select("-hashedPassword")
       .populate("major")
       .exec();
@@ -43,7 +43,7 @@ export async function update(req, res) {
       return res.status(400).end();
     }
 
-    let user = _.pick(
+    const user = _.pick(
       req.body,
       "email",
       "hashedPassword",
@@ -69,7 +69,7 @@ export async function update(req, res) {
     }
 
     if (user.hashedPassword) {
-      let salt = bcrypt.genSaltSync(10);
+      const salt = bcrypt.genSaltSync(10);
       user.hashedPassword = bcrypt.hashSync(user.hashedPassword, salt);
     }
 

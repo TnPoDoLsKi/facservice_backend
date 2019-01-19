@@ -4,7 +4,7 @@ import {
   update,
   remove,
   getAll,
-  addSubjects 
+  addSubjects
 } from "./majorController";
 
 export default function(router) {

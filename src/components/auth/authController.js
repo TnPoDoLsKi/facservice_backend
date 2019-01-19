@@ -3,11 +3,11 @@ import User from "../user/user";
 import jwt from "jsonwebtoken";
 import { SECRET } from "../../config/env";
 import Major from "../major/major";
-//import { upload } from "../../services/uploadService";
+// import { upload } from "../../services/uploadService";
 
 export async function create(req, res) {
   try {
-    let user = _.pick(
+    const user = _.pick(
       req.body,
       "email",
       "hashedPassword",
@@ -46,6 +46,9 @@ export async function create(req, res) {
 export async function signIn(req, res) {
   try {
     await User.findOne({ email: req.body.email }, (err, user) => {
+      if (err) {
+        return res.status(500).end(err);
+      }
       if (!user) {
         return res.status(400).end();
       }
@@ -60,7 +63,7 @@ export async function signIn(req, res) {
             "major",
             "avatar"
           );
-          let token = jwt.sign(userData, SECRET, {
+          const token = jwt.sign(userData, SECRET, {
             expiresIn: 604800
           });
           req.session.token = token;

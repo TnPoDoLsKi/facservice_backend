@@ -27,7 +27,7 @@ export async function create(req, res) {
 }
 export async function getAll(req, res) {
   try {
-    let section = await Section.find();
+    const section = await Section.find();
 
     return res.json(section);
   } catch (error) {
@@ -43,7 +43,7 @@ export async function getOne(req, res) {
         error: "id cannot be empty"
       });
 
-    let section = await Section.findById({
+    const section = await Section.findById({
       _id: req.params.id
     });
 
@@ -67,7 +67,7 @@ export async function update(req, res) {
         error: "description is required !"
       });
 
-    let section = await Section.findOne({ _id: req.params.id });
+    const section = await Section.findOne({ _id: req.params.id });
     if (!section)
       return res.status(400).json({
         code: 126,
@@ -92,11 +92,9 @@ export async function remove(req, res) {
         code: 126,
         error: "id cannot be empty"
       });
-    let section = await Section.deleteOne(
-      {
-        _id: req.params.id
-      }
-    );
+    const section = await Section.deleteOne({
+      _id: req.params.id
+    });
 
     return res.json(section);
   } catch (error) {

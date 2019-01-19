@@ -17,7 +17,7 @@ export async function search(req, res) {
         keys: ["title", "major", "year", "type"]
       };
       const documents = await Document.find();
-      let fuse = new Fuse(documents, options);
+      const fuse = new Fuse(documents, options);
       const result = fuse.search(req.query.name);
 
       return res.status(200).json(result);

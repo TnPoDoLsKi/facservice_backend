@@ -1,18 +1,18 @@
-import mongooseLib from 'mongoose';
-import {BD, DB} from './src/config/env';
-import FormationsSeeder from './seeders/formations.seeder';
-import LevelsSeeder from './seeders/levels.seeder';
-import SectionsSeeder from './seeders/sections.seeder';
-import SubjectsSeeder from './seeders/subjects.seeder';
-import MajorsSeeder from './seeders/majors.seeder';
+import mongooseLib from 'mongoose'
+import { DB } from './src/config/env'
+import FormationsSeeder from './seeders/formations.seeder'
+import LevelsSeeder from './seeders/levels.seeder'
+import SectionsSeeder from './seeders/sections.seeder'
+import SubjectsSeeder from './seeders/subjects.seeder'
+import MajorsSeeder from './seeders/majors.seeder'
 
-mongooseLib.Promise = global.Promise;
+mongooseLib.Promise = global.Promise
 
 // Export the mongoose lib
-export const mongoose = mongooseLib;
+export const mongoose = mongooseLib
 
 // Export the mongodb url
-export const mongoURL = DB;
+export const mongoURL = DB
 
 /*
   Seeders List
@@ -25,4 +25,4 @@ export const seedersList = {
   Formations: FormationsSeeder,
   Subjects: SubjectsSeeder,
   Majors: MajorsSeeder
-};
+}
