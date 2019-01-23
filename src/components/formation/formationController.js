@@ -69,7 +69,7 @@ export async function update(req, res) {
         error: "description is required !"
       });
 
-    const formation = await Formation.findOne({ _id: req.params.id });
+    let formation = await Formation.findOne({ _id: req.params.id });
     if (!formation)
       return res.status(400).json({
         code: 126,

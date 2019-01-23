@@ -1,5 +1,5 @@
 import _ from "lodash";
-import Document from "./document";
+import { Document, Correction } from "../../config/models";
 // import { upload } from "../../services/uploadService";
 
 export async function getAll(req, res) {
@@ -59,6 +59,89 @@ export async function getOne(req, res) {
       .exec();
 
     return res.json(document);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).end();
+  }
+}
+
+/**
+ * @api {get} /documents/:id/corrections Get all corrections for a specific document
+ * @apiGroup Documents
+ * @apiName getDocCorrections
+ * @apiParam {id} id Document id
+ * @apiSuccess {Number} _id Correction id
+ * @apiSuccess {Boolean} approved Whether the correction document is approved by the admin
+ * @apiSuccess {Number} score Correction score
+ * @apiSuccess {String} title Correction title
+ * @apiSuccess {String} filePath Correction file path
+ * @apiSuccess {Object} user Correction Owner
+ * @apiSuccess {String} document Correction document
+ * @apiSuccess {Date} updated_at Update's date
+ * @apiSuccess {Date} created_at Register's date
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 OK
+ * [
+    {
+        "approved": false,
+        "score": 0,
+        "_id": "5c41e6b8f6417937d0a24ace",
+        "title": "correction ex 2016",
+        "filePath": "/uploads/jdhgfhd.jpg",
+        "user": {
+            "type": "student",
+            "_id": "5c2426542a7e2f361896f812",
+            "email": "mohamed@test.com",
+            "hashedPassword": "$2b$10$7iOFilgwRN/qoXNA5KJuVuyiofVXvjmVEcn0MVivS4F7ne.vI9MWq",
+            "firstName": "mohamed",
+            "lastName": "mohamed",
+            "major": "5c1fb346e28363333004f02c"
+        },
+        "document": "5c41df5e0000d416fc5158fd",
+        "createdAt": "2019-01-18T14:46:16.612Z",
+        "updatedAt": "2019-01-18T14:46:16.612Z"
+    },
+    {
+        "approved": false,
+        "score": 0,
+        "_id": "5c41e6cdf6417937d0a24acf",
+        "title": "correction ds 2018",
+        "filePath": "/uploads/jdhgfhd.jpg",
+        "user": {
+            "type": "student",
+            "_id": "5c2426542a7e2f361896f812",
+            "email": "mohamed@test.com",
+            "hashedPassword": "$2b$10$7iOFilgwRN/qoXNA5KJuVuyiofVXvjmVEcn0MVivS4F7ne.vI9MWq",
+            "firstName": "mohamed",
+            "lastName": "mohamed",
+            "major": "5c1fb346e28363333004f02c"
+        },
+        "document": "5c41df5e0000d416fc5158fd",
+        "createdAt": "2019-01-18T14:46:37.828Z",
+        "updatedAt": "2019-01-18T14:46:37.828Z"
+    }
+]
+ * @apiErrorExample {json} Task not found
+ *    HTTP/1.1 404 Not Found
+ * @apiErrorExample {json} Find error
+ *    HTTP/1.1 500 Internal Server Error
+ */
+
+export async function getDocCorrections(req, res) {
+  try {
+    if (!req.params.id)
+      return res.status(400).json({
+        error: "Document id cannot be empty!"
+      });
+    const corrections = await Correction.find({
+      document: req.params.id
+    })
+      .populate({
+        path: "user",
+        select: "-deleted"
+      })
+      .exec();
+    return res.json(corrections);
   } catch (error) {
     console.log(error);
     return res.status(500).end();
