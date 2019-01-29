@@ -10,7 +10,8 @@
     "start": "nodemon --exec babel-node -- ./src/",
     "lint": "eslint --fix **/*.js",
     "docs": "apidoc -i src/ -o apidoc/",
-    "build": "node ./node_modules/babel-cli/bin/babel.js src --out-dir build --copy-files"
+    "build": "node ./node_modules/babel-cli/bin/babel.js src --out-dir build --copy-files",
+    "update": "git pull origin master; npm run build; pm2 restart archive; pm2 logs"
   },
   "apidoc": {
     "title": "Custom apiDoc browser title",
