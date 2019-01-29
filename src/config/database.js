@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
 import { DB } from "./env";
 
+console.log(DB);
+
 mongoose.connect(
   DB,
   {
