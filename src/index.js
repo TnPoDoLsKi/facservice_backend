@@ -36,8 +36,11 @@ app.use(
 app.use(morgan("dev"));
 app.use(cors());
 app.use("/api", routes);
-app.use("/uploads/", express.static(path.join(__dirname, "/uploads")));
-app.use("/apidoc/", express.static(path.join(__dirname, "/../apidoc")));
+app.use(
+  "/uploads/",
+  express.static(path.join(__dirname, "/../public/uploads/"))
+);
+app.use("/apidoc/", express.static(path.join(__dirname, "/../public/apidoc/")));
 
 server.listen(PORT, () =>
   console.log(`start in ${NODE_ENV} environment on port ${PORT}`)

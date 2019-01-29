@@ -4,7 +4,7 @@ import path from "path";
 // upload
 const config = {
   // storage
-  uploadDir: path.join(__dirname, "..", "uploads"),
+  uploadDir: path.join(__dirname, "../../public", "uploads"),
   maxFileSize: 10 * 1024 * 1024,
   multiple: true
 };
@@ -32,7 +32,9 @@ export async function upload(req, res) {
         file: file meta 
     */
   const _fileHandler = (name, file) => {
-    fileUrls.push(file.path);
+    const host = req.protocol + "://" + req.headers.host;
+    const url = host + "/uploads/" + file.path.split("\\").pop();
+    fileUrls.push(url);
     return fileUrls;
   };
   /* 
