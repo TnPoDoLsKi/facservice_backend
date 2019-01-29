@@ -1007,7 +1007,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Input",
-          "content": "{\n  \"title\": \"correction ds analyse 2018\",\n  \"type\": \"DS\",\n  \"filePath\": \"/uploads/jdhgfhd.jpg\",\n  \"user\": \"5c2426542a7e2f361896f812\",\n  \"major\": \"5c41df5e0000d416fc5158fd\",\n  \"subject\": \"5c41b2d82383c111b4ffad1a\",\n  \"year\": \"2017\",\n  \"semestre\": \"1\",\n  \"profName\": \"profX\",\n  \"session\": \"Controle\",\n  \"corrections\": [\"5c41ccd20dbd0934ccc59a0e\",\"5c41cd34dfe31425c014f85e\"]\n}",
+          "content": "{\n  \"title\": \"ds analyse 2018\",\n  \"type\": \"DS\",\n  \"filePath\": \"/uploads/jdhgfhd.jpg\",\n  \"user\": \"5c2426542a7e2f361896f812\",\n  \"major\": \"5c41df5e0000d416fc5158fd\",\n  \"subject\": \"5c41b2d82383c111b4ffad1a\",\n  \"year\": \"2017\",\n  \"semestre\": \"1\",\n  \"profName\": \"profX\",\n  \"session\": \"Controle\",\n  \"corrections\": [\"5c41ccd20dbd0934ccc59a0e\",\"5c41cd34dfe31425c014f85e\"]\n}",
           "type": "json"
         }
       ]
@@ -1016,7 +1016,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success",
-          "content": "   HTTP/1.1 200 OK\n{\n    \"type\": \"DS\",\n    \"semestre\": 1,\n    \"approved\": false,\n    \"session\": \"Controle\",\n    \"corrections\": [],\n    \"_id\": \"5c4f8ce1fcf8b220f82633dd\",\n    \"title\": \"correction ds analyse 2018\",\n    \"filePath\": \"/uploads/jdhgfhd.jpg\",\n    \"major\": \"5c41df5e0000d416fc5158fd\",\n    \"subject\": \"5c41b2d82383c111b4ffad1a\",\n    \"year\": 2017,\n    \"user\": \"5c2426542a7e2f361896f812\",\n    \"profName\": \"profX\",\n    \"corrections\" : [ \n        ObjectId(\"5c41ccd20dbd0934ccc59a0e\"), \n        ObjectId(\"5c41cd34dfe31425c014f85e\")\n    ],\n    \"createdAt\": \"2019-01-28T23:14:41.584Z\",\n    \"updatedAt\": \"2019-01-28T23:14:41.584Z\"\n}",
+          "content": "   HTTP/1.1 200 OK\n{\n    \"type\": \"DS\",\n    \"semestre\": 1,\n    \"approved\": false,\n    \"session\": \"Controle\",\n    \"corrections\": [],\n    \"_id\": \"5c4f8ce1fcf8b220f82633dd\",\n    \"title\": \"ds analyse 2018\",\n    \"filePath\": \"/uploads/jdhgfhd.jpg\",\n    \"major\": \"5c41df5e0000d416fc5158fd\",\n    \"subject\": \"5c41b2d82383c111b4ffad1a\",\n    \"year\": 2017,\n    \"user\": \"5c2426542a7e2f361896f812\",\n    \"profName\": \"profX\",\n    \"corrections\" : [ \n        ObjectId(\"5c41ccd20dbd0934ccc59a0e\"), \n        ObjectId(\"5c41cd34dfe31425c014f85e\")\n    ],\n    \"createdAt\": \"2019-01-28T23:14:41.584Z\",\n    \"updatedAt\": \"2019-01-28T23:14:41.584Z\"\n}",
           "type": "json"
         }
       ]
@@ -1137,7 +1137,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Input",
-          "content": "{\n        \"id\": \"5c4f8da2fcf8b220f82633de\",\n     \"title\": \"correction ds analyse 2018\",\n     \"type\": \"DS\",\n     \"filePath\": \"/uploads/jdhgfhd.jpg\",\n     \"user\": \"5c2426542a7e2f361896f812\",\n     \"major\": \"5c41df5e0000d416fc5158fd\",\n     \"subject\": \"5c41b2d82383c111b4ffad1a\",\n     \"year\": \"2017\",\n     \"semestre\": \"1\",\n     \"profName\": \"profX\",\n     \"session\": \"Controle\",\n     \"corrections\": [\"5c41ccd20dbd0934ccc59a0e\",\"5c41cd34dfe31425c014f85e\"]\n   }",
+          "content": "{\n        \"id\": \"5c4f8da2fcf8b220f82633de\",\n     \"title\": \"ds analyse 2018\",\n     \"type\": \"DS\",\n     \"filePath\": \"/uploads/jdhgfhd.jpg\",\n     \"user\": \"5c2426542a7e2f361896f812\",\n     \"major\": \"5c41df5e0000d416fc5158fd\",\n     \"subject\": \"5c41b2d82383c111b4ffad1a\",\n     \"year\": \"2017\",\n     \"semestre\": \"1\",\n     \"profName\": \"profX\",\n     \"session\": \"Controle\",\n     \"corrections\": [\"5c41ccd20dbd0934ccc59a0e\",\"5c41cd34dfe31425c014f85e\"]\n   }",
           "type": "json"
         }
       ]
@@ -1169,6 +1169,52 @@ define({ "api": [
     "filename": "src/components/document/documentController.js",
     "groupTitle": "Documents",
     "name": "PutDocuments"
+  },
+  {
+    "type": "post",
+    "url": "/documents/upload",
+    "title": "Upload a document or a correction",
+    "group": "Documents",
+    "name": "Upload",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "File",
+            "optional": false,
+            "field": "files",
+            "description": "<p>File to upload</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Uploaded",
+          "content": "   HTTP/1.1 200 OK\n[ \"http://igc.tn:3005/api/uploads/upload_5cbbe9e1efb762ef40c52a9c9610e5b0.jpg\" ]",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Register error",
+          "content": "HTTP/1.1 500 Internal Server Error",
+          "type": "json"
+        },
+        {
+          "title": "Find Error",
+          "content": "HTTP/1.1 444 Request canceled",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "src/components/document/documentController.js",
+    "groupTitle": "Documents"
   },
   {
     "type": "post",

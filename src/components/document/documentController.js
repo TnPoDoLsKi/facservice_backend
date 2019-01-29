@@ -428,3 +428,17 @@ export async function remove(req, res) {
     return res.status(500).end();
   }
 }
+
+/**
+ * @api {post} /documents/upload Upload a document or a correction
+ * @apiGroup Documents
+ * @apiName Upload
+ * @apiParam {File} files File to upload
+ * @apiSuccessExample {json} Uploaded
+ *    HTTP/1.1 200 OK
+ * [ "http://igc.tn:3005/api/uploads/upload_5cbbe9e1efb762ef40c52a9c9610e5b0.jpg" ]
+ * @apiErrorExample {json} Register error
+ *    HTTP/1.1 500 Internal Server Error
+ * @apiErrorExample {json} Find Error
+ *    HTTP/1.1 444 Request canceled
+ */
