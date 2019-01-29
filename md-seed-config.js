@@ -6,6 +6,8 @@ import SectionsSeeder from './seeders/sections.seeder'
 import SubjectsSeeder from './seeders/subjects.seeder'
 import MajorsSeeder from './seeders/majors.seeder'
 import UsersSeeder from './seeders/users.seeder'
+import DocumentsSeeder from './seeders/documents.seeder'
+import CorrectionsSeeder from './seeders/corrections.seeder'
 
 mongooseLib.Promise = global.Promise
 
@@ -26,5 +28,7 @@ export const seedersList = {
   Formations: FormationsSeeder,
   Subjects: SubjectsSeeder,
   Majors: MajorsSeeder,
-  Users: UsersSeeder
+  Users: UsersSeeder,
+  DocumentsSeeder,
+  CorrectionsSeeder
 }

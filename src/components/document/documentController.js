@@ -201,7 +201,7 @@ export async function getOne(req, res) {
  * @apiParam {Array} corrections Document corrections
  * @apiParamExample {json} Input
  *    {
- *      "title": "correction ds analyse 2018",
+ *      "title": "ds analyse 2018",
  *      "type": "DS",
  *      "filePath": "/uploads/jdhgfhd.jpg",
  *      "user": "5c2426542a7e2f361896f812",
@@ -222,7 +222,7 @@ export async function getOne(req, res) {
     "session": "Controle",
     "corrections": [],
     "_id": "5c4f8ce1fcf8b220f82633dd",
-    "title": "correction ds analyse 2018",
+    "title": "ds analyse 2018",
     "filePath": "/uploads/jdhgfhd.jpg",
     "major": "5c41df5e0000d416fc5158fd",
     "subject": "5c41b2d82383c111b4ffad1a",
@@ -310,7 +310,7 @@ export async function create(req, res) {
  * @apiParamExample {json} Input
 {
         "id": "5c4f8da2fcf8b220f82633de",
- *      "title": "correction ds analyse 2018",
+ *      "title": "ds analyse 2018",
  *      "type": "DS",
  *      "filePath": "/uploads/jdhgfhd.jpg",
  *      "user": "5c2426542a7e2f361896f812",
