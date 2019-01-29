@@ -1,6 +1,6 @@
 define({
   "title": "Custom apiDoc browser title",
-  "url": "http://localhost:3000/api",
+  "url": "http://igc.tn:3005/api",
   "template": {
     "forceLanguage": "en"
   },
@@ -12,7 +12,7 @@ define({
   "apidoc": "0.3.0",
   "generator": {
     "name": "apidoc",
-    "time": "2019-01-28T23:39:00.550Z",
+    "time": "2019-01-29T14:12:53.839Z",
     "url": "http://apidocjs.com",
     "version": "0.17.7"
   }

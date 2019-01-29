@@ -14,7 +14,7 @@
   },
   "apidoc": {
     "title": "Custom apiDoc browser title",
-    "url": "http://igc.tn:3000/api",
+    "url": "http://igc.tn:3005/api",
     "template": {
       "forceLanguage": "en"
     }

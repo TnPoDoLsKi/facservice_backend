@@ -5,6 +5,7 @@ import bodyParser from "body-parser";
 import routes from "./config/routes";
 import session from "express-session";
 import cors from "cors";
+import path from "path";
 import "./config/database";
 import { SECRET, PORT, NODE_ENV } from "./config/env";
 
@@ -35,6 +36,8 @@ app.use(
 app.use(morgan("dev"));
 app.use(cors());
 app.use("/api", routes);
+app.use("/uploads/", express.static(path.join(__dirname, "/uploads")));
+app.use("/apidoc/", express.static(path.join(__dirname, "/../apidoc")));
 
 server.listen(PORT, () =>
   console.log(`start in ${NODE_ENV} environment on port ${PORT}`)

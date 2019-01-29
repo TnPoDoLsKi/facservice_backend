@@ -623,7 +623,7 @@
     "error": {
       "examples": [
         {
-          "title": "document id cannot be empty",
+          "title": "Document id cannot be empty",
           "content": "HTTP/1.1 400 Not Found",
           "type": "json"
         },

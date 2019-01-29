@@ -3,6 +3,8 @@ build
 *.log
 package-lock.json
 
+ecosystem.config.js
+
 
 # compiled output
 /dist
