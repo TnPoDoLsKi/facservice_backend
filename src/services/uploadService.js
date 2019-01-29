@@ -34,8 +34,7 @@ export async function upload(req, res) {
   const _fileHandler = (name, file) => {
     const host = req.protocol + "://" + req.headers.host;
     const url = host + "/uploads/" + file.path.split("\\").pop();
-    console.log(host)
-    console.log(file.path.split("\\").pop())
+    console.log(file.path)
     fileUrls.push(url);
     return fileUrls;
   };
