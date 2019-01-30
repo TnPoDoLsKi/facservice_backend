@@ -77,6 +77,8 @@ export async function getAll(req, res) {
       .populate("subjects")
       .exec();
 
+      console.log(majors)
+
     return res.json(majors);
   } catch (error) {
     console.log(error);
