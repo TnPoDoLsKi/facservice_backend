@@ -77,8 +77,6 @@ export async function getAll(req, res) {
       .populate("subjects")
       .exec();
 
-      console.log(majors)
-
     return res.json(majors);
   } catch (error) {
     console.log(error);
@@ -94,7 +92,9 @@ export async function getOne(req, res) {
 
     const major = await Major.findById({
       _id: req.params.id
-    });
+    })
+      .populate("subjects")
+      .exec();
 
     return res.json(major);
   } catch (error) {
