@@ -25,7 +25,7 @@ const documentSchema = new mongoose.Schema(
     },
     subject: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "subject"
+      ref: "Subject"
     },
     year: {
       type: Number

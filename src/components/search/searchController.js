@@ -2,7 +2,7 @@ import Document from "../document/document";
 import Fuse from "fuse.js";
 
 /**
- * @api {post} /search Search all documents
+ * @api {get} /search Search all documents
  * @apiGroup Search
  * @apiParam {String} name Search query
  * @apiParamExample {json} Input

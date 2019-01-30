@@ -33,4 +33,4 @@ subjectSchema.plugin(mongooseDelete, {
   deletedBy: true
 });
 
-export default mongoose.model("subject", subjectSchema);
+export default mongoose.model("Subject", subjectSchema);

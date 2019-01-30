@@ -1217,7 +1217,7 @@
     "groupTitle": "Documents"
   },
   {
-    "type": "post",
+    "type": "get",
     "url": "/search",
     "title": "Search all documents",
     "group": "Search",
@@ -1267,7 +1267,7 @@
     "version": "0.0.0",
     "filename": "src/components/search/searchController.js",
     "groupTitle": "Search",
-    "name": "PostSearch"
+    "name": "GetSearch"
   },
   {
     "type": "delete",
