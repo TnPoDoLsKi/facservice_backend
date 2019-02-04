@@ -78,7 +78,7 @@ export async function getAll(req, res) {
 }
 
 /**
- * @api {get} /correction/:id Get one correction
+ * @api {get} /corrections/:id Get one correction
  * @apiGroup Corrections
  * @apiParam {id} id Correction id
  * @apiSuccess {Number} _id Correction id
@@ -155,7 +155,7 @@ export async function getOne(req, res) {
 }
 
 /**
- * @api {post} /correction Create Correction
+ * @api {post} /corrections Create Correction
  * @apiGroup Corrections
  * @apiParam {String} title Correction title
  * @apiParam {String} filePath Correction document file url
@@ -202,7 +202,7 @@ export async function create(req, res) {
 }
 
 /**
- * @api {put} /correction Update Correction
+ * @api {put} /corrections/:id Update Correction
  * @apiGroup Corrections
  * @apiParam {id} id Correction id
  * @apiParam {String} title Correction title
@@ -258,7 +258,7 @@ export async function update(req, res) {
 }
 
 /**
- * @api {delete} /correction Delete Correction
+ * @api {delete} /corrections/:id Delete Correction
  * @apiGroup Corrections
  * @apiParam {id} id Correction id
  * @apiSuccessExample {json} Success
