@@ -69,7 +69,24 @@ export async function search(req, res) {
         minMatchCharLength: 2,
         keys: ["title", "major", "year", "type"]
       };
-      const documents = await Document.find();
+      const documents = await Document.find()
+        .populate({
+          path: "user",
+          select: "-major -avatar -hashedPassword"
+        })
+        .populate({
+          path: "major",
+          select: "-subjects -formation -level -section"
+        })
+        .populate({
+          path: "subject",
+          select: "-deleted"
+        })
+        .populate({
+          path: "corrections",
+          select: "-deleted"
+        })
+        .exec();
       const fuse = new Fuse(documents, options);
       const result = fuse.search(req.query.name);
       let docs = result.map(resl => {

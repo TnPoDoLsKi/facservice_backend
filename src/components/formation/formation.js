@@ -17,4 +17,4 @@ formationSchema.plugin(mongooseDelete, {
   deletedBy: true
 });
 
-export default mongoose.model("formation", formationSchema);
+export default mongoose.model("Formation", formationSchema);

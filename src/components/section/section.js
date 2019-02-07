@@ -17,4 +17,4 @@ sectionSchema.plugin(mongooseDelete, {
   deletedBy: true
 });
 
-export default mongoose.model("section", sectionSchema);
+export default mongoose.model("Section", sectionSchema);

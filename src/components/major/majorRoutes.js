@@ -9,15 +9,10 @@ import {
 import { isLoggedIn, isAdmin } from "../../services/middlewares";
 
 export default function(router) {
-  router.get("/majors", getAll); /* tested */
-  router.get("/majors/:id", getOne); /* tested */
+  router.get("/majors", getAll);
+  router.get("/majors/:id", getOne);
   router.post("/majors", isLoggedIn, isAdmin, create);
-  router.put("/majors/:id", isLoggedIn, isAdmin, update); /* tested */
-  router.delete("/majors/:id", isLoggedIn, isAdmin, remove); /* tested */
-  router.put(
-    "/majors/:id/subjects/",
-    isLoggedIn,
-    isAdmin,
-    addSubjects
-  ); /* Done */
+  router.put("/majors/:id", isLoggedIn, isAdmin, update);
+  router.delete("/majors/:id", isLoggedIn, isAdmin, remove);
+  router.put("/majors/:id/subjects/", isLoggedIn, isAdmin, addSubjects);
 }

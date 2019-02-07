@@ -35,14 +35,8 @@ import Major from "../major/major";
  */
 export async function create(req, res) {
   try {
-    const user = _.pick(
-      req.body,
-      "email",
-      "password",
-      "type",
-      "firstName",
-      "lastName"
-    );
+    const user = _.pick(req.body, "email", "type", "firstName", "lastName");
+    user.hashedPassword = req.body.password;
 
     await User.findOne(
       {

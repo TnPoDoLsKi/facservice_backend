@@ -199,6 +199,8 @@ export async function getOne(req, res) {
  * @apiParam {String} session Document session
  * @apiParam {String} profName Document professor
  * @apiParam {Array} corrections Document corrections
+ * @apiHeader Authorization Bearer Token
+ * @apiHeader Content-Type application/x-www-form-urlencoded
  * @apiParamExample {json} Input
  *    {
  *      "title": "ds analyse 2018",
@@ -307,6 +309,8 @@ export async function create(req, res) {
  * @apiParam {String} session Document session
  * @apiParam {String} profName Document professor
  * @apiParam {Array} corrections Document corrections
+ * @apiHeader Authorization Bearer Token
+ * @apiHeader Content-Type application/x-www-form-urlencoded
  * @apiParamExample {json} Input
 {
         "id": "5c4f8da2fcf8b220f82633de",
@@ -398,6 +402,8 @@ export async function update(req, res) {
  * @api {delete} /documents Delete a document
  * @apiGroup Documents
  * @apiParam {id} id documents id
+ * @apiHeader Authorization Bearer Token
+ * @apiHeader Content-Type application/x-www-form-urlencoded
  * @apiSuccessExample {json} Success
  *    HTTP/1.1 204 Deleted (No Content)
  * @apiErrorExample {json} Document id cannot be empty
@@ -428,17 +434,3 @@ export async function remove(req, res) {
     return res.status(500).end();
   }
 }
-
-/**
- * @api {post} /documents/upload Upload a document or a correction
- * @apiGroup Documents
- * @apiName Upload
- * @apiParam {File} files File to upload
- * @apiSuccessExample {json} Uploaded
- *    HTTP/1.1 200 OK
- * [ "http://igc.tn:3005/api/uploads/upload_5cbbe9e1efb762ef40c52a9c9610e5b0.jpg" ]
- * @apiErrorExample {json} Register error
- *    HTTP/1.1 500 Internal Server Error
- * @apiErrorExample {json} Find Error
- *    HTTP/1.1 444 Request canceled
- */

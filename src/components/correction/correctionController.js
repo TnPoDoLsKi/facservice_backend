@@ -161,6 +161,8 @@ export async function getOne(req, res) {
  * @apiParam {String} filePath Correction document file url
  * @apiParam {String} user Correction owner (id)
  * @apiParam {String} document Correction document (id)
+ * @apiHeader Authorization Bearer Token
+ * @apiHeader Content-Type application/x-www-form-urlencoded
  * @apiParamExample {json} Input
  *    {
  *      "title": "correction ds analyse 2018",
@@ -209,6 +211,8 @@ export async function create(req, res) {
  * @apiParam {String} filePath Correction document file url
  * @apiParam {String} user Correction owner (id)
  * @apiParam {String} document Correction document (id)
+ * @apiHeader Authorization Bearer Token
+ * @apiHeader Content-Type application/x-www-form-urlencoded
  * @apiParamExample {json} Input
  *    {
  *      "id": "5c41e6cdf6417937d0a24acf",
@@ -261,6 +265,8 @@ export async function update(req, res) {
  * @api {delete} /corrections/:id Delete Correction
  * @apiGroup Corrections
  * @apiParam {id} id Correction id
+ * @apiHeader Authorization Bearer Token
+ * @apiHeader Content-Type application/x-www-form-urlencoded
  * @apiSuccessExample {json} Success
  *    HTTP/1.1 204 Deleted (No Content)
  * @apiErrorExample {json} Correction id cannot be empty

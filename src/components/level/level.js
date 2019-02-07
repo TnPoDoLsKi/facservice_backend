@@ -17,4 +17,4 @@ levelSchema.plugin(mongooseDelete, {
   deletedBy: true
 });
 
-export default mongoose.model("level", levelSchema);
+export default mongoose.model("Level", levelSchema);

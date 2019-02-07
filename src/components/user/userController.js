@@ -6,6 +6,8 @@ import bcrypt from "bcrypt";
  * @api {get} /users/:type Get all users by type
  * @apiGroup Users
  * @apiParam {String} type User type (student or prof)
+ * @apiHeader Authorization Bearer Token
+ * @apiHeader Content-Type application/x-www-form-urlencoded
  * @apiSuccessExample {json} Success
  *    HTTP/1.1 200 OK
  [
@@ -58,6 +60,8 @@ export async function getByType(req, res) {
 /**
  * @api {get} /users Get all users
  * @apiGroup Users
+ * @apiHeader Authorization Bearer Token
+ * @apiHeader Content-Type application/x-www-form-urlencoded
  * @apiSuccessExample {json} Success
  *    HTTP/1.1 200 OK
  * [
@@ -116,6 +120,8 @@ export async function getAll(req, res) {
  * @apiParam {String} lastName User last name
  * @apiParam {String} avatar User profile picture file path
  * @apiParam {String} major User major (id)
+ * @apiHeader Authorization Bearer Token
+ * @apiHeader Content-Type application/x-www-form-urlencoded
  * @apiParamExample {json} Input
  *    {
  *      "email": "test@test.com",
@@ -183,6 +189,8 @@ export async function update(req, res) {
  * @api {delete} /user Delete User
  * @apiGroup Users
  * @apiParam {id} id User id
+ * @apiHeader Authorization Bearer Token
+ * @apiHeader Content-Type application/x-www-form-urlencoded
  * @apiSuccessExample {json} Success
  *    HTTP/1.1 204 Deleted (No Content)
  * @apiErrorExample {json} User id cannot be empty

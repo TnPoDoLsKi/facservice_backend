@@ -1,4 +1,6 @@
-import { Seeder } from 'mongoose-data-seed'
+import {
+  Seeder
+} from 'mongoose-data-seed'
 import {
   Subject
 } from '../src/config/models'
@@ -160,7 +162,10 @@ const data = [{
 }, {
   name: 'Marketing Industriel',
   semestre: 1
-}]
+}
+]
+
+/// add major field
 
 class SubjectsSeeder extends Seeder {
   async shouldRun () {
