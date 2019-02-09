@@ -2766,7 +2766,35 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "/subject/:id",
+    "url": "/subjects",
+    "title": "Get all subjects",
+    "group": "Subjects",
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "   HTTP/1.1 200 OK\n[\n    {\n        \"semestre\": 1,\n        \"documents\": [],\n        \"_id\": \"5c3e3542077225388404c0d8\",\n        \"name\": \"Mathématiques discrètes\",\n        \"createdAt\": \"2019-01-15T19:32:18.963Z\",\n        \"updatedAt\": \"2019-01-15T19:32:18.963Z\"\n    },\n    {\n        \"semestre\": 1,\n        \"documents\": [],\n        \"_id\": \"5c3e3542077225388404c0d9\",\n        \"name\": \"Probabilité et Statistiques\",\n        \"createdAt\": \"2019-01-15T19:32:18.963Z\",\n        \"updatedAt\": \"2019-01-15T19:32:18.963Z\"\n    }\n]",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Find error",
+          "content": "HTTP/1.1 500 Internal Server Error",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "src/components/subject/subjectController.js",
+    "groupTitle": "Subjects",
+    "name": "GetSubjects"
+  },
+  {
+    "type": "get",
+    "url": "/subjects/:id",
     "title": "Get one Subject",
     "group": "Subjects",
     "success": {
@@ -2795,35 +2823,7 @@ define({ "api": [
     "version": "0.0.0",
     "filename": "src/components/subject/subjectController.js",
     "groupTitle": "Subjects",
-    "name": "GetSubjectId"
-  },
-  {
-    "type": "get",
-    "url": "/subjects",
-    "title": "Get all subjects",
-    "group": "Subjects",
-    "success": {
-      "examples": [
-        {
-          "title": "Success",
-          "content": "   HTTP/1.1 200 OK\n[\n    {\n        \"semestre\": 1,\n        \"documents\": [],\n        \"_id\": \"5c3e3542077225388404c0d8\",\n        \"name\": \"Mathématiques discrètes\",\n        \"createdAt\": \"2019-01-15T19:32:18.963Z\",\n        \"updatedAt\": \"2019-01-15T19:32:18.963Z\"\n    },\n    {\n        \"semestre\": 1,\n        \"documents\": [],\n        \"_id\": \"5c3e3542077225388404c0d9\",\n        \"name\": \"Probabilité et Statistiques\",\n        \"createdAt\": \"2019-01-15T19:32:18.963Z\",\n        \"updatedAt\": \"2019-01-15T19:32:18.963Z\"\n    }\n]",
-          "type": "json"
-        }
-      ]
-    },
-    "error": {
-      "examples": [
-        {
-          "title": "Find error",
-          "content": "HTTP/1.1 500 Internal Server Error",
-          "type": "json"
-        }
-      ]
-    },
-    "version": "0.0.0",
-    "filename": "src/components/subject/subjectController.js",
-    "groupTitle": "Subjects",
-    "name": "GetSubjects"
+    "name": "GetSubjectsId"
   },
   {
     "type": "post",

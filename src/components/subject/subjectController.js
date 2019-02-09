@@ -93,7 +93,7 @@ export async function getAll(req, res) {
 }
 
 /**
- * @api {get} /subject/:id Get one Subject
+ * @api {get} /subjects/:id Get one Subject
  * @apiGroup Subjects
  * @apiSuccessExample {json} Success
  *    HTTP/1.1 200 OK
@@ -185,7 +185,7 @@ export async function update(req, res) {
 /**
  * @api {delete} /subjects Delete a subject
  * @apiGroup Subjects
- * @apiParam {id} id Ssubject id
+ * @apiParam {id} id Subject id
  * @apiHeader Authorization Bearer Token
  * @apiHeader Content-Type application/x-www-form-urlencoded
  * @apiSuccessExample {json} Success
