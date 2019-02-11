@@ -20,7 +20,6 @@ export function isLoggedIn(req, res, next) {
               error: err.name
             });
           }
-          console.log(tokenDecoded);
           next();
         });
       }
@@ -28,7 +27,6 @@ export function isLoggedIn(req, res, next) {
       return res.status(400).end();
     }
   } catch (err) {
-    console.log(err);
     return res.status(500).end();
   }
 }

@@ -20,7 +20,7 @@ export async function create(req, res) {
       if (err) {
         return res.status(500).end();
       } else if (user) {
-        return res.status(208).end();
+        return res.status(401).end();
       }
     });
 
@@ -48,10 +48,11 @@ export async function signIn(req, res) {
       if (!user) {
         return res.status(400).end();
       }
-      user.comparePassword(req.body.hashedPassword, (err, equal) => {
+      user.comparePassword(req.body.password, (err, equal) => {
         if (equal && !err) {
           const userData = _.pick(
             user,
+            "_id",
             "firstName",
             "lastName",
             "email",
