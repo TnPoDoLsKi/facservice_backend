@@ -29,6 +29,6 @@ export const seedersList = {
   Subjects: SubjectsSeeder,
   Majors: MajorsSeeder,
   Users: UsersSeeder,
-  DocumentsSeeder,
-  CorrectionsSeeder
+  CorrectionsSeeder,
+  DocumentsSeeder
 }

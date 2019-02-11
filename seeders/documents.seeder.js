@@ -1,13 +1,24 @@
-import { Seeder } from 'mongoose-data-seed'
-import { Document, User, Major, Subject } from '../src/config/models'
+import {
+  Seeder
+} from 'mongoose-data-seed'
+import {
+  Document,
+  User,
+  Major,
+  Subject,
+  Correction
+} from '../src/config/models'
 
 class DocumentsSeeder extends Seeder {
   async beforeRun () {
     this.user = await User.findOne({
-      email: 'mouna@gmail.com' }
-    ).exec()
-    this.major = await Major.findOne({ name: 'FIA1' }).exec()
+      email: 'mouna@gmail.com'
+    }).exec()
+    this.major = await Major.findOne({
+      name: 'FIA1'
+    }).exec()
     this.subject = await Subject.find().exec()
+    this.corrections = await Correction.find().exec()
     this.documents = this._generateDocuments()
   }
   async shouldRun () {
@@ -29,7 +40,8 @@ class DocumentsSeeder extends Seeder {
       year: '2018',
       semestre: '1',
       profName: 'Maher Milli',
-      session: 'Principale'
+      session: 'Principale',
+      corrections: [this.corrections[0]]
     }, {
       title: 'EX Algo 2017',
       type: 'EX',
@@ -51,7 +63,8 @@ class DocumentsSeeder extends Seeder {
       year: '2015',
       semestre: '2',
       profName: 'profX',
-      session: 'Principale'
+      session: 'Principale',
+      corrections: [this.corrections[1]]
     }]
   }
 }
