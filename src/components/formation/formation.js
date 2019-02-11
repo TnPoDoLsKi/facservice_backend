@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import mongooseDelete from "mongoose-delete";
 
 const formationSchema = new mongoose.Schema(
   {
@@ -10,4 +11,10 @@ const formationSchema = new mongoose.Schema(
   }
 );
 
-export default mongoose.model("formation", formationSchema);
+formationSchema.plugin(mongooseDelete, {
+  overrideMethods: "all",
+  deletedAt: true,
+  deletedBy: true
+});
+
+export default mongoose.model("Formation", formationSchema);

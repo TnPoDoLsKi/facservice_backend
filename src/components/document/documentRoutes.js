@@ -1,9 +1,12 @@
 import { create, getOne, update, remove, getAll } from "./documentController";
+import { upload } from "../../services/uploadService";
+import { isLoggedIn, isAdmin } from "../../services/middlewares";
 
 export default function(router) {
   router.get("/documents", getAll);
-  router.get("/document/:id", getOne);
-  router.post("/document", create);
-  router.put("/document/:id", update);
-  router.delete("/document/:id", remove);
+  router.get("/documents/:id", getOne);
+  router.post("/documents", isLoggedIn, create);
+  router.post("/documents/upload", isLoggedIn, upload);
+  router.put("/documents/:id", isLoggedIn, isAdmin, update);
+  router.delete("/documents/:id", isLoggedIn, isAdmin, remove);
 }

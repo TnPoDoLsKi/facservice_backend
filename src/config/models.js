@@ -7,4 +7,13 @@ import Formation from "../components/formation/formation";
 import Level from "../components/level/level";
 import Section from "../components/section/section";
 
-export { User, Document, Correction, Subject, Major, Formation, Level, Section };
+export {
+  User,
+  Document,
+  Correction,
+  Subject,
+  Major,
+  Formation,
+  Level,
+  Section
+};

@@ -1,5 +1,4 @@
 import express from "express";
-const router = express.Router();
 
 import majorRoute from "../components/major/majorRoutes";
 import formationRoute from "../components/formation/formationRoutes";
@@ -9,6 +8,9 @@ import subjectRoute from "../components/subject/subjectRoutes";
 import userRoute from "../components/user/userRoutes";
 import authRoute from "../components/auth/authRoutes";
 import documentRoute from "../components/document/documentRoutes";
+import correctionRoute from "../components/correction/correctionRoutes";
+import searchRoute from "../components/search/searchRoutes";
+const router = express.Router();
 
 majorRoute(router);
 formationRoute(router);
@@ -18,5 +20,7 @@ subjectRoute(router);
 userRoute(router);
 authRoute(router);
 documentRoute(router);
+correctionRoute(router);
+searchRoute(router);
 
 export default router;

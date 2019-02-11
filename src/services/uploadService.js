@@ -1,15 +1,32 @@
 import formidable from "formidable";
 import path from "path";
 
-//upload
+/**
+ * @api {post} /documents/upload Upload a document or a correction
+ * @apiGroup Documents
+ * @apiName Upload
+ * @apiParam {File} files File to upload
+ * @apiHeader Authorization Bearer Token
+ * @apiHeader Content-Type application/x-www-form-urlencoded
+ * @apiSuccessExample {json} Uploaded
+ *    HTTP/1.1 200 OK
+ * [ "http://igc.tn:3005/api/uploads/upload_5cbbe9e1efb762ef40c52a9c9610e5b0.jpg" ]
+ * @apiErrorExample {json} Register error
+ *    HTTP/1.1 500 Internal Server Error
+ * @apiErrorExample {json} Find Error
+ *    HTTP/1.1 444 Request canceled
+ */
+
+// upload
 const config = {
-  //storage
-  uploadDir: path.join(__dirname, "..", "uploads"),
+  // storage
+  uploadDir: path.join(__dirname, "../../public", "uploads"),
   maxFileSize: 10 * 1024 * 1024,
   multiple: true
 };
-export async function Upload(req, res, next) {
-  //abort handler
+export async function upload(req, res) {
+  const fileUrls = [];
+  // abort handler
   const _abortHandler = () => {
     const error = new Error("request canceled");
     res.status(444).send({
@@ -17,7 +34,7 @@ export async function Upload(req, res, next) {
     });
   };
 
-  //error handler
+  // error handler
   const _errorHandler = error => {
     res.status(500).send({
       error
@@ -31,15 +48,15 @@ export async function Upload(req, res, next) {
         file: file meta 
     */
   const _fileHandler = (name, file) => {
-    req.form = req.form || {};
-    req.form.attachements = req.form.attachements || [];
-    req.form.attachements = [
-      ...req.form.attachements,
-      {
-        name: path.basename(file.path),
-        mimetype: file.type
-      }
-    ];
+    const host = req.protocol + "://" + req.headers.host;
+    let url = "";
+    if (req.headers.host === "igc.tn:3005") {
+      url = host + "/uploads/" + file.path.split("/").pop();
+    } else {
+      url = host + "/uploads/" + file.path.split("\\").pop();
+    }
+    fileUrls.push(url);
+    return fileUrls;
   };
   /* 
      field handler 
@@ -48,7 +65,7 @@ export async function Upload(req, res, next) {
     req.form = req.form || {};
     req.form[name] = value;
   };
-  //midleware
+  // midleware
   try {
     const form = new formidable.IncomingForm(config);
     form.keepExtensions = true;
@@ -59,10 +76,11 @@ export async function Upload(req, res, next) {
     form.on("aborted", _abortHandler);
     form.on("end", () => {
       console.log("Reachead end");
+      res.json(fileUrls);
     });
   } catch (error) {
-    console.log(error);
+    console.log("error:", error);
     res.status(500).send(error);
   }
 }
-//end
+// end

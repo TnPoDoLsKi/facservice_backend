@@ -1,9 +1,10 @@
 import { getOne, create, update, remove, getAll } from "./formationController";
+import { isLoggedIn, isAdmin } from "../../services/middlewares";
 
 export default function(router) {
-  router.get("/formation", getAll);
-  router.get("/formation/:id", getOne);
-  router.post("/formation", create);
-  router.put("/formation/:id", update);
-  router.delete("/formation/:id", remove);
+  router.get("/formations", getAll);
+  router.get("/formations/:id", getOne);
+  router.post("/formations", isLoggedIn, isAdmin, create);
+  router.put("/formations/:id", isLoggedIn, isAdmin, update);
+  router.delete("/formations/:id", isLoggedIn, isAdmin, remove);
 }

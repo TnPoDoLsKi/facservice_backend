@@ -4,14 +4,15 @@ import {
   update,
   remove,
   getAll,
- /* addSubjects */
+  addSubjects
 } from "./majorController";
+import { isLoggedIn, isAdmin } from "../../services/middlewares";
 
 export default function(router) {
-  router.get("/majors", getAll); /* TO DO test */
-  router.get("/majors/:id", getOne); /* TO DO test*/
-  router.post("/majors", create);
-  router.put("/majors/:id", update); /* TO DO test */
-  router.delete("/majors/:id", remove); /* TO DO test */
-/*  router.put("/majors/:id/subjects/", addSubjects); /* TO DO */
+  router.get("/majors", getAll);
+  router.get("/majors/:id", getOne);
+  router.post("/majors", isLoggedIn, isAdmin, create);
+  router.put("/majors/:id", isLoggedIn, isAdmin, update);
+  router.delete("/majors/:id", isLoggedIn, isAdmin, remove);
+  router.put("/majors/:id/subjects/", isLoggedIn, isAdmin, addSubjects);
 }
