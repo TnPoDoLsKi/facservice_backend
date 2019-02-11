@@ -17,6 +17,8 @@ export const mongoose = mongooseLib
 // Export the mongodb url
 export const mongoURL = DB
 
+console.log(process.env.MONGODB_URI )
+
 /*
   Seeders List
   ------
