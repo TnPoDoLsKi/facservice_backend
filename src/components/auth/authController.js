@@ -124,6 +124,7 @@ export async function signIn(req, res) {
           if (equal && !err) {
             const userData = _.pick(
               user,
+              "_id",
               "firstName",
               "lastName",
               "email",

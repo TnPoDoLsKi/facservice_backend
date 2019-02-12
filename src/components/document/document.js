@@ -71,4 +71,12 @@ documentSchema.plugin(mongooseDelete, {
   deletedAt: true,
   deletedBy: true
 });
+
+documentSchema.methods.toJSON = function() {
+  var obj = this.toObject();
+  delete obj.__v;
+  delete obj.deleted;
+  return obj;
+};
+
 export default mongoose.model("document", documentSchema);

@@ -69,14 +69,14 @@ export async function getAll(req, res) {
         path: "user",
         select: "-major -avatar -hashedPassword"
       })
-      .populate({
-        path: "major",
-        select: "-subjects -formation -level -section"
-      })
-      .populate({
-        path: "subject",
-        select: "-deleted"
-      })
+      // .populate({
+      //   path: "major",
+      //   select: "-subjects -formation -level -section"
+      // })
+      // .populate({
+      //   path: "subject",
+      //   select: "-deleted"
+      // })
       .populate({
         path: "corrections",
         select: "-deleted"
@@ -164,14 +164,14 @@ export async function getOne(req, res) {
         path: "user",
         select: "-major -avatar -hashedPassword"
       })
-      .populate({
-        path: "major",
-        select: "-subjects -formation -level -section"
-      })
-      .populate({
-        path: "subject",
-        select: "-deleted"
-      })
+      // .populate({
+      //   path: "major",
+      //   select: "-subjects -formation -level -section"
+      // })
+      // .populate({
+      //   path: "subject",
+      //   select: "-deleted"
+      // })
       .populate({
         path: "corrections",
         select: "-deleted"

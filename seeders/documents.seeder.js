@@ -33,6 +33,7 @@ class DocumentsSeeder extends Seeder {
     return [{
       title: 'ds analyse 2018',
       type: 'DS',
+      approved: true,
       filePath: '/uploads/jdhgfhd.jpg',
       user: this.user._id,
       major: this.major._id,
@@ -45,6 +46,7 @@ class DocumentsSeeder extends Seeder {
     }, {
       title: 'EX Algo 2017',
       type: 'EX',
+      approved: true,
       filePath: '/uploads/jdhgfhd.jpg',
       user: this.user._id,
       major: this.major._id,
@@ -56,6 +58,7 @@ class DocumentsSeeder extends Seeder {
     }, {
       title: 'DS Archi 2015',
       type: 'DS',
+      approved: true,
       filePath: '/uploads/jdhgfhd.jpg',
       user: this.user._id,
       major: this.major._id,
