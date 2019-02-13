@@ -13,7 +13,7 @@ import { isLoggedIn, isAdmin } from "../../services/middlewares";
 export default function(router) {
   router.get("/documents", getAll);
   router.get("/documents/:id", getOne);
-  router.get("/documents/corrections/:id", isLoggedIn, getCorrections);
+  router.get("/documents/corrections/:id", getCorrections);
   router.post("/documents", isLoggedIn, create);
   router.post("/documents/upload", isLoggedIn, upload);
   router.post("/documents/corrections/:id", isLoggedIn, addCorrections);
