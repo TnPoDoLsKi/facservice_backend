@@ -242,7 +242,7 @@ export async function getDocByType(req, res) {
     });
 
     documents = _.filter(documents, document => {
-      return document.type.toLowerCase() === req.query.type;
+      return document.type.toLowerCase() === req.query.type.toLowerCase();
     });
 
     return res.json(documents);
