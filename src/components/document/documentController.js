@@ -1,5 +1,8 @@
 import _ from "lodash";
-import { Document, Correction } from "../../config/models";
+import {
+  Document,
+  Correction
+} from "../../config/models";
 // import { upload } from "../../services/uploadService";
 
 /**
@@ -158,8 +161,8 @@ export async function getOne(req, res) {
       });
 
     const document = await Document.findById({
-      _id: req.params.id
-    })
+        _id: req.params.id
+      })
       .populate({
         path: "user",
         select: "-major -avatar -hashedPassword"
@@ -219,8 +222,6 @@ export async function getOne(req, res) {
 ]
  * @apiErrorExample {json} Subject id cannot be empty
  *    HTTP/1.1 400 Not Found
- * @apiErrorExample {json} Document type cannot be empty
- *    HTTP/1.1 400 Not Found
  * @apiErrorExample {json} Find error
  *    HTTP/1.1 500 Internal Server Error
  */
@@ -232,18 +233,22 @@ export async function getDocByType(req, res) {
         error: "Subject id cannot be empty"
       });
 
-    if (!req.query.type)
-      return res.status(400).json({
-        error: "Document type cannot be empty"
-      });
+    // if (!req.query.type)
+    //   return res.status(400).json({
+    //     error: "Document type cannot be empty"
+    //   });
 
     let documents = await Document.find({
       subject: req.params.id
+    }).populate({
+      path: "user",
+      select: "-major -avatar -hashedPassword -deleted -__v"
     });
 
-    documents = _.filter(documents, document => {
-      return document.type.toLowerCase() === req.query.type.toLowerCase();
-    });
+    if (req.query.type)
+      documents = _.filter(documents, document => {
+        return document.type.toLowerCase() === req.query.type.toLowerCase();
+      });
 
     return res.json(documents);
   } catch (error) {
@@ -383,8 +388,7 @@ export async function create(req, res) {
       "session",
       "profName"
     );
-    await Document.findOne(
-      {
+    await Document.findOne({
         type: document.type,
         semestre: document.semestre,
         major: document.major,
@@ -448,8 +452,7 @@ export async function addCorrections(req, res) {
         error: "Corrections Array cannot be empty!"
       });
     }
-    await Document.findById(
-      {
+    await Document.findById({
         _id: req.params.id
       },
       async (err, document) => {
@@ -533,8 +536,7 @@ export async function update(req, res) {
       "profName",
       "corrections"
     );
-    await Document.findOne(
-      {
+    await Document.findOne({
         type: document.type,
         description: document.description,
         semestre: document.semestre,
@@ -554,14 +556,11 @@ export async function update(req, res) {
         }
       }
     );
-    await Document.update(
-      {
-        _id: req.params.id
-      },
-      {
-        $set: document
-      }
-    );
+    await Document.update({
+      _id: req.params.id
+    }, {
+      $set: document
+    });
 
     return res.status(204).end();
   } catch (error) {
