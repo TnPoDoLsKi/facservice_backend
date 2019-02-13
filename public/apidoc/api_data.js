@@ -1089,11 +1089,6 @@ define({ "api": [
           "type": "json"
         },
         {
-          "title": "Document type cannot be empty",
-          "content": "HTTP/1.1 400 Not Found",
-          "type": "json"
-        },
-        {
           "title": "Find error",
           "content": "HTTP/1.1 500 Internal Server Error",
           "type": "json"
