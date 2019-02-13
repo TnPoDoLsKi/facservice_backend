@@ -1,8 +1,5 @@
 import _ from "lodash";
-import {
-  Document,
-  Correction
-} from "../../config/models";
+import { Document, Correction } from "../../config/models";
 // import { upload } from "../../services/uploadService";
 
 /**
@@ -161,8 +158,8 @@ export async function getOne(req, res) {
       });
 
     const document = await Document.findById({
-        _id: req.params.id
-      })
+      _id: req.params.id
+    })
       .populate({
         path: "user",
         select: "-major -avatar -hashedPassword"
@@ -388,7 +385,8 @@ export async function create(req, res) {
       "session",
       "profName"
     );
-    await Document.findOne({
+    await Document.findOne(
+      {
         type: document.type,
         semestre: document.semestre,
         major: document.major,
@@ -452,7 +450,8 @@ export async function addCorrections(req, res) {
         error: "Corrections Array cannot be empty!"
       });
     }
-    await Document.findById({
+    await Document.findById(
+      {
         _id: req.params.id
       },
       async (err, document) => {
@@ -536,7 +535,8 @@ export async function update(req, res) {
       "profName",
       "corrections"
     );
-    await Document.findOne({
+    await Document.findOne(
+      {
         type: document.type,
         description: document.description,
         semestre: document.semestre,
@@ -556,11 +556,14 @@ export async function update(req, res) {
         }
       }
     );
-    await Document.update({
-      _id: req.params.id
-    }, {
-      $set: document
-    });
+    await Document.update(
+      {
+        _id: req.params.id
+      },
+      {
+        $set: document
+      }
+    );
 
     return res.status(204).end();
   } catch (error) {
