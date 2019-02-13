@@ -38,6 +38,23 @@ export async function create(req, res) {
     const user = _.pick(req.body, "email", "type", "firstName", "lastName");
     user.hashedPassword = req.body.password;
 
+    if (req.body.major) {
+      await Major.findOne(
+        {
+          name: req.body.major
+        },
+        (err, foundMajor) => {
+          if (err) {
+            return res.status(500).end();
+          } else if (!foundMajor) {
+            return res.status(400).end();
+          } else {
+            user.major = foundMajor._id;
+          }
+        }
+      );
+    }
+
     await User.findOne(
       {
         email: user.email
@@ -52,24 +69,6 @@ export async function create(req, res) {
         }
       }
     );
-
-    if (req.body.major) {
-      await Major.findOne(
-        {
-          name: req.body.major
-        },
-        (err, foundMajor) => {
-          if (err) {
-            return res.status(500).end();
-          } else if (!foundMajor) {
-            console.log("here")
-            return res.status(400).end();
-          } else {
-            user.major = foundMajor._id;
-          }
-        }
-      );
-    }
 
     await User.create(user);
 
