@@ -4,11 +4,13 @@ import {
   update,
   remove,
   getAll,
-  addSubjects
+  addSubjects,
+  getOneByName
 } from "./majorController";
 import { isLoggedIn, isAdmin } from "../../services/middlewares";
 
 export default function(router) {
+  router.get("/major", getOneByName);
   router.get("/majors", getAll);
   router.get("/majors/:id", getOne);
   router.post("/majors", isLoggedIn, isAdmin, create);

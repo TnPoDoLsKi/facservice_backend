@@ -59,7 +59,10 @@ const documentSchema = new mongoose.Schema(
         type: mongoose.Schema.Types.ObjectId,
         ref: "correction"
       }
-    ]
+    ],
+    description: {
+      type: String
+    }
   },
   {
     timestamps: true
@@ -71,4 +74,12 @@ documentSchema.plugin(mongooseDelete, {
   deletedAt: true,
   deletedBy: true
 });
+
+documentSchema.methods.toJSON = function() {
+  var obj = this.toObject();
+  delete obj.__v;
+  delete obj.deleted;
+  return obj;
+};
+
 export default mongoose.model("document", documentSchema);

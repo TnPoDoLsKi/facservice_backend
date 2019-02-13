@@ -41,4 +41,11 @@ majorSchema.plugin(mongoose_delete, {
   deletedBy: true
 });
 
+majorSchema.methods.toJSON = function() {
+  var obj = this.toObject();
+  delete obj.__v;
+  delete obj.deleted;
+  return obj;
+};
+
 export default mongoose.model("Major", majorSchema);

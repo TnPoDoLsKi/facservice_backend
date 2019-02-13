@@ -1,5 +1,5 @@
 import _ from "lodash";
-import Subject from "./subject";
+import { Document, Subject } from "../../config/models";
 
 /**
  * @api {post} /subjects Create a subject

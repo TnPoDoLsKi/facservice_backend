@@ -33,4 +33,11 @@ subjectSchema.plugin(mongooseDelete, {
   deletedBy: true
 });
 
+subjectSchema.methods.toJSON = function() {
+  var obj = this.toObject();
+  delete obj.__v;
+  delete obj.deleted;
+  return obj;
+};
+
 export default mongoose.model("Subject", subjectSchema);

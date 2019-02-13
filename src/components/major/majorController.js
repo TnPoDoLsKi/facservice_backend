@@ -158,10 +158,8 @@ export async function create(req, res) {
 export async function getAll(req, res) {
   try {
     const majors = await Major.find()
+      .select("-formation -level -section")
       .populate("subjects")
-      .populate("formation")
-      .populate("level")
-      .populate("section")
       .exec();
 
     return res.json(majors);
@@ -221,10 +219,8 @@ export async function getOne(req, res) {
     const major = await Major.findById({
       _id: req.params.id
     })
+      .select("-formation -level -section")
       .populate("subjects")
-      .populate("formation")
-      .populate("level")
-      .populate("section")
       .exec();
 
     return res.json(major);
@@ -235,7 +231,55 @@ export async function getOne(req, res) {
 }
 
 /**
- * @api {put} /majors Update a major
+ * @api {get} /major Get one major by name
+ * @apiGroup Majors
+ * @apiParam {String} name Major name
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 OK
+ * {
+    "_id": "5c6199dff134a742549ed42a",
+    "name": "FIA2-II",
+    "description": "2eme année Formation d'Ingénieur: Informatique Industrielle",
+    "subjects": [
+        {
+            "semestre": 1,
+            "documents": [],
+            "_id": "5c6199dff134a742549ed40d",
+            "name": "Sécurité des réseaux",
+            "createdAt": "2019-02-11T15:50:55.588Z",
+            "updatedAt": "2019-02-11T15:50:55.588Z",
+        }
+    ],
+}
+ * @apiErrorExample {json} Major name cannot be empty
+ *    HTTP/1.1 400 Not Found
+ * @apiErrorExample {json} Find error
+ *    HTTP/1.1 500 Internal Server Error
+ */
+
+export async function getOneByName(req, res) {
+  try {
+    if (!req.query.name)
+      return res.status(400).json({
+        error: "Major Name cannot be empty"
+      });
+
+    const major = await Major.findOne({
+      name: req.query.name
+    })
+      .select("-formation -level -section")
+      .populate("subjects")
+      .exec();
+
+    return res.json(major);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).end();
+  }
+}
+
+/**
+ * @api {put} /majors/:id Update a major
  * @apiGroup Majors
  * @apiParam {id} id Major id
  * @apiParam {String} name Major name
@@ -339,7 +383,7 @@ export async function update(req, res) {
 }
 
 /**
- * @api {delete} /majors Delete a major
+ * @api {delete} /majors/:id Delete a major
  * @apiGroup Majors
  * @apiParam {id} id Major id
  * @apiHeader Authorization Bearer Token

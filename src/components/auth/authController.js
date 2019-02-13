@@ -3,7 +3,6 @@ import User from "../user/user";
 import jwt from "jsonwebtoken";
 import { SECRET } from "../../config/env";
 import Major from "../major/major";
-// import { upload } from "../../services/uploadService";
 
 /**
  * @api {post} /auth/signup Create User
@@ -29,6 +28,8 @@ import Major from "../major/major";
  * @apiErrorExample {json} User already exists
  *    HTTP/1.1 208 Already Reported
  * @apiErrorExample {json} Major specified doesn't exist
+ *    HTTP/1.1 406 Not Acceptable
+ * @apiErrorExample {json} User info cannot be empty
  *    HTTP/1.1 400 Bad Request
  * @apiErrorExample {json} Register error
  *    HTTP/1.1 500 Internal Server Error
@@ -38,39 +39,53 @@ export async function create(req, res) {
     const user = _.pick(req.body, "email", "type", "firstName", "lastName");
     user.hashedPassword = req.body.password;
 
-    await User.findOne(
-      {
-        email: user.email
-      },
-      (err, user) => {
-        if (err) {
-          return res.status(500).end({
-            error: err
-          });
-        } else if (user) {
-          return res.status(208).end();
-        }
-      }
-    );
-
-    if (req.body.major) {
-      await Major.findOne(
-        {
-          name: req.body.major
-        },
-        (err, foundMajor) => {
-          if (err) {
-            return res.status(400).end();
-          } else {
-            user.major = foundMajor._id;
+    if (
+      !req.body.email ||
+      !req.body.type ||
+      !req.body.firstName ||
+      !req.body.lastName ||
+      !req.body.password
+    ) {
+      return res.status(400).end();
+    } else {
+      if (req.body.major) {
+        await Major.findOne(
+          {
+            name: req.body.major
+          },
+          (err, foundMajor) => {
+            if (err) {
+              return res.status(500).end();
+            } else if (!foundMajor) {
+              return res.status(406).end();
+            } else {
+              user.major = foundMajor._id;
+            }
           }
-        }
-      );
+        );
+
+        await User.findOne(
+          {
+            email: user.email
+          },
+          (err, user) => {
+            if (err) {
+              return res.status(500).end({
+                error: err
+              });
+            } else if (user) {
+              return res.status(208).end();
+            }
+          }
+        );
+
+        await User.create(user);
+
+        return res.status(201).end();
+      } else {
+        return res.status(406).end();
+      }
     }
-
-    await User.create(user);
-
-    return res.status(201).end();
   } catch (err) {
     res.status(500).end();
     console.log(err);
@@ -124,6 +139,7 @@ export async function signIn(req, res) {
           if (equal && !err) {
             const userData = _.pick(
               user,
+              "_id",
               "firstName",
               "lastName",
               "email",

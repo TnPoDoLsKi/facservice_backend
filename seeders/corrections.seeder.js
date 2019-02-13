@@ -24,11 +24,13 @@ class CorrectionsSeeder extends Seeder {
       title: 'correction ds algo 2015',
       filePath: '/uploads/jdhgfhd.jpg',
       user: this.user._id,
+      approved: true,
       document: this.documents[0]._id
     }, {
       title: 'correction ds analyse 2018',
       filePath: '/uploads/jdhgfhd.jpg',
       user: this.user._id,
+      approved: true,
       document: this.documents[1]._id
     }]
   }

@@ -114,16 +114,16 @@ export async function search(req, res) {
       documents = await Document.find({})
         .populate({
           path: "user",
-          select: "-major -avatar -hashedPassword"
+          select: "-major -avatar -hashedPassword -deleted -__v"
         })
-        .populate({
-          path: "major",
-          select: "-subjects -formation -level -section"
-        })
-        .populate({
-          path: "subject",
-          select: "-deleted"
-        })
+        // .populate({
+        //   path: "major",
+        //   select: "-subjects -formation -level -section"
+        // })
+        // .populate({
+        //   path: "subject",
+        //   select: "-deleted"
+        // })
         .populate({
           path: "corrections",
           select: "-deleted"

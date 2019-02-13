@@ -184,6 +184,11 @@ define({ "api": [
         },
         {
           "title": "Major specified doesn't exist",
+          "content": "HTTP/1.1 406 Not Acceptable",
+          "type": "json"
+        },
+        {
+          "title": "User info cannot be empty",
           "content": "HTTP/1.1 400 Bad Request",
           "type": "json"
         },
@@ -843,6 +848,52 @@ define({ "api": [
   },
   {
     "type": "get",
+    "url": "/documents/corrections/:id",
+    "title": "Get document's corrections",
+    "group": "Documents",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "id",
+            "optional": false,
+            "field": "id",
+            "description": "<p>Document id</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "   HTTP/1.1 200 OK\n[\n    {\n        \"approved\": false,\n        \"verifiedByProf\": false,\n        \"score\": 0,\n        \"_id\": \"5c619b28afaefd38f005ae77\",\n        \"title\": \"correction ds analyse 2018\",\n        \"filePath\": \"/uploads/jdhgfhd.jpg\",\n        \"user\": \"5c6199dff134a742549ed42c\",\n        \"createdAt\": \"2019-02-11T15:56:24.786Z\",\n        \"updatedAt\": \"2019-02-11T15:56:24.786Z\"\n    },\n    {\n        \"approved\": false,\n        \"verifiedByProf\": false,\n        \"score\": 0,\n        \"_id\": \"5c619b28afaefd38f005ae76\",\n        \"title\": \"correction ds algo 2015\",\n        \"filePath\": \"/uploads/jdhgfhd.jpg\",\n        \"user\": \"5c6199dff134a742549ed42c\",\n        \"createdAt\": \"2019-02-11T15:56:24.786Z\",\n        \"updatedAt\": \"2019-02-11T15:56:24.786Z\"\n    }\n]",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Document id cannot be empty",
+          "content": "HTTP/1.1 400 Not Found",
+          "type": "json"
+        },
+        {
+          "title": "Find error",
+          "content": "HTTP/1.1 500 Internal Server Error",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "src/components/document/documentController.js",
+    "groupTitle": "Documents",
+    "name": "GetDocumentsCorrectionsId"
+  },
+  {
+    "type": "get",
     "url": "/documents/:id",
     "title": "Get one document",
     "group": "Documents",
@@ -973,7 +1024,7 @@ define({ "api": [
     "error": {
       "examples": [
         {
-          "title": "Correction id cannot be empty",
+          "title": "Document id cannot be empty",
           "content": "HTTP/1.1 400 Not Found",
           "type": "json"
         },
@@ -988,6 +1039,66 @@ define({ "api": [
     "filename": "src/components/document/documentController.js",
     "groupTitle": "Documents",
     "name": "GetDocumentsId"
+  },
+  {
+    "type": "get",
+    "url": "/documents/subject/:id",
+    "title": "Get documents by type",
+    "group": "Documents",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "id",
+            "optional": false,
+            "field": "id",
+            "description": "<p>Subject id</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "type",
+            "description": "<p>Document type (DS, EX, C, TP, TD)</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Input",
+          "content": "{\n  \"type\": \"ex\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "   HTTP/1.1 200 OK\n[\n    {\n        \"type\": \"EX\",\n        \"semestre\": 1,\n        \"approved\": true,\n        \"NBDowloads\": 0,\n        \"verifiedByProf\": false,\n        \"session\": \"Principale\",\n        \"corrections\": [],\n        \"_id\": \"5c63689000aa6a06a4dfd577\",\n        \"title\": \"EX Algo 2017\",\n        \"filePath\": \"/uploads/jdhgfhd.jpg\",\n        \"user\": \"5c63688f00aa6a06a4dfd573\",\n        \"major\": \"5c63688f00aa6a06a4dfd571\",\n        \"subject\": \"5c63688e00aa6a06a4dfd540\",\n        \"year\": 2017,\n        \"profName\": \"profX\",\n        \"createdAt\": \"2019-02-13T00:45:04.446Z\",\n        \"updatedAt\": \"2019-02-13T00:45:04.446Z\"\n    }\n]",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Subject id cannot be empty",
+          "content": "HTTP/1.1 400 Not Found",
+          "type": "json"
+        },
+        {
+          "title": "Find error",
+          "content": "HTTP/1.1 500 Internal Server Error",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "src/components/document/documentController.js",
+    "groupTitle": "Documents",
+    "name": "GetDocumentsSubjectId"
   },
   {
     "type": "post",
@@ -1129,6 +1240,77 @@ define({ "api": [
     "filename": "src/components/document/documentController.js",
     "groupTitle": "Documents",
     "name": "PostDocuments"
+  },
+  {
+    "type": "post",
+    "url": "/documents/:id/corrections",
+    "title": "Add corrections to a document",
+    "group": "Documents",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Array",
+            "optional": false,
+            "field": "corrections",
+            "description": "<p>Document corrections</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Input",
+          "content": "{\n  \"corrections\": [\"5c41ccd20dbd0934ccc59a0e\",\"5c41cd34dfe31425c014f85e\"]\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer Token</p>"
+          },
+          {
+            "group": "Header",
+            "optional": false,
+            "field": "Content-Type",
+            "description": "<p>application/x-www-form-urlencoded</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 OK",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Document id or Corrections cannot be empty",
+          "content": "HTTP/1.1 400 Already Reported",
+          "type": "json"
+        },
+        {
+          "title": "Register error",
+          "content": "HTTP/1.1 500 Internal Server Error",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "src/components/document/documentController.js",
+    "groupTitle": "Documents",
+    "name": "PostDocumentsIdCorrections"
   },
   {
     "type": "put",
@@ -1281,7 +1463,7 @@ define({ "api": [
   {
     "type": "post",
     "url": "/documents/upload",
-    "title": "Upload a document or a correction",
+    "title": "Upload a file",
     "group": "Documents",
     "name": "Upload",
     "parameter": {
@@ -1940,7 +2122,7 @@ define({ "api": [
   },
   {
     "type": "delete",
-    "url": "/majors",
+    "url": "/majors/:id",
     "title": "Delete a major",
     "group": "Majors",
     "parameter": {
@@ -2000,7 +2182,53 @@ define({ "api": [
     "version": "0.0.0",
     "filename": "src/components/major/majorController.js",
     "groupTitle": "Majors",
-    "name": "DeleteMajors"
+    "name": "DeleteMajorsId"
+  },
+  {
+    "type": "get",
+    "url": "/major",
+    "title": "Get one major by name",
+    "group": "Majors",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "name",
+            "description": "<p>Major name</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "   HTTP/1.1 200 OK\n{\n    \"_id\": \"5c6199dff134a742549ed42a\",\n    \"name\": \"FIA2-II\",\n    \"description\": \"2eme année Formation d'Ingénieur: Informatique Industrielle\",\n    \"subjects\": [\n        {\n            \"semestre\": 1,\n            \"documents\": [],\n            \"_id\": \"5c6199dff134a742549ed40d\",\n            \"name\": \"Sécurité des réseaux\",\n            \"createdAt\": \"2019-02-11T15:50:55.588Z\",\n            \"updatedAt\": \"2019-02-11T15:50:55.588Z\",\n        }\n    ],\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Major name cannot be empty",
+          "content": "HTTP/1.1 400 Not Found",
+          "type": "json"
+        },
+        {
+          "title": "Find error",
+          "content": "HTTP/1.1 500 Internal Server Error",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "src/components/major/majorController.js",
+    "groupTitle": "Majors",
+    "name": "GetMajor"
   },
   {
     "type": "get",
@@ -2240,7 +2468,7 @@ define({ "api": [
   },
   {
     "type": "put",
-    "url": "/majors",
+    "url": "/majors/:id",
     "title": "Update a major",
     "group": "Majors",
     "parameter": {
@@ -2347,7 +2575,7 @@ define({ "api": [
     "version": "0.0.0",
     "filename": "src/components/major/majorController.js",
     "groupTitle": "Majors",
-    "name": "PutMajors"
+    "name": "PutMajorsId"
   },
   {
     "type": "get",
@@ -2713,7 +2941,7 @@ define({ "api": [
             "type": "id",
             "optional": false,
             "field": "id",
-            "description": "<p>Ssubject id</p>"
+            "description": "<p>Subject id</p>"
           }
         ]
       }
