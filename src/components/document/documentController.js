@@ -186,6 +186,74 @@ export async function getOne(req, res) {
 }
 
 /**
+ * @api {get} /documents/:id Get documents by type 
+ * @apiGroup Documents
+ * @apiParam {id} id Subject id
+ * @apiParam {String} type Document type (DS, EX, C, TP, TD)
+ * @apiParamExample {json} Input
+ *    {
+ *      "type": "ex"
+ *    }
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 OK
+ * [
+    {
+        "type": "EX",
+        "semestre": 1,
+        "approved": true,
+        "NBDowloads": 0,
+        "verifiedByProf": false,
+        "session": "Principale",
+        "corrections": [],
+        "_id": "5c63689000aa6a06a4dfd577",
+        "title": "EX Algo 2017",
+        "filePath": "/uploads/jdhgfhd.jpg",
+        "user": "5c63688f00aa6a06a4dfd573",
+        "major": "5c63688f00aa6a06a4dfd571",
+        "subject": "5c63688e00aa6a06a4dfd540",
+        "year": 2017,
+        "profName": "profX",
+        "createdAt": "2019-02-13T00:45:04.446Z",
+        "updatedAt": "2019-02-13T00:45:04.446Z"
+    }
+]
+ * @apiErrorExample {json} Subject id cannot be empty
+ *    HTTP/1.1 400 Not Found
+ * @apiErrorExample {json} Document type cannot be empty
+ *    HTTP/1.1 400 Not Found
+ * @apiErrorExample {json} Find error
+ *    HTTP/1.1 500 Internal Server Error
+ */
+
+export async function getDocByType(req, res) {
+  try {
+    if (!req.params.id)
+      return res.status(400).json({
+        error: "Subject id cannot be empty"
+      });
+
+    if (!req.query.type)
+      return res.status(400).json({
+        error: "Document type cannot be empty"
+      });
+
+    let documents = await Document.find({
+      subject: req.params.id
+    });
+    console.log(document.type.toLowerCase())
+
+    documents = _.filter(documents, document => {
+      return document.type.toLowerCase() === req.query.type;
+    });
+
+    return res.json(documents);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).end();
+  }
+}
+
+/**
  * @api {get} /documents/corrections/:id Get document's corrections
  * @apiGroup Documents
  * @apiParam {id} id Document id
