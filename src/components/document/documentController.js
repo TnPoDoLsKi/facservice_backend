@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { Document } from "../../config/models";
+import { Document, Correction } from "../../config/models";
 // import { upload } from "../../services/uploadService";
 
 /**
@@ -144,7 +144,7 @@ export async function getAll(req, res) {
     "createdAt": "2019-01-18T10:45:00.529Z",
     "updatedAt": "2019-01-18T10:45:00.529Z"
 }
- * @apiErrorExample {json} Correction id cannot be empty
+ * @apiErrorExample {json} Document id cannot be empty
  *    HTTP/1.1 400 Not Found
  * @apiErrorExample {json} Find error
  *    HTTP/1.1 500 Internal Server Error
@@ -179,6 +179,60 @@ export async function getOne(req, res) {
       .exec();
 
     return res.json(document);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).end();
+  }
+}
+
+/**
+ * @api {get} /documents/corrections/:id Get document's corrections
+ * @apiGroup Documents
+ * @apiParam {id} id Document id
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 OK
+ * [
+    {
+        "approved": false,
+        "verifiedByProf": false,
+        "score": 0,
+        "_id": "5c619b28afaefd38f005ae77",
+        "title": "correction ds analyse 2018",
+        "filePath": "/uploads/jdhgfhd.jpg",
+        "user": "5c6199dff134a742549ed42c",
+        "createdAt": "2019-02-11T15:56:24.786Z",
+        "updatedAt": "2019-02-11T15:56:24.786Z"
+    },
+    {
+        "approved": false,
+        "verifiedByProf": false,
+        "score": 0,
+        "_id": "5c619b28afaefd38f005ae76",
+        "title": "correction ds algo 2015",
+        "filePath": "/uploads/jdhgfhd.jpg",
+        "user": "5c6199dff134a742549ed42c",
+        "createdAt": "2019-02-11T15:56:24.786Z",
+        "updatedAt": "2019-02-11T15:56:24.786Z"
+    }
+]
+ * @apiErrorExample {json} Document id cannot be empty
+ *    HTTP/1.1 400 Not Found
+ * @apiErrorExample {json} Find error
+ *    HTTP/1.1 500 Internal Server Error
+ */
+
+export async function getCorrections(req, res) {
+  try {
+    if (!req.params.id)
+      return res.status(400).json({
+        error: "Document id cannot be empty!"
+      });
+
+    const corrections = await Correction.find({
+      document: req.params.id
+    });
+
+    return res.json(corrections);
   } catch (error) {
     console.log(error);
     return res.status(500).end();
@@ -288,6 +342,59 @@ export async function create(req, res) {
     }
     document = await Document.create(document);
     return res.json(document);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).end();
+  }
+}
+
+/**
+ * @api {post} /documents/:id/corrections Add corrections to a document
+ * @apiGroup Documents
+ * @apiParam {Array} corrections Document corrections
+ * @apiHeader Authorization Bearer Token
+ * @apiHeader Content-Type application/x-www-form-urlencoded
+ * @apiParamExample {json} Input
+ *    {
+ *      "corrections": ["5c41ccd20dbd0934ccc59a0e","5c41cd34dfe31425c014f85e"]
+ *    }
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 OK
+ * @apiErrorExample {json} Document id or Corrections cannot be empty
+ *    HTTP/1.1 400 Already Reported
+ * @apiErrorExample {json} Register error
+ *    HTTP/1.1 500 Internal Server Error
+ */
+
+export async function addCorrections(req, res) {
+  try {
+    if (!req.params.id) {
+      return res.status(400).json({
+        error: "Document id cannot be empty!"
+      });
+    }
+    if (!req.body.corrections) {
+      return res.status(400).json({
+        error: "Corrections Array cannot be empty!"
+      });
+    }
+    await Document.findById(
+      {
+        _id: req.params.id
+      },
+      async (err, document) => {
+        if (err) {
+          return res.status(500).end();
+        } else if (document) {
+          document.corrections = [];
+          for (let i = 0; i < req.body.corrections.length; ++i) {
+            document.corrections.push(req.body.corrections[i]);
+          }
+          await document.save();
+          return res.status(200).end();
+        }
+      }
+    );
   } catch (error) {
     console.log(error);
     return res.status(500).end();

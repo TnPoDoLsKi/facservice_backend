@@ -59,7 +59,10 @@ const documentSchema = new mongoose.Schema(
         type: mongoose.Schema.Types.ObjectId,
         ref: "correction"
       }
-    ]
+    ],
+    description: {
+      type: String
+    }
   },
   {
     timestamps: true

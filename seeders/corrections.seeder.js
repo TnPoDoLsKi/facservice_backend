@@ -8,7 +8,7 @@ class CorrectionsSeeder extends Seeder {
     this.user = await User.findOne({
       email: 'chady@gmail.com' }
     ).exec()
-    // this.documents = await Document.find().exec()
+    this.documents = await Document.find().exec()
     this.corrections = this._generateCorrections()
   }
   async shouldRun () {
@@ -23,13 +23,15 @@ class CorrectionsSeeder extends Seeder {
     return [{
       title: 'correction ds algo 2015',
       filePath: '/uploads/jdhgfhd.jpg',
-      user: this.user._id
-      // document: this.documents[0]._id
+      user: this.user._id,
+      approved: true,
+      document: this.documents[0]._id
     }, {
       title: 'correction ds analyse 2018',
       filePath: '/uploads/jdhgfhd.jpg',
-      user: this.user._id
-      // document: this.documents[1]._id
+      user: this.user._id,
+      approved: true,
+      document: this.documents[1]._id
     }]
   }
 }

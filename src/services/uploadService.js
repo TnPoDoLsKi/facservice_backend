@@ -2,7 +2,7 @@ import formidable from "formidable";
 import path from "path";
 
 /**
- * @api {post} /documents/upload Upload a document or a correction
+ * @api {post} /documents/upload Upload a file
  * @apiGroup Documents
  * @apiName Upload
  * @apiParam {File} files File to upload

@@ -42,7 +42,8 @@ class DocumentsSeeder extends Seeder {
       semestre: '1',
       profName: 'Maher Milli',
       session: 'Principale',
-      corrections: [this.corrections[0]]
+      description: 'ds analyse 2018 par Maher Mili'
+      // corrections: [this.corrections[0]]
     }, {
       title: 'EX Algo 2017',
       type: 'EX',
@@ -53,8 +54,9 @@ class DocumentsSeeder extends Seeder {
       subject: this.subject[1]._id,
       year: '2017',
       semestre: '1',
-      profName: 'profX',
-      session: 'Principale'
+      profName: 'Hanen Beji',
+      session: 'Principale',
+      description: 'EX Algo 2017 par Hanen Beji'
     }, {
       title: 'DS Archi 2015',
       type: 'DS',
@@ -65,9 +67,10 @@ class DocumentsSeeder extends Seeder {
       subject: this.subject[2]._id,
       year: '2015',
       semestre: '2',
-      profName: 'profX',
+      profName: 'Heni Mouredi',
       session: 'Principale',
-      corrections: [this.corrections[1]]
+      description: 'DS Archi 2015 par Heni Mouredi'
+      // corrections: [this.corrections[1]]
     }]
   }
 }

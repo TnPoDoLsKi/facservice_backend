@@ -233,7 +233,7 @@ export async function getOne(req, res) {
 /**
  * @api {get} /major Get one major by name
  * @apiGroup Majors
- * @apiParam name
+ * @apiParam {String} name Major name
  * @apiSuccessExample {json} Success
  *    HTTP/1.1 200 OK
  * {
