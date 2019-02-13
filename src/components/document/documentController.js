@@ -240,7 +240,6 @@ export async function getDocByType(req, res) {
     let documents = await Document.find({
       subject: req.params.id
     });
-    console.log(document.type.toLowerCase())
 
     documents = _.filter(documents, document => {
       return document.type.toLowerCase() === req.query.type;
