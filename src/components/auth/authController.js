@@ -38,7 +38,7 @@ export async function create(req, res) {
     const user = _.pick(req.body, "email", "type", "firstName", "lastName");
     user.hashedPassword = req.body.password;
 
-    console.log(req.body)
+    console.log(req.body);
 
     await User.findOne(
       {
@@ -62,6 +62,8 @@ export async function create(req, res) {
         },
         (err, foundMajor) => {
           if (err) {
+            return res.status(500).end();
+          } else if (!foundMajor) {
             return res.status(400).end();
           } else {
             user.major = foundMajor._id;
