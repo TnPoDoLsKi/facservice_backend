@@ -1042,7 +1042,7 @@
   },
   {
     "type": "get",
-    "url": "/documents/:id",
+    "url": "/documents/subject/:id",
     "title": "Get documents by type",
     "group": "Documents",
     "parameter": {
@@ -1103,7 +1103,7 @@
     "version": "0.0.0",
     "filename": "src/components/document/documentController.js",
     "groupTitle": "Documents",
-    "name": "GetDocumentsId"
+    "name": "GetDocumentsSubjectId"
   },
   {
     "type": "post",

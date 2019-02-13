@@ -186,7 +186,7 @@ export async function getOne(req, res) {
 }
 
 /**
- * @api {get} /documents/:id Get documents by type 
+ * @api {get} /documents/subject/:id Get documents by type 
  * @apiGroup Documents
  * @apiParam {id} id Subject id
  * @apiParam {String} type Document type (DS, EX, C, TP, TD)
