@@ -38,6 +38,8 @@ export async function create(req, res) {
     const user = _.pick(req.body, "email", "type", "firstName", "lastName");
     user.hashedPassword = req.body.password;
 
+    console.log(req.body)
+
     await User.findOne(
       {
         email: user.email
