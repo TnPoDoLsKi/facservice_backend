@@ -184,6 +184,11 @@ define({ "api": [
         },
         {
           "title": "Major specified doesn't exist",
+          "content": "HTTP/1.1 406 Not Acceptable",
+          "type": "json"
+        },
+        {
+          "title": "User info cannot be empty",
           "content": "HTTP/1.1 400 Bad Request",
           "type": "json"
         },
