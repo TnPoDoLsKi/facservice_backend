@@ -4,10 +4,23 @@ import Fuse from "fuse.js";
 /**
  * @api {get} /search Search all documents
  * @apiGroup Search
- * @apiParam {String} name Search query
+ * @apiParam {String} name S
+ * @apiParam {String} type document type (optional)
+ * @apiParam {ID} majorID major id (optional)
+ *
  * @apiParamExample {json} Input
  *    {
  *      "name": "algo"
+ *    }
+ * @apiParamExample {json} Input
+ *    {
+ *       "name": "algo",
+ *       "majorID": "5c41ae2c6c942e059c10737d"
+ *    }
+ * @apiParamExample {json} Input
+ *    {
+ *       "name": "algo",
+ *       "type": "ds"
  *    }
  * @apiSuccessExample {json} Success
  *    HTTP/1.1 201 OK
@@ -56,20 +69,11 @@ import Fuse from "fuse.js";
 
 export async function search(req, res) {
   try {
+    let documents = {};
     if (!req.query.name) {
       return res.status(400).end();
-    } else {
-      const options = {
-        shouldSort: true,
-        includeScore: true,
-        threshold: 0.27,
-        location: 0,
-        distance: 100,
-        maxPatternLength: 32,
-        minMatchCharLength: 2,
-        keys: ["title", "major", "year", "type"]
-      };
-      const documents = await Document.find()
+    } else if (req.query.majorID) {
+      documents = await Document.find({ major: req.query.majorID })
         .populate({
           path: "user",
           select: "-major -avatar -hashedPassword"
@@ -87,14 +91,63 @@ export async function search(req, res) {
           select: "-deleted"
         })
         .exec();
-      const fuse = new Fuse(documents, options);
-      const result = fuse.search(req.query.name);
-      let docs = result.map(resl => {
-        return resl.item;
-      });
-
-      return res.status(200).json(docs);
+    } else if (req.query.type) {
+      documents = await Document.find({ type: req.query.type })
+        .populate({
+          path: "user",
+          select: "-major -avatar -hashedPassword"
+        })
+        .populate({
+          path: "major",
+          select: "-subjects -formation -level -section"
+        })
+        .populate({
+          path: "subject",
+          select: "-deleted"
+        })
+        .populate({
+          path: "corrections",
+          select: "-deleted"
+        })
+        .exec();
+    } else {
+      documents = await Document.find({})
+        .populate({
+          path: "user",
+          select: "-major -avatar -hashedPassword"
+        })
+        .populate({
+          path: "major",
+          select: "-subjects -formation -level -section"
+        })
+        .populate({
+          path: "subject",
+          select: "-deleted"
+        })
+        .populate({
+          path: "corrections",
+          select: "-deleted"
+        })
+        .exec();
     }
+    const options = {
+      shouldSort: true,
+      includeScore: true,
+      threshold: 0.21,
+      location: 0,
+      distance: 100,
+      maxPatternLength: 32,
+      minMatchCharLength: 2,
+      keys: ["type", "title", "session", "year"]
+    };
+
+    const fuse = new Fuse(documents, options);
+    const result = fuse.search(req.query.name);
+    let docs = result.map(resl => {
+      return resl.item;
+    });
+
+    return res.status(200).json(docs);
   } catch (err) {
     console.log(err);
     return res.status(500).end();
