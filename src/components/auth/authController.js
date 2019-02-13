@@ -28,9 +28,9 @@ import Major from "../major/major";
  * @apiErrorExample {json} User already exists
  *    HTTP/1.1 208 Already Reported
  * @apiErrorExample {json} Major specified doesn't exist
- *    HTTP/1.1 400 Bad Request
+ *    HTTP/1.1 406 Not Acceptable
  * @apiErrorExample {json} User info cannot be empty
- *    HTTP/1.1 402 Bad Request
+ *    HTTP/1.1 400 Bad Request
  * @apiErrorExample {json} Register error
  *    HTTP/1.1 500 Internal Server Error
  */
@@ -46,7 +46,7 @@ export async function create(req, res) {
       !req.body.lastName ||
       !req.body.password
     ) {
-      return res.status(402).end();
+      return res.status(400).end();
     } else {
       if (req.body.major) {
         await Major.findOne(
@@ -57,7 +57,7 @@ export async function create(req, res) {
             if (err) {
               return res.status(500).end();
             } else if (!foundMajor) {
-              return res.status(400).end();
+              return res.status(406).end();
             } else {
               user.major = foundMajor._id;
             }
@@ -83,7 +83,7 @@ export async function create(req, res) {
 
         return res.status(201).end();
       } else {
-        return res.status(400).end();
+        return res.status(406).end();
       }
     }
   } catch (err) {
