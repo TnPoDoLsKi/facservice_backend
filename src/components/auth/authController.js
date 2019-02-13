@@ -64,6 +64,7 @@ export async function create(req, res) {
           if (err) {
             return res.status(500).end();
           } else if (!foundMajor) {
+            console.log("here")
             return res.status(400).end();
           } else {
             user.major = foundMajor._id;
