@@ -230,6 +230,9 @@ export async function getCorrections(req, res) {
 
     const corrections = await Correction.find({
       document: req.params.id
+    }).populate({
+      path: "user",
+      select: "-major -avatar -hashedPassword"
     });
 
     return res.json(corrections);

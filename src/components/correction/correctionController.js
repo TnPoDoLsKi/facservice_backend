@@ -141,10 +141,10 @@ export async function getOne(req, res) {
         path: "user",
         select: "-major -avatar -hashedPassword"
       })
-      .populate({
-        path: "document",
-        select: "-approved"
-      })
+      // .populate({
+      //   path: "document",
+      //   select: "-approved"
+      // })
       .exec();
 
     return res.json(correction);
