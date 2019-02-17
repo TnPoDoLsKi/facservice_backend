@@ -4,7 +4,15 @@ import mongooseDelete from "mongoose-delete";
 const sectionSchema = new mongoose.Schema(
   {
     name: { type: String },
-    description: { type: String }
+    description: { type: String },
+    formation: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Formation"
+    },
+    level: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Level"
+    }
   },
   {
     timestamps: true

@@ -20,7 +20,7 @@ export function isLoggedIn(req, res, next) {
               error: err.name
             });
           }
-          console.log("here", tokenDecoded);
+          // console.log("here", tokenDecoded);
           next();
         });
       }
