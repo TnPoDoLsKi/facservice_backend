@@ -1618,6 +1618,45 @@
   },
   {
     "type": "get",
+    "url": "/formations/:fId/levels/:lId/sections",
+    "title": "Get all sections of a formation in a specific level",
+    "group": "Formations",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "id",
+            "optional": false,
+            "field": "fId",
+            "description": "<p>Formation Id</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "id",
+            "optional": false,
+            "field": "lId",
+            "description": "<p>Level Id</p>"
+          }
+        ]
+      }
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Internal error",
+          "content": "HTTP/1.1 500 Internal Server Error",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "src/components/formation/formationController.js",
+    "groupTitle": "Formations",
+    "name": "GetFormationsFidLevelsLidSections"
+  },
+  {
+    "type": "get",
     "url": "/formations/:id",
     "title": "Get one formation",
     "group": "Formations",
@@ -1648,6 +1687,38 @@
     "filename": "src/components/formation/formationController.js",
     "groupTitle": "Formations",
     "name": "GetFormationsId"
+  },
+  {
+    "type": "get",
+    "url": "/formations/:id/levels",
+    "title": "Get all levels of a formation",
+    "group": "Formations",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "id",
+            "optional": false,
+            "field": "id",
+            "description": "<p>Formation Id</p>"
+          }
+        ]
+      }
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Internal error",
+          "content": "HTTP/1.1 500 Internal Server Error",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "src/components/formation/formationController.js",
+    "groupTitle": "Formations",
+    "name": "GetFormationsIdLevels"
   },
   {
     "type": "post",
@@ -2590,7 +2661,21 @@
             "type": "String",
             "optional": false,
             "field": "name",
-            "description": "<p>Search query</p>"
+            "description": "<p>S</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "type",
+            "description": "<p>document type (optional)</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "ID",
+            "optional": false,
+            "field": "majorID",
+            "description": "<p>major id (optional)</p>"
           }
         ]
       },
@@ -2598,6 +2683,16 @@
         {
           "title": "Input",
           "content": "{\n  \"name\": \"algo\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Input",
+          "content": "{\n   \"name\": \"algo\",\n   \"majorID\": \"5c41ae2c6c942e059c10737d\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Input",
+          "content": "{\n   \"name\": \"algo\",\n   \"type\": \"ds\"\n}",
           "type": "json"
         }
       ]
