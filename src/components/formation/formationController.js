@@ -1,5 +1,5 @@
 import _ from "lodash";
-import Formation from "./formation";
+import { Section, Formation } from "../../config/models";
 
 /**
  * @api {post} /formations Create a formation
@@ -47,6 +47,50 @@ export async function create(req, res) {
     formation = await Formation.create(formation);
 
     return res.json(formation);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).end();
+  }
+}
+
+/**
+ * @api {get} /formations/:id/levels Get all levels of a formation
+ * @apiGroup Formations
+ * @apiParam {id} id Formation Id
+ * @apiErrorExample {json} Internal error
+ *    HTTP/1.1 500 Internal Server Error
+ */
+export async function getFormationLevels(req, res) {
+  try {
+    const formation = await Formation.findById({
+      _id: req.params.id
+    })
+      .populate("levels")
+      .exec();
+
+    return res.json(formation.levels);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).end();
+  }
+}
+
+/**
+ * @api {get} /formations/:fId/levels/:lId/sections Get all sections of a formation in a specific level
+ * @apiGroup Formations
+ * @apiParam {id} fId Formation Id
+ * @apiParam {id} lId Level Id
+ * @apiErrorExample {json} Internal error
+ *    HTTP/1.1 500 Internal Server Error
+ */
+export async function getFormationSections(req, res) {
+  try {
+    const sections = await Section.find({
+      formation: req.params.fId,
+      level: req.params.lId
+    });
+
+    return res.json(sections);
   } catch (error) {
     console.log(error);
     return res.status(500).end();
@@ -166,7 +210,9 @@ export async function update(req, res) {
         error: "description is required !"
       });
 
-    let formation = await Formation.findOne({ _id: req.params.id });
+    let formation = await Formation.findOne({
+      _id: req.params.id
+    });
     if (!formation)
       return res.status(404).json({
         error: "formation not found !"
