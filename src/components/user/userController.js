@@ -111,7 +111,7 @@ export async function getAll(req, res) {
 
 export async function getCurrent(req, res) {
   try {
-    const user = _.pick(req.user, ["firstName", "lastName", "email"])
+    const user = _.pick(req.user, ["_id", "firstName", "lastName", "email"])
     return res.status(200).json(user);
   } catch (err) {
     return res.status(500).end();
