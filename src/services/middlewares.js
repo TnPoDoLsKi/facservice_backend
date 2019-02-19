@@ -14,13 +14,14 @@ export function isLoggedIn(req, res, next) {
           message: "No token provided"
         });
       } else {
-        jwt.verify(token, SECRET, (err, tokenDecoded) => {
+        jwt.verify(token, SECRET, (err, user) => {
           if (err) {
             return res.status(401).json({
               error: err.name
             });
           }
-          // console.log("here", tokenDecoded);
+          // console.log("here ", user);
+          req.user = user
           next();
         });
       }

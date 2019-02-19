@@ -109,6 +109,15 @@ export async function getAll(req, res) {
   }
 }
 
+export async function getCurrent(req, res) {
+  try {
+    const user = _.pick(req.user, ["firstName", "lastName", "email"])
+    return res.status(200).json(user);
+  } catch (err) {
+    return res.status(500).end();
+  }
+}
+
 /**
  * @api {put} /users Update user info
  * @apiGroup Users
