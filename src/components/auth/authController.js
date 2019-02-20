@@ -124,6 +124,7 @@ export async function create(req, res) {
 
 export async function signIn(req, res) {
   try {
+    console.log(req.body)
     await User.findOne(
       {
         email: req.body.email
