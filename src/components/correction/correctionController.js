@@ -1,4 +1,5 @@
 import _ from "lodash";
+import mongoose from "mongoose";
 import { Correction } from "../../config/models";
 
 /**
@@ -134,20 +135,26 @@ export async function getOne(req, res) {
       return res.status(400).json({
         error: "Correction id cannot be empty!"
       });
-    const correction = await Correction.findById({
-      _id: req.params.id
-    })
-      .populate({
-        path: "user",
-        select: "-major -avatar -hashedPassword"
+    else if (mongoose.Types.ObjectId.isValid(req.params.id)) {
+      const correction = await Correction.findById({
+        _id: req.params.id
       })
-      // .populate({
-      //   path: "document",
-      //   select: "-approved"
-      // })
-      .exec();
+        .populate({
+          path: "user",
+          select: "-major -avatar -hashedPassword"
+        })
+        // .populate({
+        //   path: "document",
+        //   select: "-approved"
+        // })
+        .exec();
 
-    return res.json(correction);
+      return res.json(correction);
+    } else {
+      return res.status(400).json({
+        error: "Id is not valid!"
+      });
+    }
   } catch (error) {
     console.log(error);
     return res.status(500).end();
@@ -235,21 +242,27 @@ export async function update(req, res) {
       return res.status(400).json({
         error: "Correction id cannot be empty!"
       });
-    let correction = await Correction.findOne({
-      _id: req.params.id
-    });
-    if (!correction)
-      return res.status(400).json({
-        error: "Correction not found !"
+    else if (mongoose.Types.ObjectId.isValid(req.params.id)) {
+      let correction = await Correction.findOne({
+        _id: req.params.id
       });
-    correction.title = req.body.title;
-    correction.filePath = req.body.filePath;
-    correction.user = req.body.user;
-    correction.document = req.body.document;
+      if (!correction)
+        return res.status(400).json({
+          error: "Correction not found !"
+        });
+      correction.title = req.body.title;
+      correction.filePath = req.body.filePath;
+      correction.user = req.body.user;
+      correction.document = req.body.document;
 
-    await correction.save();
+      await correction.save();
 
-    return res.status(200).end();
+      return res.status(200).end();
+    } else {
+      return res.status(400).json({
+        error: "Id is not valid!"
+      });
+    }
   } catch (error) {
     console.log(error);
     if (error.name === "CastError")
@@ -281,12 +294,17 @@ export async function remove(req, res) {
       return res.status(400).json({
         error: "Correction id cannot be empty!"
       });
+    else if (mongoose.Types.ObjectId.isValid(req.params.id)) {
+      await Correction.remove({
+        _id: req.params.id
+      });
 
-    await Correction.remove({
-      _id: req.params.id
-    });
-
-    return res.status(204).end();
+      return res.status(204).end();
+    } else {
+      return res.status(400).json({
+        error: "Id is not valid!"
+      });
+    }
   } catch (error) {
     console.log(error);
     if (error.name === "CastError")

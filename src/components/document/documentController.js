@@ -1,6 +1,6 @@
 import _ from "lodash";
 import { Document, Correction } from "../../config/models";
-// import { upload } from "../../services/uploadService";
+import mongoose from "mongoose";
 
 /**
  * @api {get} /documents Get all documents
@@ -156,29 +156,34 @@ export async function getOne(req, res) {
       return res.status(400).json({
         error: "Document id cannot be empty!"
       });
-
-    const document = await Document.findById({
-      _id: req.params.id
-    })
-      .populate({
-        path: "user",
-        select: "-major -avatar -hashedPassword"
+    else if (mongoose.Types.ObjectId.isValid(req.params.id)) {
+      const document = await Document.findById({
+        _id: req.params.id
       })
-      // .populate({
-      //   path: "major",
-      //   select: "-subjects -formation -level -section"
-      // })
-      // .populate({
-      //   path: "subject",
-      //   select: "-deleted"
-      // })
-      .populate({
-        path: "corrections",
-        select: "-deleted"
-      })
-      .exec();
+        .populate({
+          path: "user",
+          select: "-major -avatar -hashedPassword"
+        })
+        // .populate({
+        //   path: "major",
+        //   select: "-subjects -formation -level -section"
+        // })
+        // .populate({
+        //   path: "subject",
+        //   select: "-deleted"
+        // })
+        .populate({
+          path: "corrections",
+          select: "-deleted"
+        })
+        .exec();
 
-    return res.json(document);
+      return res.json(document);
+    } else {
+      return res.status(400).json({
+        error: "Id is not valid!"
+      });
+    }
   } catch (error) {
     console.log(error);
     return res.status(500).end();
@@ -229,25 +234,30 @@ export async function getDocByType(req, res) {
       return res.status(400).json({
         error: "Subject id cannot be empty"
       });
+    else if (mongoose.Types.ObjectId.isValid(req.params.id)) {
+      // if (!req.query.type)
+      //   return res.status(400).json({
+      //     error: "Document type cannot be empty"
+      //   });
 
-    // if (!req.query.type)
-    //   return res.status(400).json({
-    //     error: "Document type cannot be empty"
-    //   });
-
-    let documents = await Document.find({
-      subject: req.params.id
-    }).populate({
-      path: "user",
-      select: "-major -avatar -hashedPassword -deleted -__v"
-    });
-
-    if (req.query.type)
-      documents = _.filter(documents, document => {
-        return document.type.toLowerCase() === req.query.type.toLowerCase();
+      let documents = await Document.find({
+        subject: req.params.id
+      }).populate({
+        path: "user",
+        select: "-major -avatar -hashedPassword -deleted -__v"
       });
 
-    return res.json(documents);
+      if (req.query.type)
+        documents = _.filter(documents, document => {
+          return document.type.toLowerCase() === req.query.type.toLowerCase();
+        });
+
+      return res.json(documents);
+    } else {
+      return res.status(400).json({
+        error: "Id is not valid!"
+      });
+    }
   } catch (error) {
     console.log(error);
     return res.status(500).end();
@@ -296,15 +306,20 @@ export async function getCorrections(req, res) {
       return res.status(400).json({
         error: "Document id cannot be empty!"
       });
+    else if (mongoose.Types.ObjectId.isValid(req.params.id)) {
+      const corrections = await Correction.find({
+        document: req.params.id
+      }).populate({
+        path: "user",
+        select: "-major -avatar -hashedPassword"
+      });
 
-    const corrections = await Correction.find({
-      document: req.params.id
-    }).populate({
-      path: "user",
-      select: "-major -avatar -hashedPassword"
-    });
-
-    return res.json(corrections);
+      return res.json(corrections);
+    } else {
+      return res.status(400).json({
+        error: "Id is not valid!"
+      });
+    }
   } catch (error) {
     console.log(error);
     return res.status(500).end();
@@ -444,29 +459,34 @@ export async function addCorrections(req, res) {
       return res.status(400).json({
         error: "Document id cannot be empty!"
       });
-    }
-    if (!req.body.corrections) {
+    } else if (mongoose.Types.ObjectId.isValid(req.params.id)) {
+      if (!req.body.corrections) {
+        return res.status(400).json({
+          error: "Corrections Array cannot be empty!"
+        });
+      }
+      await Document.findById(
+        {
+          _id: req.params.id
+        },
+        async (err, document) => {
+          if (err) {
+            return res.status(500).end();
+          } else if (document) {
+            document.corrections = [];
+            for (let i = 0; i < req.body.corrections.length; ++i) {
+              document.corrections.push(req.body.corrections[i]);
+            }
+            await document.save();
+            return res.status(200).end();
+          }
+        }
+      );
+    } else {
       return res.status(400).json({
-        error: "Corrections Array cannot be empty!"
+        error: "Id is not valid!"
       });
     }
-    await Document.findById(
-      {
-        _id: req.params.id
-      },
-      async (err, document) => {
-        if (err) {
-          return res.status(500).end();
-        } else if (document) {
-          document.corrections = [];
-          for (let i = 0; i < req.body.corrections.length; ++i) {
-            document.corrections.push(req.body.corrections[i]);
-          }
-          await document.save();
-          return res.status(200).end();
-        }
-      }
-    );
   } catch (error) {
     console.log(error);
     return res.status(500).end();
@@ -474,7 +494,7 @@ export async function addCorrections(req, res) {
 }
 
 /**
- * @api {put} /documents Update a document
+ * @api {put} /documents/:id Update a document
  * @apiGroup Documents
  * @apiParam {id} id documents id
  * @apiParam {String} title Document title
@@ -519,53 +539,58 @@ export async function update(req, res) {
       return res.status(400).json({
         error: "Document id cannot be empty!"
       });
-
-    const document = _.pick(
-      req.body,
-      "title",
-      "description",
-      "filePath",
-      "type",
-      "semestre",
-      "major",
-      "subject",
-      "year",
-      "user",
-      "session",
-      "profName",
-      "corrections"
-    );
-    await Document.findOne(
-      {
-        type: document.type,
-        description: document.description,
-        semestre: document.semestre,
-        major: document.major,
-        subject: document.subject,
-        year: document.year,
-        session: document.session,
-        profName: document.profName,
-        title: document.title,
-        filePath: document.filePath
-      },
-      (err, document) => {
-        if (err) {
-          return res.status(500).end();
-        } else if (document) {
-          return res.status(208).end();
+    else if (mongoose.Types.ObjectId.isValid(req.params.id)) {
+      const document = _.pick(
+        req.body,
+        "title",
+        "description",
+        "filePath",
+        "type",
+        "semestre",
+        "major",
+        "subject",
+        "year",
+        "user",
+        "session",
+        "profName",
+        "corrections"
+      );
+      await Document.findOne(
+        {
+          type: document.type,
+          description: document.description,
+          semestre: document.semestre,
+          major: document.major,
+          subject: document.subject,
+          year: document.year,
+          session: document.session,
+          profName: document.profName,
+          title: document.title,
+          filePath: document.filePath
+        },
+        (err, document) => {
+          if (err) {
+            return res.status(500).end();
+          } else if (document) {
+            return res.status(208).end();
+          }
         }
-      }
-    );
-    await Document.update(
-      {
-        _id: req.params.id
-      },
-      {
-        $set: document
-      }
-    );
+      );
+      await Document.update(
+        {
+          _id: req.params.id
+        },
+        {
+          $set: document
+        }
+      );
 
-    return res.status(204).end();
+      return res.status(204).end();
+    } else {
+      return res.status(400).json({
+        error: "Id is not valid!"
+      });
+    }
   } catch (error) {
     console.log(error);
     if (error.name === "CastError")
@@ -578,7 +603,7 @@ export async function update(req, res) {
 }
 
 /**
- * @api {delete} /documents Delete a document
+ * @api {delete} /documents/:id Delete a document
  * @apiGroup Documents
  * @apiParam {id} id documents id
  * @apiHeader Authorization Bearer Token
@@ -597,12 +622,17 @@ export async function remove(req, res) {
       return res.status(400).json({
         error: "Document id cannot be empty!"
       });
+    else if (mongoose.Types.ObjectId.isValid(req.params.id)) {
+      await Document.remove({
+        _id: req.params.id
+      });
 
-    await Document.remove({
-      _id: req.params.id
-    });
-
-    return res.status(204).end();
+      return res.status(204).end();
+    } else {
+      return res.status(400).json({
+        error: "Id is not valid!"
+      });
+    }
   } catch (error) {
     console.log(error);
     if (error.name === "CastError")

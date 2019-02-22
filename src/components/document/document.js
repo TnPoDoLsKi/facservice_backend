@@ -6,9 +6,9 @@ const documentSchema = new mongoose.Schema(
     title: {
       type: String
     },
-    filePath: {
+    filePath: [{
       type: String
-    },
+    }],
     type: {
       type: String,
       enum: ["DS", "EX", "C", "TD", "TP", "DS1", "DS2"],
@@ -37,10 +37,6 @@ const documentSchema = new mongoose.Schema(
     NBDowloads: {
       type: Number,
       default: 0
-    },
-    verifiedByProf: {
-      type: Boolean,
-      default: false
     },
     user: {
       type: mongoose.Schema.Types.ObjectId,

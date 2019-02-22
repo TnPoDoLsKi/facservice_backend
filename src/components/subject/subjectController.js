@@ -1,5 +1,6 @@
 import _ from "lodash";
-import { Document, Subject } from "../../config/models";
+import mongoose from "mongoose";
+import { Subject } from "../../config/models";
 
 /**
  * @api {post} /subjects Create a subject
@@ -116,12 +117,17 @@ export async function getOne(req, res) {
       return res.status(400).json({
         error: "id cannot be empty"
       });
+    else if (mongoose.Types.ObjectId.isValid(req.params.id)) {
+      const subject = await Subject.findById({
+        _id: req.params.id
+      });
 
-    const subject = await Subject.findById({
-      _id: req.params.id
-    });
-
-    return res.json(subject);
+      return res.json(subject);
+    } else {
+      return res.status(400).json({
+        error: "Id is not valid!"
+      });
+    }
   } catch (error) {
     console.log(error);
     return res.status(500).end();
@@ -129,7 +135,7 @@ export async function getOne(req, res) {
 }
 
 /**
- * @api {put} /subjects Update a Subject
+ * @api {put} /subjects/:id Update a Subject
  * @apiGroup Subjects
  * @apiParam {id} id Subject id
  * @apiParam {String} name Subject name
@@ -161,21 +167,26 @@ export async function update(req, res) {
       return res.status(400).json({
         error: "description is required !"
       });
-
-    const subject = await Subject.findOne({
-      _id: req.params.id
-    });
-    if (!subject)
-      return res.status(401).json({
-        error: "subject not found !"
+    else if (mongoose.Types.ObjectId.isValid(req.params.id)) {
+      const subject = await Subject.findOne({
+        _id: req.params.id
       });
+      if (!subject)
+        return res.status(401).json({
+          error: "subject not found !"
+        });
 
-    subject.description = req.body.description;
-    subject.name = req.body.name;
+      subject.description = req.body.description;
+      subject.name = req.body.name;
 
-    await subject.save();
+      await subject.save();
 
-    return res.status(200).end();
+      return res.status(200).end();
+    } else {
+      return res.status(400).json({
+        error: "Id is not valid!"
+      });
+    }
   } catch (error) {
     console.log(error);
     return res.status(500).end();
@@ -183,7 +194,7 @@ export async function update(req, res) {
 }
 
 /**
- * @api {delete} /subjects Delete a subject
+ * @api {delete} /subjects/:id Delete a subject
  * @apiGroup Subjects
  * @apiParam {id} id Subject id
  * @apiHeader Authorization Bearer Token
@@ -201,11 +212,17 @@ export async function remove(req, res) {
       return res.status(400).json({
         error: "id cannot be empty"
       });
-    const subject = await Subject.deleteOne({
-      _id: req.params.id
-    });
+    else if (mongoose.Types.ObjectId.isValid(req.params.id)) {
+      const subject = await Subject.deleteOne({
+        _id: req.params.id
+      });
 
-    return res.json(subject);
+      return res.json(subject);
+    } else {
+      return res.status(400).json({
+        error: "Id is not valid!"
+      });
+    }
   } catch (error) {
     console.log(error);
     return res.status(500).end();

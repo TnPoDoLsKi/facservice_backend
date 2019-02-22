@@ -20,8 +20,7 @@ export function isLoggedIn(req, res, next) {
               error: err.name
             });
           }
-          // console.log("here ", user);
-          req.user = user
+          req.user = user;
           next();
         });
       }
