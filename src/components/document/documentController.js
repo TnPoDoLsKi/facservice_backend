@@ -25,7 +25,7 @@ import mongoose from "mongoose";
      {
         "type": "DS",
         "semestre": 1,
-        "approved": false,
+        "approved": true,
         "session": "Principale",
         "corrections": [],
         "_id": "5c41ae2c6c942e059c10737d",
@@ -64,7 +64,9 @@ import mongoose from "mongoose";
 
 export async function getAll(req, res) {
   try {
-    const documents = await Document.find()
+    const documents = await Document.find({
+      aproved: true
+    })
       .populate({
         path: "user",
         select: "-major -avatar -hashedPassword"
@@ -113,7 +115,7 @@ export async function getAll(req, res) {
  * {
     "type": "DS",
     "semestre": 1,
-    "approved": false,
+    "approved": true,
     "session": "Principale",
     "corrections": [],
     "_id": "5c41ae2c6c942e059c10737d",
@@ -158,7 +160,8 @@ export async function getOne(req, res) {
       });
     else if (mongoose.Types.ObjectId.isValid(req.params.id)) {
       const document = await Document.findById({
-        _id: req.params.id
+        _id: req.params.id,
+        aproved: true
       })
         .populate({
           path: "user",
@@ -241,7 +244,8 @@ export async function getDocByType(req, res) {
       //   });
 
       let documents = await Document.find({
-        subject: req.params.id
+        subject: req.params.id,
+        approved: true
       }).populate({
         path: "user",
         select: "-major -avatar -hashedPassword -deleted -__v"
@@ -411,7 +415,8 @@ export async function create(req, res) {
         profName: document.profName,
         title: document.title,
         filePath: document.filePath,
-        user: document.user
+        user: document.user,
+        approved: true
       },
       (err, document) => {
         if (err) {
@@ -465,9 +470,10 @@ export async function addCorrections(req, res) {
           error: "Corrections Array cannot be empty!"
         });
       }
-      await Document.findById(
+      await Document.find(
         {
-          _id: req.params.id
+          _id: req.params.id,
+          approved: true
         },
         async (err, document) => {
           if (err) {
