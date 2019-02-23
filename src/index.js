@@ -4,13 +4,15 @@ import morgan from "morgan";
 import bodyParser from "body-parser";
 import routes from "./config/routes";
 import session from "express-session";
-import connectMongo from 'connect-mongo'
+// import connectMongo from 'connect-mongo'
+// import mongooseConnection from './config/database'
 import cors from "cors";
 import path from "path";
 import "./config/database";
 import { SECRET, PORT, NODE_ENV } from "./config/env";
 
 const app = express();
+// const mongoStore = connectMongo(session)
 const server = http.createServer(app);
 
 app.use(
@@ -21,7 +23,7 @@ app.use(
     cookie: {
       secure: false
     },
-    store: new mongoStore({ mongooseConnection: mongooseConnection })
+    // store: new mongoStore({ mongooseConnection: mongooseConnection })
   })
 );
 
