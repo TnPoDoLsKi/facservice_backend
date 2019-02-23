@@ -643,3 +643,26 @@ export async function remove(req, res) {
     return res.status(500).end();
   }
 }
+
+export async function getDocByUser(req, res) {
+  try {
+    if (!req.params.id)
+      return res.status(400).json({
+        error: "User id cannot be empty"
+      });
+    else if (mongoose.Types.ObjectId.isValid(req.params.id)) {
+      let documents = await Document.find({
+        user: req.params.id
+      });
+      console.log(documents);
+      return res.status(200).json(documents);
+    } else {
+      return res.status(400).json({
+        error: "Id is not valid!"
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(500).end();
+  }
+}
