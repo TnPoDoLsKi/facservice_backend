@@ -4,6 +4,7 @@ import morgan from "morgan";
 import bodyParser from "body-parser";
 import routes from "./config/routes";
 import session from "express-session";
+import connectMongo from 'connect-mongo'
 import cors from "cors";
 import path from "path";
 import "./config/database";
@@ -16,10 +17,11 @@ app.use(
   session({
     secret: SECRET,
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
     cookie: {
       secure: false
-    }
+    },
+    store: new mongoStore({ mongooseConnection: mongooseConnection })
   })
 );
 
@@ -28,11 +30,13 @@ app.use(
     limit: "4mb"
   })
 );
+
 app.use(
   bodyParser.urlencoded({
     extended: false
   })
 );
+
 app.use(morgan("dev"));
 app.use(cors());
 app.use("/api", routes);
