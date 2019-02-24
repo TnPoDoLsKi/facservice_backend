@@ -21,7 +21,8 @@ import path from "path";
 const config = {
   // storage
   uploadDir: path.join(__dirname, "../../public", "uploads"),
-  maxFileSize: 10 * 1024 * 1024,
+  maxFileSize: 100 * 1024 * 1024,
+  maxFieldsSize = 100 * 1024 * 1024,
   multiple: true
 };
 export async function upload(req, res) {
