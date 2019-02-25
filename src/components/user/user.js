@@ -37,22 +37,9 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-userSchema.pre("save", function(next) {
-  const user = this;
-  bcrypt.genSalt(10, function(err, salt) {
-    if (err) {
-      console.log("generating salt failed");
-      return next(err);
-    }
-    bcrypt.hash(user.hashedPassword, salt, function(err, hash) {
-      if (err) {
-        console.log("Hashing failed");
-        return next(err);
-      }
-      user.hashedPassword = hash;
-      next();
-    });
-  });
+userSchema.virtual("password").set(function(password) {
+  console.log("from the model : ", password);
+  this.hashedPassword = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
 });
 
 userSchema.methods.comparePassword = function(password, callback) {

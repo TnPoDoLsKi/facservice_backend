@@ -6,9 +6,14 @@ const documentSchema = new mongoose.Schema(
     title: {
       type: String
     },
-    filePath: [{
+    filePath: {
       type: String
-    }],
+    },
+    filesStaging: [
+      {
+        type: String
+      }
+    ],
     type: {
       type: String,
       enum: ["DS", "EX", "C", "TD", "TP", "DS1", "DS2"],
