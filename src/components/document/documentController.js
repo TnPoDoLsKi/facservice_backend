@@ -65,7 +65,7 @@ import mongoose from "mongoose";
 export async function getAll(req, res) {
   try {
     const documents = await Document.find({
-      aproved: true
+      approved: true
     })
       .populate({
         path: "user",
@@ -161,7 +161,7 @@ export async function getOne(req, res) {
     else if (mongoose.Types.ObjectId.isValid(req.params.id)) {
       const document = await Document.findById({
         _id: req.params.id,
-        aproved: true
+        approved: true
       })
         .populate({
           path: "user",
