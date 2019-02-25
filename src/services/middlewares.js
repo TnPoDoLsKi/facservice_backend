@@ -4,32 +4,31 @@ import atob from "atob";
 
 export function isLoggedIn(req, res, next) {
   try {
+    let token = null
+
     if ("authorization" in req.headers) {
       const bearer = req.headers["authorization"];
-      const token = bearer.split(" ")[1];
+      token = bearer.split(" ")[1];
 
-      if (!token) {
-        return res.status(403).send({
-          auth: false,
-          message: "No token provided"
-        });
-      } else {
-        jwt.verify(token, SECRET, (err, user) => {
-          if (err) {
-            return res.status(401).json({
-              error: err.name
-            });
-          }
-          // console.log("here ", user);
-          req.user = user
-          next();
-        });
-      }
+    } else if (req.session && req.session.token) {
+      token = req.session.token
+      
     } else {
       return res.status(401).json({
         error: "Authorization required !"
       });
     }
+
+    jwt.verify(token, SECRET, (err, user) => {
+      if (err) {
+        return res.status(401).json({
+          error: err.name
+        });
+      }
+      req.user = user;
+      next();
+    });
+
   } catch (err) {
     console.log(err);
     return res.status(500).end();

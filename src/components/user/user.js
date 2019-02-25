@@ -37,25 +37,13 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-userSchema.pre("save", function(next) {
-  const user = this;
-  bcrypt.genSalt(10, function(err, salt) {
-    if (err) {
-      console.log("generating salt failed");
-      return next(err);
-    }
-    bcrypt.hash(user.hashedPassword, salt, function(err, hash) {
-      if (err) {
-        console.log("Hashing failed");
-        return next(err);
-      }
-      user.hashedPassword = hash;
-      next();
-    });
-  });
-});
+userSchema.virtual('password')
+  .set(function (password) {
+    console.log('from the model : ', password)
+    this.hashedPassword = bcrypt.hashSync(password, bcrypt.genSaltSync(10))
+  })
 
-userSchema.methods.comparePassword = function(password, callback) {
+userSchema.methods.comparePassword = function (password, callback) {
   bcrypt.compare(password, this.hashedPassword, (err, equal) => {
     if (err) {
       return callback(err);
@@ -70,7 +58,7 @@ userSchema.plugin(mongooseDelete, {
   deletedBy: true
 });
 
-userSchema.methods.toJSON = function() {
+userSchema.methods.toJSON = function () {
   var obj = this.toObject();
   delete obj.__v;
   delete obj.deleted;

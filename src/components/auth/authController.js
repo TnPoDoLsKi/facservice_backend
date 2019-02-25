@@ -36,8 +36,7 @@ import Major from "../major/major";
  */
 export async function create(req, res) {
   try {
-    const user = _.pick(req.body, "email", "type", "firstName", "lastName");
-    user.hashedPassword = req.body.password;
+    const user = _.pick(req.body, "email", "type", "firstName", "lastName", "password");
 
     if (
       !req.body.email ||
@@ -124,7 +123,6 @@ export async function create(req, res) {
 
 export async function signIn(req, res) {
   try {
-    console.log(req.body)
     await User.findOne(
       {
         email: req.body.email
@@ -136,6 +134,7 @@ export async function signIn(req, res) {
         if (!user) {
           return res.status(400).end();
         }
+
         user.comparePassword(req.body.password, (err, equal) => {
           if (equal && !err) {
             const userData = _.pick(
@@ -151,6 +150,7 @@ export async function signIn(req, res) {
             const token = jwt.sign(userData, SECRET, {
               expiresIn: 604800
             });
+            
             req.session.token = token;
             req.session.userData = userData;
 
@@ -159,6 +159,7 @@ export async function signIn(req, res) {
               token: token
             });
           } else {
+            console.log(equal, err)
             return res.status(400).end();
           }
         });

@@ -268,7 +268,7 @@ export async function getOneByName(req, res) {
       name: req.query.name
     })
       .select("-formation -level -section")
-      .populate("subjects")
+      .populate({ path: "subjects", select: "-documents" })
       .exec();
 
     return res.json(major);

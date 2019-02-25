@@ -1,6 +1,6 @@
 import { User, Major } from "../../config/models";
 import _ from "lodash";
-import bcrypt from "bcrypt";
+import mongoose from "mongoose";
 
 /**
  * @api {get} /users/:type Get all users by type
@@ -111,7 +111,7 @@ export async function getAll(req, res) {
 
 export async function getCurrent(req, res) {
   try {
-    const user = _.pick(req.user, ["_id", "firstName", "lastName", "email"])
+    const user = await User.findOne({ _id: req.user._id }).select('_id firstName lastName email')
     return res.status(200).json(user);
   } catch (err) {
     return res.status(500).end();
@@ -119,7 +119,7 @@ export async function getCurrent(req, res) {
 }
 
 /**
- * @api {put} /users Update user info
+ * @api {put} /users/:id Update user info
  * @apiGroup Users
  * @apiParam {id} id User id
  * @apiParam {String} email User email
@@ -151,43 +151,34 @@ export async function getCurrent(req, res) {
 
 export async function update(req, res) {
   try {
-    if (!req.params.id) {
-      return res.status(400).end();
-    }
-
-    const user = _.pick(
+    const userData = _.pick(
       req.body,
       "email",
-      "password",
       "type",
       "firstName",
       "lastName",
-      "avatar"
+      "avatar",
+      "password",
+      "major"
     );
 
-    if (req.body.major) {
-      await Major.findOne(
-        {
-          _id: req.body.major
-        },
-        (err, foundMajor) => {
-          if (err) {
-            return res.status(400).end();
-          } else {
-            user.major = foundMajor._id;
-          }
-        }
-      );
-    }
+    await User.update(
+      {
+        _id: req.user._id
+      },
+      {
+        $set: userData
+      }
+    );
 
-    if (user.password) {
-      const salt = bcrypt.genSaltSync(10);
-      user.password = bcrypt.hashSync(user.password, salt);
+    if (userData.password) {
+      let user = await User.findOne({ _id: req.user._id })
+      user.password = userData.password
+      await user.save()
     }
-
-    await User.update({ _id: req.params.id }, { $set: user });
 
     return res.status(200).end();
+
   } catch (error) {
     console.log(error);
     return res.status(500).end();
@@ -195,7 +186,7 @@ export async function update(req, res) {
 }
 
 /**
- * @api {delete} /user Delete User
+ * @api {delete} /users/:id Delete User
  * @apiGroup Users
  * @apiParam {id} id User id
  * @apiHeader Authorization Bearer Token
@@ -211,12 +202,17 @@ export async function update(req, res) {
 export async function remove(req, res) {
   try {
     if (!req.params.id) return res.status(400).end();
+    else if (mongoose.Types.ObjectId.isValid(req.params.id)) {
+      await User.remove({
+        _id: req.params.id
+      });
 
-    await User.remove({
-      _id: req.params.id
-    });
-
-    return res.status(204).end();
+      return res.status(204).end();
+    } else {
+      return res.status(400).json({
+        error: "Id is not valid!"
+      });
+    }
   } catch (error) {
     return res.status(500).end();
   }
