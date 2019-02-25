@@ -19,8 +19,6 @@ export function isLoggedIn(req, res, next) {
       });
     }
 
-    console.log(token)
-
     jwt.verify(token, SECRET, (err, user) => {
       if (err) {
         return res.status(401).json({
