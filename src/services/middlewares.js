@@ -4,15 +4,13 @@ import atob from "atob";
 
 export function isLoggedIn(req, res, next) {
   try {
-    let token = null
+    let token = null;
 
     if ("authorization" in req.headers) {
       const bearer = req.headers["authorization"];
       token = bearer.split(" ")[1];
-
     } else if (req.session && req.session.token) {
-      token = req.session.token
-      
+      token = req.session.token;
     } else {
       return res.status(401).json({
         error: "Authorization required !"
@@ -28,7 +26,6 @@ export function isLoggedIn(req, res, next) {
       req.user = user;
       next();
     });
-
   } catch (err) {
     console.log(err);
     return res.status(500).end();
