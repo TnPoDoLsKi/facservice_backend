@@ -158,17 +158,16 @@ export async function update(req, res) {
       const user = _.pick(
         req.body,
         "email",
-        "password",
         "type",
         "firstName",
         "lastName",
         "avatar"
       );
 
-      if (req.body.major) {
+      if (req.body.major && req.body.major !== "") {
         await Major.findOne(
           {
-            _id: req.body.major
+            name: req.body.major
           },
           (err, foundMajor) => {
             if (err) {
@@ -179,10 +178,9 @@ export async function update(req, res) {
           }
         );
       }
-
-      if (user.password) {
+      if (req.body.password && req.body.password !== "") {
         const salt = bcrypt.genSaltSync(10);
-        user.password = bcrypt.hashSync(user.password, salt);
+        user.password = bcrypt.hashSync(req.body.password, salt);
       }
 
       await User.update(

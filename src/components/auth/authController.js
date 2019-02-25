@@ -158,7 +158,7 @@ export async function signIn(req, res) {
               token: token
             });
           } else {
-            return res.status(400).end();
+            return res.status(401).end();
           }
         });
       }
