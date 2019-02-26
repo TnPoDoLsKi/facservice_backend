@@ -34,10 +34,7 @@ import Fuse from "fuse.js";
         "_id": "5c41ae2c6c942e059c10737d",
         "title": "dsAlgo",
         "filePath": "/uploads/hjkhdfkjl.pdf",
-        "major": {
-            "_id": "5c61956ee4fee13ce8342e73",
-            "name": "FIA1"
-        },
+        "major": "5c3f8bee091f3c3290ac10b2",
         "subject": "5c41b2d82383c111b4ffad1d",
         "year": 2016,
         "user": "5c2426542a7e2f361896f812",
@@ -56,10 +53,7 @@ import Fuse from "fuse.js";
         "_id": "5c41df5e0000d416fc5158fd",
         "title": "EXAlgo",
         "filePath": "/uploads/hjkhdfkjl.pdf",
-        "major": {
-            "_id": "5c61956ee4fee13ce8342e73",
-            "name": "FIA1"
-        },
+        "major": "5c3f8bee091f3c3290ac10b2",
         "subject": "5c3f8bed091f3c3290ac1083",
         "year": 2016,
         "user": "5c2426542a7e2f361896f812",
@@ -79,14 +73,21 @@ export async function search(req, res) {
     if (!req.query.name) {
       return res.status(400).end();
     } else if (req.query.majorID) {
-      documents = await Document.find({ major: req.query.majorID })
+      documents = await Document.find({
+        major: req.query.majorID,
+        approved: true
+      })
         .populate({
           path: "user",
           select: "-major -avatar -hashedPassword"
         })
         .populate({
           path: "major",
-          select: "name"
+          select: "-subjects -formation -level -section"
+        })
+        .populate({
+          path: "subject",
+          select: "-deleted"
         })
         .populate({
           path: "corrections",
@@ -94,14 +95,18 @@ export async function search(req, res) {
         })
         .exec();
     } else if (req.query.type) {
-      documents = await Document.find({ type: req.query.type.toUpperCase() })
+      documents = await Document.find({ type: req.query.type, approved: true })
         .populate({
           path: "user",
           select: "-major -avatar -hashedPassword"
         })
         .populate({
           path: "major",
-          select: "name"
+          select: "-subjects -formation -level -section"
+        })
+        .populate({
+          path: "subject",
+          select: "-deleted"
         })
         .populate({
           path: "corrections",
@@ -109,15 +114,19 @@ export async function search(req, res) {
         })
         .exec();
     } else {
-      documents = await Document.find({})
+      documents = await Document.find({ approved: true })
         .populate({
           path: "user",
           select: "-major -avatar -hashedPassword -deleted -__v"
         })
-        .populate({
-          path: "major",
-          select: "name"
-        })
+        // .populate({
+        //   path: "major",
+        //   select: "-subjects -formation -level -section"
+        // })
+        // .populate({
+        //   path: "subject",
+        //   select: "-deleted"
+        // })
         .populate({
           path: "corrections",
           select: "-deleted"
@@ -127,7 +136,7 @@ export async function search(req, res) {
     const options = {
       shouldSort: true,
       includeScore: true,
-      threshold: 0.24,
+      threshold: 0.21,
       location: 0,
       distance: 100,
       maxPatternLength: 32,

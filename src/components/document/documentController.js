@@ -165,7 +165,7 @@ export async function getOne(req, res) {
       })
         .populate({
           path: "user",
-          select: "-major -avatar -hashedPassword"
+          select: "-major -hashedPassword"
         })
         // .populate({
         //   path: "major",
