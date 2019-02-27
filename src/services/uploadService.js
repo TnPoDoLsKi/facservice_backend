@@ -76,7 +76,7 @@ export async function upload(req, res) {
     form.on("error", _errorHandler);
     form.on("aborted", _abortHandler);
     form.on("end", () => {
-      console.log("Reachead end");
+      console.log("uploaded");
       res.json(fileUrls);
     });
   } catch (error) {
