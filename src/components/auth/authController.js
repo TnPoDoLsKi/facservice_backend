@@ -86,9 +86,13 @@ export async function create(req, res) {
           }
         );
 
-        await User.create(user);
+        const userCreated = await User.create(user);
 
-        return res.status(201).end();
+        const token = jwt.sign({ id: userCreated._id }, SECRET, {
+          expiresIn: 604800
+        });
+
+        return res.status(201).json({ token: token });
       } else {
         return res.status(406).end();
       }
@@ -141,6 +145,10 @@ export async function signIn(req, res) {
         }
         if (!user) {
           return res.status(400).end();
+        }
+
+        if (user.activated === false) {
+          return res.status(403).end();
         }
 
         user.comparePassword(req.body.password, (err, equal) => {
@@ -203,5 +211,22 @@ export function testMailer(req, res) {
     res.status(400).end();
   } else {
     res.status(200).end();
+  }
+}
+
+export async function activeAccount(req, res) {
+  if (req.params.token) {
+    jwt.verify(req.params.token, SECRET, (err, user) => {
+      if (err) {
+        res.status(400).end();
+      } else {
+        User.update({ _id: user.id }, { $set: { activated: true } }, error => {
+          if (error) {
+            return res.status(500).end();
+          }
+          return res.status(200).end();
+        });
+      }
+    });
   }
 }

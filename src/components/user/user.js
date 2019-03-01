@@ -30,6 +30,10 @@ const userSchema = new mongoose.Schema(
     major: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Major"
+    },
+    activated: {
+      type: Boolean,
+      default: false
     }
   },
   {
@@ -58,7 +62,7 @@ userSchema.plugin(mongooseDelete, {
 });
 
 userSchema.methods.toJSON = function() {
-  var obj = this.toObject();
+  let obj = this.toObject();
   delete obj.__v;
   delete obj.deleted;
   return obj;

@@ -179,8 +179,21 @@ export async function update(req, res) {
         );
       }
       if (req.body.password && req.body.password !== "") {
-        const salt = bcrypt.genSaltSync(10);
-        user.password = bcrypt.hashSync(req.body.password, salt);
+        await User.findById({ _id: req.params.id }, async (err, user) => {
+          if (err) {
+            return res.status(500).end(err);
+          }
+          await user.comparePassword(req.body.oldPassword, (err, equal) => {
+            if (equal && !err) {
+              console.log("equal");
+              const salt = bcrypt.genSaltSync(10);
+              user.password = bcrypt.hashSync(req.body.password, salt);
+            } else {
+              console.log("not equal");
+              return res.status(401).json({ error: "old password is wrong" });
+            }
+          });
+        });
       }
 
       await User.update(
