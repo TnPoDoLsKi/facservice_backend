@@ -660,7 +660,6 @@ export async function getDocByUser(req, res) {
       let documents = await Document.find({
         user: req.params.id
       });
-      console.log(documents);
       return res.status(200).json(documents);
     } else {
       return res.status(400).json({
