@@ -152,52 +152,34 @@ export async function getCurrent(req, res) {
 
 export async function update(req, res) {
   try {
-    if (!req.params.id) {
-      return res.status(400).end();
-    } else if (mongoose.Types.ObjectId.isValid(req.params.id)) {
-      const user = _.pick(
-        req.body,
-        "email",
-        "type",
-        "firstName",
-        "lastName",
-        "avatar"
-      );
+    const userData = _.pick(
+      req.body,
+      "email",
+      "type",
+      "firstName",
+      "lastName",
+      "avatar",
+      "password",
+      "major"
+    );
 
-      if (req.body.major && req.body.major !== "") {
-        await Major.findOne(
-          {
-            name: req.body.major
-          },
-          (err, foundMajor) => {
-            if (err) {
-              return res.status(400).end();
-            } else {
-              user.major = foundMajor._id;
-            }
-          }
-        );
+    await User.update(
+      {
+        _id: req.user._id
+      },
+      {
+        $set: userData
       }
-      if (req.body.password && req.body.password !== "") {
-        const salt = bcrypt.genSaltSync(10);
-        user.password = bcrypt.hashSync(req.body.password, salt);
-      }
+    );
 
-      await User.update(
-        {
-          _id: req.params.id
-        },
-        {
-          $set: user
-        }
-      );
-
-      return res.status(200).end();
-    } else {
-      return res.status(400).json({
-        error: "Id is not valid!"
-      });
+    if (userData.password) {
+      let user = await User.findOne({ _id: req.user._id })
+      user.password = userData.password
+      await user.save()
     }
+
+    return res.status(200).end();
+
   } catch (error) {
     console.log(error);
     return res.status(500).end();
