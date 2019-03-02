@@ -216,12 +216,22 @@ export async function getOne(req, res) {
         error: "Major ID cannot be empty"
       });
 
-    const major = await Major.findById({
+    let major = await Major.findById({
       _id: req.params.id
     })
       .select("-formation -level -section")
       .populate("subjects")
       .exec();
+
+    if (major) {
+      major = major.toJSON()
+      for(let subject of major.subjects ) {
+        let docs = await Document.find({subject: subject._id})
+      }
+
+    }
+
+
 
     return res.json(major);
   } catch (error) {
