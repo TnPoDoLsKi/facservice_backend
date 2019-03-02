@@ -73,7 +73,10 @@ export async function search(req, res) {
     if (!req.query.name) {
       return res.status(400).end();
     } else if (req.query.majorID) {
-      documents = await Document.find({ major: req.query.majorID,approved: true })
+      documents = await Document.find({
+        major: req.query.majorID,
+        approved: true
+      })
         .populate({
           path: "user",
           select: "-major -avatar -hashedPassword"
@@ -92,7 +95,7 @@ export async function search(req, res) {
         })
         .exec();
     } else if (req.query.type) {
-      documents = await Document.find({ type: req.query.type,approved: true })
+      documents = await Document.find({ type: req.query.type, approved: true })
         .populate({
           path: "user",
           select: "-major -avatar -hashedPassword"
@@ -111,7 +114,7 @@ export async function search(req, res) {
         })
         .exec();
     } else {
-      documents = await Document.find({approved: true})
+      documents = await Document.find({ approved: true })
         .populate({
           path: "user",
           select: "-major -avatar -hashedPassword -deleted -__v"

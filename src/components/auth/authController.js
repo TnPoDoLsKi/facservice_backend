@@ -3,6 +3,7 @@ import User from "../user/user";
 import jwt from "jsonwebtoken";
 import { SECRET } from "../../config/env";
 import Major from "../major/major";
+import mailer from "../../services/mailer";
 
 /**
  * @api {post} /auth/signup Create User
@@ -85,9 +86,21 @@ export async function create(req, res) {
           }
         );
 
-        await User.create(user);
+        const userCreated = await User.create(user);
 
-        return res.status(201).end();
+        const token = jwt.sign({ id: userCreated._id }, SECRET, {
+          expiresIn: 604800
+        });
+
+        const subject = "Activation de compte";
+        const message = `localhost:3000/api/activate/${token}`;
+
+        const error = mailer(userCreated.email, subject, message);
+        if (error) {
+          res.status(400).end();
+        } else {
+          return res.status(201).end();
+        }
       } else {
         return res.status(406).end();
       }
@@ -142,6 +155,10 @@ export async function signIn(req, res) {
           return res.status(400).end();
         }
 
+        if (user.activated === false) {
+          return res.status(403).end();
+        }
+
         user.comparePassword(req.body.password, (err, equal) => {
           if (equal && !err) {
             const userData = _.pick(
@@ -193,5 +210,22 @@ export async function signOut(req, res) {
     return res.status(200).end();
   } catch (err) {
     return res.status(500).end();
+  }
+}
+
+export async function activeAccount(req, res) {
+  if (req.params.token) {
+    jwt.verify(req.params.token, SECRET, (err, user) => {
+      if (err) {
+        res.status(400).end();
+      } else {
+        User.update({ _id: user.id }, { $set: { activated: true } }, error => {
+          if (error) {
+            return res.status(500).end();
+          }
+          res.redirect("http://localhost:4200/activate");
+        });
+      }
+    });
   }
 }

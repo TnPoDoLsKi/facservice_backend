@@ -1,4 +1,4 @@
-import { User, Major } from "../../config/models";
+import { User } from "../../config/models";
 import _ from "lodash";
 import mongoose from "mongoose";
 
@@ -129,7 +129,13 @@ export async function getAll(req, res) {
 
 export async function getCurrent(req, res) {
   try {
-    const user = _.pick(req.user, ["_id", "firstName", "lastName", "email", "major"]);
+    const user = _.pick(req.user, [
+      "_id",
+      "firstName",
+      "lastName",
+      "email",
+      "major"
+    ]);
     return res.status(200).json(user);
   } catch (err) {
     return res.status(500).end();
@@ -189,13 +195,14 @@ export async function update(req, res) {
     );
 
     if (userData.password) {
-      let user = await User.findOne({ _id: req.user._id })
-      user.password = userData.password
-      await user.save()
+      let user = await User.findOne({
+        _id: req.user._id
+      });
+      user.password = userData.password;
+      await user.save();
     }
 
     return res.status(200).end();
-
   } catch (error) {
     console.log(error);
     return res.status(500).end();
