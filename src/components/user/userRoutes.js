@@ -11,6 +11,6 @@ export default function(router) {
   router.get("/user", isLoggedIn, getCurrent);
   router.get("/users", isLoggedIn, isAdmin, getAll);
   router.get("/users/:type", isLoggedIn, isAdmin, getByType);
-  router.put("/user/:id", isLoggedIn, update);
+  router.put("/user", isLoggedIn, update);
   router.delete("/users/:id", isLoggedIn, remove);
 }
