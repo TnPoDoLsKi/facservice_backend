@@ -1,7 +1,6 @@
 import { User, Major } from "../../config/models";
 import _ from "lodash";
 import mongoose from "mongoose";
-import bcrypt from "bcrypt";
 
 /**
  * @api {get} /users/:type Get all users by type
@@ -110,9 +109,27 @@ export async function getAll(req, res) {
   }
 }
 
+/**
+ * @api {get} /user Get current user
+ * @apiGroup Users
+ * @apiHeader Authorization Bearer Token
+ * @apiHeader Content-Type application/x-www-form-urlencoded
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 OK
+ *  {
+        "_id": "5c2426542a7e2f361896f812",
+        "firstName": "mohamed",
+        "lastName": "mohamed",
+        "email": "mohamed@test.com",
+        "major": "5c2426542a7e2f361896f812"
+    }
+ * @apiErrorExample {json} Find error
+ *    HTTP/1.1 500 Internal Server Error
+ */
+
 export async function getCurrent(req, res) {
   try {
-    const user = _.pick(req.user, ["_id", "firstName", "lastName", "email"]);
+    const user = _.pick(req.user, ["_id", "firstName", "lastName", "email", "major"]);
     return res.status(200).json(user);
   } catch (err) {
     return res.status(500).end();
@@ -120,9 +137,8 @@ export async function getCurrent(req, res) {
 }
 
 /**
- * @api {put} /users/:id Update user info
+ * @api {put} /user Update user info
  * @apiGroup Users
- * @apiParam {id} id User id
  * @apiParam {String} email User email
  * @apiParam {String} password User password
  * @apiParam {String} type User type(prof, student)
