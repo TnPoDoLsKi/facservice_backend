@@ -92,7 +92,15 @@ export async function create(req, res) {
           expiresIn: 604800
         });
 
-        return res.status(201).json({ token: token });
+        const subject = "Activation de compte";
+        const message = `localhost:3000/api/activate/${token}`;
+
+        const error = mailer(userCreated.email, subject, message);
+        if (error) {
+          res.status(400).end();
+        } else {
+          return res.status(201).end();
+        }
       } else {
         return res.status(406).end();
       }
@@ -205,15 +213,6 @@ export async function signOut(req, res) {
   }
 }
 
-export function testMailer(req, res) {
-  const error = mailer("test", "hello friend");
-  if (error) {
-    res.status(400).end();
-  } else {
-    res.status(200).end();
-  }
-}
-
 export async function activeAccount(req, res) {
   if (req.params.token) {
     jwt.verify(req.params.token, SECRET, (err, user) => {
@@ -224,7 +223,7 @@ export async function activeAccount(req, res) {
           if (error) {
             return res.status(500).end();
           }
-          return res.status(200).end();
+          res.redirect("http://localhost:4200/activate");
         });
       }
     });
