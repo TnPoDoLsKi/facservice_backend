@@ -118,7 +118,7 @@ export async function getCurrent(req, res) {
       "lastName",
       "email",
       "major"
-    ]);
+    ]); 
     return res.status(200).json(user);
   } catch (err) {
     return res.status(500).end();
