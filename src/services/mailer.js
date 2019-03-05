@@ -2,17 +2,17 @@ import nodemailer from "nodemailer";
 
 export default function mailer(receiver, subject, message) {
   const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
+    host: "banshee.mxlogin.com",
     port: 465,
-    secure: true,
+    secure: true, // true for 465, false for other ports
     auth: {
-      user: "contact@igc.tn",
-      pass: "mdp"
+      user: "archive@igc.tn",
+      pass: "[5+gdBr{tiNC"
     }
   });
 
   let mailOptions = {
-    from: "contact@igc.tn",
+    from: "archive@igc.tn",
     to: receiver,
     subject: subject,
     text: message
