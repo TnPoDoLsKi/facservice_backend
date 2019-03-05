@@ -9,6 +9,11 @@ const correctionSchema = new mongoose.Schema(
     filePath: {
       type: String
     },
+    filesStaging: [
+      {
+        type: String
+      }
+    ],
     approved: {
       type: Boolean,
       default: false
