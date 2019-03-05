@@ -1,6 +1,7 @@
 import { User } from "../../config/models";
 import _ from "lodash";
 import mongoose from "mongoose";
+import bcrypt from "bcrypt";
 
 /**
  * @api {get} /users/:type Get all users by type
@@ -129,13 +130,8 @@ export async function getAll(req, res) {
 
 export async function getCurrent(req, res) {
   try {
-    const user = _.pick(req.user, [
-      "_id",
-      "firstName",
-      "lastName",
-      "email",
-      "major"
-    ]);
+    const user = await User.findOne({ _id: req.user._id })
+
     return res.status(200).json(user);
   } catch (err) {
     return res.status(500).end();

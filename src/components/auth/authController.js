@@ -37,7 +37,19 @@ import mailer from "../../services/mailer";
  */
 export async function create(req, res) {
   try {
-    const user = _.pick(
+
+    if (
+      !req.body.email ||
+      !req.body.type ||
+      !req.body.firstName ||
+      !req.body.lastName ||
+      !req.body.password ||
+      !req.body.major
+    ) {
+      return res.status(400).end();
+    }
+
+    let user = _.pick(
       req.body,
       "email",
       "type",
@@ -46,65 +58,42 @@ export async function create(req, res) {
       "password"
     );
 
-    if (
-      !req.body.email ||
-      !req.body.type ||
-      !req.body.firstName ||
-      !req.body.lastName ||
-      !req.body.password
-    ) {
-      return res.status(400).end();
-    } else {
-      if (req.body.major) {
-        await Major.findOne(
-          {
-            name: req.body.major
-          },
-          (err, foundMajor) => {
-            if (err) {
-              return res.status(500).end();
-            } else if (!foundMajor) {
-              return res.status(406).end();
-            } else {
-              user.major = foundMajor._id;
-            }
-          }
-        );
-
-        await User.findOne(
-          {
-            email: user.email
-          },
-          (err, user) => {
-            if (err) {
-              return res.status(500).end({
-                error: err
-              });
-            } else if (user) {
-              return res.status(208).end();
-            }
-          }
-        );
-
-        const userCreated = await User.create(user);
-
-        const token = jwt.sign({ id: userCreated._id }, SECRET, {
-          expiresIn: 604800
-        });
-
-        const subject = "Activation de compte";
-        const message = `localhost:3000/api/activate/${token}`;
-
-        const error = mailer(userCreated.email, subject, message);
-        if (error) {
-          res.status(400).end();
+    await Major.findOne(
+      {
+        name: req.body.major
+      },
+      (err, foundMajor) => {
+        if (err) {
+          return res.status(500).end();
+        } else if (!foundMajor) {
+          return res.status(406).end();
         } else {
-          return res.status(201).end();
+          user.major = foundMajor._id;
         }
-      } else {
-        return res.status(406).end();
-      }
-    }
+      })
+
+    await User.findOne(
+      {
+        email: user.email
+      },
+      (err, user) => {
+        if (err) {
+          return res.status(500).end({
+            error: err
+          });
+        } else if (user) {
+          return res.status(208).end();
+        }
+      })
+
+    const userCreated = await User.create(user);
+
+    const token = jwt.sign(userCreated, SECRET, {
+      expiresIn: 604800
+    });
+
+    return res.status(201).json({ token: token });
+
   } catch (err) {
     res.status(500).end();
     console.log(err);
@@ -153,10 +142,6 @@ export async function signIn(req, res) {
         }
         if (!user) {
           return res.status(400).end();
-        }
-
-        if (user.activated === false) {
-          return res.status(403).end();
         }
 
         user.comparePassword(req.body.password, (err, equal) => {
@@ -213,6 +198,15 @@ export async function signOut(req, res) {
   }
 }
 
+export function testMailer(req, res) {
+  const error = mailer("test", "hello friend");
+  if (error) {
+    res.status(400).end();
+  } else {
+    res.status(200).end();
+  }
+}
+
 export async function activeAccount(req, res) {
   if (req.params.token) {
     jwt.verify(req.params.token, SECRET, (err, user) => {
@@ -223,7 +217,7 @@ export async function activeAccount(req, res) {
           if (error) {
             return res.status(500).end();
           }
-          res.redirect("http://localhost:4200/activate");
+          return res.status(200).end();
         });
       }
     });
