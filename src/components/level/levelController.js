@@ -1,24 +1,27 @@
 import _ from "lodash";
-import Level from "./level";
+import { Level, Formation } from "../../config/models";
 
 /**
  * @api {post} /levels Create a level
  * @apiGroup Levels
  * @apiParam {String} name Level name
  * @apiParam {String} description Level description
+ * @apiParam {String} formation Level formation(ID)
  * @apiHeader Authorization Bearer Token
  * @apiHeader Content-Type application/x-www-form-urlencoded
  * @apiParamExample {json} Input
  *    {
- *      "name": "A1",
- *      "description": "1ere année"
+ *      "name": "1",
+ *      "description": "1ere année",
+ *      "formation": "5c5080a2bb95dc104b9934b3"
  *    }
  * @apiSuccessExample {json} Success
  *    HTTP/1.1 200 OK
  * {
         "_id": "5c5080a2bb95dc104b9934b3",
-        "name": "A1",
+        "name": "1",
         "description": "1ere année",
+        "formation": "5c5080a2bb95dc104b9934b3",
         "createdAt": "2019-01-29T16:34:42.203Z",
         "updatedAt": "2019-01-29T16:34:42.203Z"
     }
@@ -42,9 +45,19 @@ export async function create(req, res) {
         error: "description is required !"
       });
 
-    let level = _.pick(req.body, "name", "description");
+    if (!req.body.formation)
+      return res.status(400).json({
+        error: "formation is required !"
+      });
 
-    level = await Level.create(level);
+    const formation = await Formation.findOne({ _id: req.body.formation });
+
+    if (!formation)
+      return res.status(400).json({
+        error: "wrong formation id !"
+      });
+
+    const level = await Level.create(req.body);
 
     return res.json(level);
   } catch (error) {
@@ -61,22 +74,25 @@ export async function create(req, res) {
  * [
     {
         "_id": "5c3e21856891a52950272390",
-        "name": "A2",
+        "name": "2",
         "description": "2eme année",
+        "formation": "5c3e21856891a5295027238f",
         "createdAt": "2019-01-15T18:08:05.242Z",
         "updatedAt": "2019-01-15T18:08:05.242Z"
     },
     {
         "_id": "5c3e21856891a5295027238f",
-        "name": "A1",
+        "name": "1",
         "description": "1ere année",
+        "formation": "5c3e21856891a5295027238f",
         "createdAt": "2019-01-15T18:08:05.241Z",
         "updatedAt": "2019-01-15T18:08:05.241Z"
     },
     {
         "_id": "5c3e21856891a52950272391",
-        "name": "A3",
+        "name": "3",
         "description": "3eme année",
+        "formation": "5c3e21856891a5295027238f",
         "createdAt": "2019-01-15T18:08:05.242Z",
         "updatedAt": "2019-01-15T18:08:05.242Z"
     }
@@ -136,6 +152,7 @@ export async function getOne(req, res) {
  * @apiParam {id} id Level id
  * @apiParam {String} name Level name
  * @apiParam {String} description Level description
+ * @apiParam {String} formation Level formation(ID)
  * @apiHeader Authorization Bearer Token
  * @apiHeader Content-Type application/x-www-form-urlencoded
  * @apiParamExample {json} Input
@@ -154,6 +171,13 @@ export async function getOne(req, res) {
  */
 export async function update(req, res) {
   try {
+
+    const level = await Level.findOne({ _id: req.params.id });
+    if (!level)
+      return res.status(401).json({
+        error: "level not found !"
+      });
+
     if (!req.body.name)
       return res.status(400).json({
         error: "name is required !"
@@ -164,14 +188,21 @@ export async function update(req, res) {
         error: "description is required !"
       });
 
-    const level = await Level.findOne({ _id: req.params.id });
-    if (!level)
-      return res.status(401).json({
-        error: "level not found !"
+    if (!req.body.formation)
+      return res.status(400).json({
+        error: "formation is required !"
+      });
+
+    const formation = await Formation.findOne({ _id: req.body.formation });
+
+    if (!formation)
+      return res.status(400).json({
+        error: "wrong formation id !"
       });
 
     level.description = req.body.description;
     level.name = req.body.name;
+    level.formation = req.body.formation;
 
     await level.save();
 
@@ -201,6 +232,7 @@ export async function remove(req, res) {
       return res.status(400).json({
         error: "id cannot be empty"
       });
+      
     const level = await Level.deleteOne({
       _id: req.params.id
     });

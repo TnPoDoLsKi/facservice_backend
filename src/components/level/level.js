@@ -4,7 +4,12 @@ import mongooseDelete from "mongoose-delete";
 const levelSchema = new mongoose.Schema(
   {
     name: { type: String },
-    description: { type: String }
+    description: { type: String },
+    formation:
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Formation"
+    }
   },
   {
     timestamps: true
@@ -17,7 +22,7 @@ levelSchema.plugin(mongooseDelete, {
   deletedBy: true
 });
 
-levelSchema.methods.toJSON = function() {
+levelSchema.methods.toJSON = function () {
   var obj = this.toObject();
   delete obj.__v;
   delete obj.deleted;

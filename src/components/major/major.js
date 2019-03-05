@@ -11,24 +11,10 @@ const majorSchema = new mongoose.Schema(
     description: {
       type: String
     },
-    formation: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Formation"
-    },
     level: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Level"
-    },
-    section: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Section"
-    },
-    subjects: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Subject"
-      }
-    ]
+    }
   },
   {
     timestamp: true
