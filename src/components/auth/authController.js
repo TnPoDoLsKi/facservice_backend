@@ -147,10 +147,6 @@ export async function signIn(req, res) {
           return res.status(400).end();
         }
 
-        if (user.activated === false) {
-          return res.status(403).end();
-        }
-
         user.comparePassword(req.body.password, (err, equal) => {
           if (equal && !err) {
             const userData = _.pick(
