@@ -654,7 +654,7 @@
   },
   {
     "type": "delete",
-    "url": "/documents/:id",
+    "url": "/documents",
     "title": "Delete a document",
     "group": "Documents",
     "parameter": {
@@ -714,7 +714,7 @@
     "version": "0.0.0",
     "filename": "src/components/document/documentController.js",
     "groupTitle": "Documents",
-    "name": "DeleteDocumentsId"
+    "name": "DeleteDocuments"
   },
   {
     "type": "get",
@@ -827,7 +827,7 @@
       "examples": [
         {
           "title": "Success",
-          "content": "   HTTP/1.1 200 OK\n[\n     {\n        \"type\": \"DS\",\n        \"semestre\": 1,\n        \"approved\": true,\n        \"session\": \"Principale\",\n        \"corrections\": [],\n        \"_id\": \"5c41ae2c6c942e059c10737d\",\n        \"title\": \"dsAlgo\",\n        \"filePath\": \"/uploads/hjkhdfkjl.pdf\",\n        \"major\": {\n            \"_id\": \"5c3f8bee091f3c3290ac10b2\",\n            \"name\": \"FIA1\",\n            \"description\": \"1ere année Formation d'Ingénieur\"\n        },\n        \"subject\": {\n            \"semestre\": 1,\n            \"documents\": [],\n            \"_id\": \"5c41b2d82383c111b4ffad1d\",\n            \"name\": \"Algorithmique et structures de données\",\n            \"createdAt\": \"2019-01-18T11:04:56.121Z\",\n            \"updatedAt\": \"2019-01-18T11:04:56.121Z\",\n            \"__v\": 0\n        },\n        \"year\": 2016,\n        \"user\": {\n            \"type\": \"student\",\n            \"deleted\": false,\n            \"_id\": \"5c2426542a7e2f361896f812\",\n            \"email\": \"mohamed@test.com\",\n            \"firstName\": \"mohamed\",\n            \"lastName\": \"mohamed\",\n            \"__v\": 0\n        },\n        \"createdAt\": \"2019-01-18T10:45:00.529Z\",\n        \"updatedAt\": \"2019-01-18T10:45:00.529Z\"\n    }]",
+          "content": "   HTTP/1.1 200 OK\n[\n     {\n        \"type\": \"DS\",\n        \"semestre\": 1,\n        \"approved\": false,\n        \"session\": \"Principale\",\n        \"corrections\": [],\n        \"_id\": \"5c41ae2c6c942e059c10737d\",\n        \"title\": \"dsAlgo\",\n        \"filePath\": \"/uploads/hjkhdfkjl.pdf\",\n        \"major\": {\n            \"_id\": \"5c3f8bee091f3c3290ac10b2\",\n            \"name\": \"FIA1\",\n            \"description\": \"1ere année Formation d'Ingénieur\"\n        },\n        \"subject\": {\n            \"semestre\": 1,\n            \"documents\": [],\n            \"_id\": \"5c41b2d82383c111b4ffad1d\",\n            \"name\": \"Algorithmique et structures de données\",\n            \"createdAt\": \"2019-01-18T11:04:56.121Z\",\n            \"updatedAt\": \"2019-01-18T11:04:56.121Z\",\n            \"__v\": 0\n        },\n        \"year\": 2016,\n        \"user\": {\n            \"type\": \"student\",\n            \"deleted\": false,\n            \"_id\": \"5c2426542a7e2f361896f812\",\n            \"email\": \"mohamed@test.com\",\n            \"firstName\": \"mohamed\",\n            \"lastName\": \"mohamed\",\n            \"__v\": 0\n        },\n        \"createdAt\": \"2019-01-18T10:45:00.529Z\",\n        \"updatedAt\": \"2019-01-18T10:45:00.529Z\"\n    }]",
           "type": "json"
         }
       ]
@@ -1016,7 +1016,7 @@
       "examples": [
         {
           "title": "Success",
-          "content": "   HTTP/1.1 200 OK\n{\n    \"type\": \"DS\",\n    \"semestre\": 1,\n    \"approved\": true,\n    \"session\": \"Principale\",\n    \"corrections\": [],\n    \"_id\": \"5c41ae2c6c942e059c10737d\",\n    \"title\": \"dsAlgo\",\n    \"filePath\": \"/uploads/hjkhdfkjl.pdf\",\n    \"major\": {\n        \"_id\": \"5c3f8bee091f3c3290ac10b2\",\n        \"name\": \"FIA1\",\n        \"description\": \"1ere année Formation d'Ingénieur\"\n    },\n    \"subject\": {\n        \"semestre\": 1,\n        \"documents\": [],\n        \"_id\": \"5c41b2d82383c111b4ffad1d\",\n        \"name\": \"Algorithmique et structures de données\",\n        \"createdAt\": \"2019-01-18T11:04:56.121Z\",\n        \"updatedAt\": \"2019-01-18T11:04:56.121Z\"\n    },\n    \"year\": 2016,\n    \"user\": {\n        \"type\": \"student\",\n        \"deleted\": false,\n        \"_id\": \"5c2426542a7e2f361896f812\",\n        \"email\": \"mohamed@test.com\",\n        \"firstName\": \"mohamed\",\n        \"lastName\": \"mohamed\"\n    },\n    \"createdAt\": \"2019-01-18T10:45:00.529Z\",\n    \"updatedAt\": \"2019-01-18T10:45:00.529Z\"\n}",
+          "content": "   HTTP/1.1 200 OK\n{\n    \"type\": \"DS\",\n    \"semestre\": 1,\n    \"approved\": false,\n    \"session\": \"Principale\",\n    \"corrections\": [],\n    \"_id\": \"5c41ae2c6c942e059c10737d\",\n    \"title\": \"dsAlgo\",\n    \"filePath\": \"/uploads/hjkhdfkjl.pdf\",\n    \"major\": {\n        \"_id\": \"5c3f8bee091f3c3290ac10b2\",\n        \"name\": \"FIA1\",\n        \"description\": \"1ere année Formation d'Ingénieur\"\n    },\n    \"subject\": {\n        \"semestre\": 1,\n        \"documents\": [],\n        \"_id\": \"5c41b2d82383c111b4ffad1d\",\n        \"name\": \"Algorithmique et structures de données\",\n        \"createdAt\": \"2019-01-18T11:04:56.121Z\",\n        \"updatedAt\": \"2019-01-18T11:04:56.121Z\"\n    },\n    \"year\": 2016,\n    \"user\": {\n        \"type\": \"student\",\n        \"deleted\": false,\n        \"_id\": \"5c2426542a7e2f361896f812\",\n        \"email\": \"mohamed@test.com\",\n        \"firstName\": \"mohamed\",\n        \"lastName\": \"mohamed\"\n    },\n    \"createdAt\": \"2019-01-18T10:45:00.529Z\",\n    \"updatedAt\": \"2019-01-18T10:45:00.529Z\"\n}",
           "type": "json"
         }
       ]
@@ -1314,7 +1314,7 @@
   },
   {
     "type": "put",
-    "url": "/documents/:id",
+    "url": "/documents",
     "title": "Update a document",
     "group": "Documents",
     "parameter": {
@@ -1458,7 +1458,7 @@
     "version": "0.0.0",
     "filename": "src/components/document/documentController.js",
     "groupTitle": "Documents",
-    "name": "PutDocumentsId"
+    "name": "PutDocuments"
   },
   {
     "type": "post",
@@ -3025,7 +3025,7 @@
   },
   {
     "type": "delete",
-    "url": "/subjects/:id",
+    "url": "/subjects",
     "title": "Delete a subject",
     "group": "Subjects",
     "parameter": {
@@ -3085,7 +3085,7 @@
     "version": "0.0.0",
     "filename": "src/components/subject/subjectController.js",
     "groupTitle": "Subjects",
-    "name": "DeleteSubjectsId"
+    "name": "DeleteSubjects"
   },
   {
     "type": "get",
@@ -3240,7 +3240,7 @@
   },
   {
     "type": "put",
-    "url": "/subjects/:id",
+    "url": "/subjects",
     "title": "Update a Subject",
     "group": "Subjects",
     "parameter": {
@@ -3326,11 +3326,11 @@
     "version": "0.0.0",
     "filename": "src/components/subject/subjectController.js",
     "groupTitle": "Subjects",
-    "name": "PutSubjectsId"
+    "name": "PutSubjects"
   },
   {
     "type": "delete",
-    "url": "/users/:id",
+    "url": "/user",
     "title": "Delete User",
     "group": "Users",
     "parameter": {
@@ -3390,53 +3390,7 @@
     "version": "0.0.0",
     "filename": "src/components/user/userController.js",
     "groupTitle": "Users",
-    "name": "DeleteUsersId"
-  },
-  {
-    "type": "get",
-    "url": "/user",
-    "title": "Get current user",
-    "group": "Users",
-    "header": {
-      "fields": {
-        "Header": [
-          {
-            "group": "Header",
-            "optional": false,
-            "field": "Authorization",
-            "description": "<p>Bearer Token</p>"
-          },
-          {
-            "group": "Header",
-            "optional": false,
-            "field": "Content-Type",
-            "description": "<p>application/x-www-form-urlencoded</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "examples": [
-        {
-          "title": "Success",
-          "content": "  HTTP/1.1 200 OK\n{\n       \"_id\": \"5c2426542a7e2f361896f812\",\n       \"firstName\": \"mohamed\",\n       \"lastName\": \"mohamed\",\n       \"email\": \"mohamed@test.com\",\n       \"major\": 5c2426542a7e2f361896f812\n   }",
-          "type": "json"
-        }
-      ]
-    },
-    "error": {
-      "examples": [
-        {
-          "title": "Find error",
-          "content": "HTTP/1.1 500 Internal Server Error",
-          "type": "json"
-        }
-      ]
-    },
-    "version": "0.0.0",
-    "filename": "src/components/user/userController.js",
-    "groupTitle": "Users",
-    "name": "GetUser"
+    "name": "DeleteUser"
   },
   {
     "type": "get",
@@ -3550,12 +3504,19 @@
   },
   {
     "type": "put",
-    "url": "/user",
+    "url": "/users",
     "title": "Update user info",
     "group": "Users",
     "parameter": {
       "fields": {
         "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "id",
+            "optional": false,
+            "field": "id",
+            "description": "<p>User id</p>"
+          },
           {
             "group": "Parameter",
             "type": "String",
@@ -3659,6 +3620,6 @@
     "version": "0.0.0",
     "filename": "src/components/user/userController.js",
     "groupTitle": "Users",
-    "name": "PutUser"
+    "name": "PutUsers"
   }
 ]
