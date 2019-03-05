@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { Document, Correction } from "../../config/models";
+import { Document, Correction, Subject } from "../../config/models";
 import mongoose from "mongoose";
 
 /**
@@ -393,8 +393,6 @@ export async function create(req, res) {
   try {
     let document = _.pick(
       req.body,
-      "title",
-      "filePath",
       "type",
       "semestre",
       "major",
@@ -402,7 +400,8 @@ export async function create(req, res) {
       "year",
       "user",
       "session",
-      "profName"
+      "profName",
+      "filesStaging"
     );
     await Document.findOne(
       {
@@ -413,8 +412,7 @@ export async function create(req, res) {
         year: document.year,
         session: document.session,
         profName: document.profName,
-        title: document.title,
-        filePath: document.filePath,
+        filesStaging: document.filesStaging,
         user: document.user,
         approved: true
       },
@@ -423,6 +421,22 @@ export async function create(req, res) {
           return res.status(500).end();
         } else if (document) {
           return res.status(208).end();
+        }
+      }
+    );
+    console.log(req.body)
+    await Subject.findById(
+      {
+        _id: document.subject
+      },
+      (err, subject) => {
+        if (err) {
+          return res.status(500).end();
+        } else if (subject) {
+          document.title =
+            document.type == "C"
+              ? "Cours"
+              : document.type + " " + subject.name + " " + document.year;
         }
       }
     );
