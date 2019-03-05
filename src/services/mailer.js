@@ -1,19 +1,19 @@
 import nodemailer from "nodemailer";
 
-export default function mailer(receiver, subject, message) {
+export default function mailer(subject, message) {
   const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
+    host: "",
     port: 465,
     secure: true,
     auth: {
-      user: "contact@igc.tn",
-      pass: "mdp"
+      user: "oppkalash@gmail.com",
+      pass: ""
     }
   });
 
   let mailOptions = {
-    from: "contact@igc.tn",
-    to: receiver,
+    from: "oppkalash@gmail.com",
+    to: "atoui.louay77@gmail.com",
     subject: subject,
     text: message
   };
