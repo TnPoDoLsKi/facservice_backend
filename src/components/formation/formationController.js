@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { Section, Formation } from "../../config/models";
+import { Formation } from "../../config/models";
 
 /**
  * @api {post} /formations Create a formation
@@ -37,14 +37,7 @@ export async function create(req, res) {
         error: "name is required !"
       });
 
-    if (!req.body.description)
-      return res.status(400).json({
-        error: "description is required !"
-      });
-
-    let formation = _.pick(req.body, "name", "description");
-
-    formation = await Formation.create(formation);
+    const formation = await Formation.create(req.body);
 
     return res.json(formation);
   } catch (error) {
@@ -115,11 +108,6 @@ export async function getAll(req, res) {
 
 export async function getOne(req, res) {
   try {
-    if (!req.params.id)
-      return res.status(400).json({
-        error: "id cannot be empty"
-      });
-
     const formation = await Formation.findById({
       _id: req.params.id
     });
@@ -127,6 +115,9 @@ export async function getOne(req, res) {
     return res.json(formation);
   } catch (error) {
     console.log(error);
+    if (error.name == 'CastError')
+      return res.status(400).json({ error: error.message })
+
     return res.status(500).end();
   }
 }
@@ -156,32 +147,30 @@ export async function getOne(req, res) {
 
 export async function update(req, res) {
   try {
-    if (!req.body.name)
-      return res.status(400).json({
-        error: "name is required !"
-      });
-
-    if (!req.body.description)
-      return res.status(400).json({
-        error: "description is required !"
-      });
 
     let formation = await Formation.findOne({
       _id: req.params.id
     });
+
     if (!formation)
       return res.status(404).json({
         error: "formation not found !"
       });
 
-    formation.description = req.body.description;
-    formation.name = req.body.name;
+    if (req.body.description)
+      formation.description = req.body.description;
+
+    if (req.body.name)
+      formation.name = req.body.name;
 
     await formation.save();
 
     return res.status(200).end();
   } catch (error) {
     console.log(error);
+    if (error.name == 'CastError')
+      return res.status(400).json({ error: error.message })
+
     return res.status(500).end();
   }
 }
@@ -201,15 +190,10 @@ export async function update(req, res) {
  */
 export async function remove(req, res) {
   try {
-    if (!req.params.id)
-      return res.status(400).json({
-        error: "id cannot be empty"
-      });
-    const formation = await Formation.deleteOne({
-      _id: req.params.id
-    });
+    await Formation.delete({ _id: req.params.id });
 
-    return res.json(formation);
+    return res.status(200).end();
+    
   } catch (error) {
     console.log(error);
     return res.status(500).end();

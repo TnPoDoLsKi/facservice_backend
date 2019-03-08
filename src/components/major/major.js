@@ -5,8 +5,7 @@ const majorSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: true,
-      unique: true
+      required: true
     },
     description: {
       type: String
@@ -26,12 +25,5 @@ majorSchema.plugin(mongoose_delete, {
   deletedAt: true,
   deletedBy: true
 });
-
-majorSchema.methods.toJSON = function() {
-  var obj = this.toObject();
-  delete obj.__v;
-  delete obj.deleted;
-  return obj;
-};
 
 export default mongoose.model("Major", majorSchema);

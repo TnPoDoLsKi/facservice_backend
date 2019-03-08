@@ -43,66 +43,27 @@ export async function create(req, res) {
         error: "name is required !"
       });
 
-    if (!req.body.description)
-      return res.status(400).json({
-        error: "description is required !"
-      });
-
-    if (!req.body.formation)
-      return res.status(400).json({
-        error: "formation is required !"
-      });
-
     if (!req.body.level)
       return res.status(400).json({
         error: "level is required !"
       });
 
-    if (!req.body.section)
+    const level = await Level.findOne({ _id: req.body.level });
+
+    if (!level)
       return res.status(400).json({
-        error: "section is required !"
+        error: "wrong level id !"
       });
-    let major = _.pick(req.body, "name", "description");
-    await Formation.findOne(
-      {
-        name: req.body.formation
-      },
-      (err, found) => {
-        if (err) {
-          return res.status(400).end();
-        } else {
-          major.formation = found._id;
-        }
-      }
-    );
-    await Level.findOne(
-      {
-        name: req.body.level
-      },
-      (err, found) => {
-        if (err) {
-          return res.status(400).end();
-        } else {
-          major.level = found._id;
-        }
-      }
-    );
-    await Section.findOne(
-      {
-        name: req.body.section
-      },
-      (err, found) => {
-        if (err) {
-          return res.status(400).end();
-        } else {
-          major.section = found._id;
-        }
-      }
-    );
-    major = await Major.create(major);
+
+    const major = await Major.create(req.body);
+
     return res.json(major);
+
   } catch (error) {
     console.log(error);
+    if (error.name == 'CastError')
+      return res.status(400).json({ error: error.message })
+
     return res.status(500).end();
   }
 }
@@ -158,9 +119,6 @@ export async function create(req, res) {
 export async function getAll(req, res) {
   try {
     const majors = await Major.find()
-      .select("-formation -level -section")
-      .populate("subjects")
-      .exec();
 
     return res.json(majors);
   } catch (error) {
@@ -211,31 +169,16 @@ export async function getAll(req, res) {
 
 export async function getOne(req, res) {
   try {
-    if (!req.params.id)
-      return res.status(400).json({
-        error: "Major ID cannot be empty"
-      });
 
-    let major = await Major.findById({
-      _id: req.params.id
-    })
-      .select("-formation -level -section")
-      .populate("subjects")
-      .exec();
-
-    if (major) {
-      major = major.toJSON()
-      for(let subject of major.subjects ) {
-        let docs = await Document.find({subject: subject._id})
-      }
-
-    }
-
-
+    const major = await Major.findById({ _id: req.params.id })
 
     return res.json(major);
+
   } catch (error) {
     console.log(error);
+    if (error.name == 'CastError')
+      return res.status(400).json({ error: error.message })
+
     return res.status(500).end();
   }
 }
@@ -269,19 +212,11 @@ export async function getOne(req, res) {
 
 export async function getOneByName(req, res) {
   try {
-    if (!req.query.name)
-      return res.status(400).json({
-        error: "Major Name cannot be empty"
-      });
 
-    const major = await Major.findOne({
-      name: req.query.name
-    })
-      .select("-formation -level -section")
-      .populate({ path: "subjects", select: "-documents" })
-      .exec();
+    const major = await Major.findOne({ name: req.params.name })
 
     return res.json(major);
+
   } catch (error) {
     console.log(error);
     return res.status(500).end();
@@ -318,76 +253,39 @@ export async function getOneByName(req, res) {
 
 export async function update(req, res) {
   try {
-    if (!req.body.name)
-      return res.status(400).json({
-        error: "Major name is required !"
-      });
 
-    if (!req.body.description)
-      return res.status(400).json({
-        error: "Major description is required !"
-      });
+    let major = await Major.findOne({ _id: req.params.id });
 
-    const NewMajor = _.pick(req.body, "name", "description");
-    if (req.body.formation)
-      await Formation.findOne(
-        {
-          name: req.body.formation
-        },
-        (err, found) => {
-          if (err) {
-            return res.status(400).end();
-          } else {
-            NewMajor.formation = found._id;
-          }
-        }
-      );
-    if (req.body.level)
-      await Level.findOne(
-        {
-          name: req.body.level
-        },
-        (err, found) => {
-          if (err) {
-            return res.status(400).end();
-          } else {
-            NewMajor.level = found._id;
-          }
-        }
-      );
-    if (req.body.section)
-      await Section.findOne(
-        {
-          name: req.body.section
-        },
-        (err, found) => {
-          if (err) {
-            return res.status(400).end();
-          } else {
-            NewMajor.section = found._id;
-          }
-        }
-      );
-
-    let major = await Major.findOne({
-      _id: req.params.id
-    });
     if (!major)
       return res.status(401).json({
-        error: "Major not found !"
+        error: "Major not found "
       });
 
-    major.description = NewMajor.description;
-    major.name = NewMajor.name;
-    major.formation = NewMajor.formation;
-    major.level = NewMajor.level;
-    major.section = NewMajor.section;
+    if (req.body.name)
+      major.name = req.body.name;
+
+    if (req.body.description)
+      major.description = req.body.description;
+
+    if (req.body.level) {
+      const level = await Level.findOne({ _id: req.body.level });
+
+      if (!level)
+        return res.status(400).json({
+          error: "wrong level id !"
+        });
+
+      major.level = req.body.level;
+    }
 
     await major.save();
-
     return res.status(200).end();
+
   } catch (error) {
     console.log(error);
+    if (error.name == 'CastError')
+      return res.status(400).json({ error: error.message })
+
     return res.status(500).end();
   }
 }
@@ -408,70 +306,16 @@ export async function update(req, res) {
 
 export async function remove(req, res) {
   try {
-    if (!req.params.id)
-      return res.status(400).json({
-        error: "Major id cannot be empty"
-      });
-    const major = await Major.deleteOne({
-      _id: req.params.id
-    });
 
-    return res.json(major);
-  } catch (error) {
-    console.log(error);
-    return res.status(500).end();
-  }
-}
-
-/**
- * @api {post} /majors/:id/subjects Add subjects to a major
- * @apiGroup Majors
- * @apiParam {String} subject Major subject(id)
- * @apiHeader Authorization Bearer Token
- * @apiHeader Content-Type application/x-www-form-urlencoded
- * @apiParamExample {json} Input
- *    {
- *      "subject" : "5c3e3542077225388404c0d8"
- *    }
- * @apiSuccessExample {json} Success
- *    HTTP/1.1 200 Added
- * @apiErrorExample {json} Major or Subject not found
- *    HTTP/1.1 400 Internal Server Error
- * @apiErrorExample {json} Register error
- *    HTTP/1.1 500 Internal Server Error
- */
-
-export async function addSubjects(req, res) {
-  try {
-    const major = await Major.findOne({
-      _id: req.params.id
-    });
-    if (!major)
-      return res.status(400).json({
-        error: "major not found !"
-      });
-
-    if (!req.body.subject)
-      return res.status(400).json({
-        error: "Subject is required !"
-      });
-
-    const subject = await Subject.findOne({
-      name: req.body.SubjectName
-    });
-
-    if (!subject)
-      return res.status(500).json({
-        error: "subject not found !"
-      });
-
-    await major.subjects.push(subject._id);
-
-    await major.save();
+    await Major.delete({_id: req.params.id});
 
     return res.status(200).end();
+    
   } catch (error) {
     console.log(error);
+    if (error.name == 'CastError')
+      return res.status(400).json({ error: error.message })
+
     return res.status(500).end();
   }
 }

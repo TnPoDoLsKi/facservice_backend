@@ -22,11 +22,4 @@ levelSchema.plugin(mongooseDelete, {
   deletedBy: true
 });
 
-levelSchema.methods.toJSON = function () {
-  var obj = this.toObject();
-  delete obj.__v;
-  delete obj.deleted;
-  return obj;
-};
-
 export default mongoose.model("Level", levelSchema);

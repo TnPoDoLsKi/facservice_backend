@@ -32,17 +32,11 @@ import { Level, Formation } from "../../config/models";
  * @apiErrorExample {json} Register error
  *    HTTP/1.1 500 Internal Server Error
  */
-
 export async function create(req, res) {
   try {
     if (!req.body.name)
       return res.status(400).json({
         error: "name is required !"
-      });
-
-    if (!req.body.description)
-      return res.status(400).json({
-        error: "description is required !"
       });
 
     if (!req.body.formation)
@@ -60,8 +54,12 @@ export async function create(req, res) {
     const level = await Level.create(req.body);
 
     return res.json(level);
+    
   } catch (error) {
     console.log(error);
+    if (error.name == 'CastError')
+      return res.status(400).json({ error: error.message })
+
     return res.status(500).end();
   }
 }
@@ -130,18 +128,18 @@ export async function getAll(req, res) {
  */
 export async function getOne(req, res) {
   try {
-    if (!req.params.id)
-      return res.status(400).json({
-        error: "id cannot be empty"
-      });
 
     const level = await Level.findById({
       _id: req.params.id
     });
 
     return res.json(level);
+
   } catch (error) {
+
     console.log(error);
+    if (error.name == 'CastError')
+      return res.status(400).json({ error: error.message })
     return res.status(500).end();
   }
 }
@@ -172,43 +170,38 @@ export async function getOne(req, res) {
 export async function update(req, res) {
   try {
 
-    const level = await Level.findOne({ _id: req.params.id });
+    let level = await Level.findOne({ _id: req.params.id });
     if (!level)
       return res.status(401).json({
         error: "level not found !"
       });
 
-    if (!req.body.name)
-      return res.status(400).json({
-        error: "name is required !"
-      });
+    if (req.body.name)
+      level.name = req.body.name;
 
-    if (!req.body.description)
-      return res.status(400).json({
-        error: "description is required !"
-      });
+    if (req.body.description)
+      level.description = req.body.description;
 
-    if (!req.body.formation)
-      return res.status(400).json({
-        error: "formation is required !"
-      });
+    if (req.body.formation) {
+      const formation = await Formation.findOne({ _id: req.body.formation });
 
-    const formation = await Formation.findOne({ _id: req.body.formation });
+      if (!formation)
+        return res.status(400).json({
+          error: "wrong formation id "
+        });
 
-    if (!formation)
-      return res.status(400).json({
-        error: "wrong formation id !"
-      });
-
-    level.description = req.body.description;
-    level.name = req.body.name;
-    level.formation = req.body.formation;
+      level.formation = req.body.formation;
+    }
 
     await level.save();
 
     return res.status(200).end();
   } catch (error) {
+
     console.log(error);
+    if (error.name == 'CastError')
+      return res.status(400).json({ error: error.message })
+
     return res.status(500).end();
   }
 }
@@ -228,18 +221,16 @@ export async function update(req, res) {
  */
 export async function remove(req, res) {
   try {
-    if (!req.params.id)
-      return res.status(400).json({
-        error: "id cannot be empty"
-      });
-      
-    const level = await Level.deleteOne({
-      _id: req.params.id
-    });
 
-    return res.json(level);
+    await Level.delete({ _id: req.params.id });
+
+    return res.status(200).end();
+
   } catch (error) {
     console.log(error);
+    if (error.name == 'CastError')
+      return res.status(400).json({ error: error.message })
+
     return res.status(500).end();
   }
 }

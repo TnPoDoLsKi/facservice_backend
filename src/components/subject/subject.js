@@ -6,21 +6,18 @@ const subjectSchema = new mongoose.Schema(
     name: {
       type: String
     },
+    description: {
+      type: String
+    },
     semestre: {
       type: Number,
       enum: [1, 2],
       default: 1
     },
-    documents: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Document"
-      }
-    ],
-    major: {
+    majors: [{
       type: mongoose.Schema.Types.ObjectId,
       ref: "Major"
-    }
+    }]
   },
   {
     timestamps: true
@@ -32,12 +29,5 @@ subjectSchema.plugin(mongooseDelete, {
   deletedAt: true,
   deletedBy: true
 });
-
-subjectSchema.methods.toJSON = function() {
-  var obj = this.toObject();
-  delete obj.__v;
-  delete obj.deleted;
-  return obj;
-};
 
 export default mongoose.model("Subject", subjectSchema);
