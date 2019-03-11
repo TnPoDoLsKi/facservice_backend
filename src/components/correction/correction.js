@@ -9,9 +9,13 @@ const correctionSchema = new mongoose.Schema(
     filePath: {
       type: String
     },
-    approved: {
-      type: Boolean,
-      default: false
+    filesStaging: [{
+      type: String
+    }],
+    status: {
+      type: String,
+      enum: ['inReview', 'approved', 'rejected'],
+      default: 'inReview'
     },
     verifiedByProf: {
       type: Boolean,
@@ -40,12 +44,5 @@ correctionSchema.plugin(mongooseDelete, {
   deletedAt: true,
   deletedBy: true
 });
-
-correctionSchema.methods.toJSON = function() {
-  var obj = this.toObject();
-  delete obj.__v;
-  delete obj.deleted;
-  return obj;
-};
 
 export default mongoose.model("correction", correctionSchema);

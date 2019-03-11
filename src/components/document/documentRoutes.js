@@ -4,10 +4,9 @@ import {
   update,
   remove,
   getAll,
-  addCorrections,
-  getCorrections,
-  getDocByType,
-  getDocByUser
+  getDocBySubjectByType,
+  getDocByUser,
+  getAllByStatus
 } from "./documentController";
 import { upload } from "../../services/uploadService";
 import { isLoggedIn, isAdmin } from "../../services/middlewares";
@@ -15,12 +14,13 @@ import { isLoggedIn, isAdmin } from "../../services/middlewares";
 export default function(router) {
   router.get("/documents", getAll);
   router.get("/documents/:id", getOne);
-  router.get("/documents/corrections/:id", getCorrections);
-  router.get("/documents/subject/:id", getDocByType);
-  router.get("/documents/users/:id", getDocByUser);
-  router.post("/documents", isLoggedIn, create);
-  router.post("/documents/upload", isLoggedIn, upload);
-  router.post("/documents/corrections/:id", isLoggedIn, addCorrections);
-  router.put("/documents/:id", isLoggedIn, isAdmin, update);
-  router.delete("/documents/:id", isLoggedIn, isAdmin, remove);
+  
+  router.get("/documents/byStatus/:status", getAllByStatus);
+  router.get("/documents/bySubject/:subjectId/byType/:type", getDocBySubjectByType);
+  router.get("/documents/byUser/:userId", getDocByUser);
+  
+  router.post("/documents", create);
+  router.put("/documents/:id", update);
+  router.post("/documents/upload", upload);
+  router.delete("/documents/:id", remove);
 }

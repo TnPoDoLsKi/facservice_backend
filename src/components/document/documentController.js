@@ -1,6 +1,5 @@
 import _ from "lodash";
-import { Document, Correction } from "../../config/models";
-import mongoose from "mongoose";
+import { Document, Subject } from "../../config/models";
 
 /**
  * @api {get} /documents Get all documents
@@ -64,25 +63,102 @@ import mongoose from "mongoose";
 
 export async function getAll(req, res) {
   try {
-    const documents = await Document.find({
-      approved: true
+    const documents = await Document.find().populate({
+      path: "user",
+      select: "-major -avatar -hashedPassword"
     })
-      .populate({
-        path: "user",
-        select: "-major -avatar -hashedPassword"
-      })
       // .populate({
-      //   path: "major",
-      //   select: "-subjects -formation -level -section"
-      // })
-      // .populate({
-      //   path: "subject",
+      //   path: "corrections",
       //   select: "-deleted"
       // })
-      .populate({
-        path: "corrections",
-        select: "-deleted"
-      })
+      .exec();
+
+    return res.json(documents);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).end();
+  }
+}
+
+/**
+ * @api {get} /documents Get all documents
+ * @apiGroup Documents
+ * @apiSuccess {Number} _id Document id
+ * @apiSuccess {Boolean} approved Whether the document is approved by the admin
+ * @apiSuccess {String} type Document type (DS, Ex, ...)
+ * @apiSuccess {Number} semestre Document semester (1 or 2)
+ * @apiSuccess {String} title Document title
+ * @apiSuccess {String} session Document session (Principale, Controle)
+ * @apiSuccess {String} filePath Document file path
+ * @apiSuccess {Object} user Document Owner
+ * @apiSuccess {Object} corrections Document corrections (a table of objects)
+ * @apiSuccess {Object} major Document major
+ * @apiSuccess {Object} subject Document subject
+ * @apiSuccess {Number} year Document year
+ * @apiSuccess {Date} updated_at Update's date
+ * @apiSuccess {Date} created_at Register's date
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 OK
+ * [
+     {
+        "type": "DS",
+        "semestre": 1,
+        "approved": true,
+        "session": "Principale",
+        "corrections": [],
+        "_id": "5c41ae2c6c942e059c10737d",
+        "title": "dsAlgo",
+        "filePath": "/uploads/hjkhdfkjl.pdf",
+        "major": {
+            "_id": "5c3f8bee091f3c3290ac10b2",
+            "name": "FIA1",
+            "description": "1ere année Formation d'Ingénieur"
+        },
+        "subject": {
+            "semestre": 1,
+            "documents": [],
+            "_id": "5c41b2d82383c111b4ffad1d",
+            "name": "Algorithmique et structures de données",
+            "createdAt": "2019-01-18T11:04:56.121Z",
+            "updatedAt": "2019-01-18T11:04:56.121Z",
+            "__v": 0
+        },
+        "year": 2016,
+        "user": {
+            "type": "student",
+            "deleted": false,
+            "_id": "5c2426542a7e2f361896f812",
+            "email": "mohamed@test.com",
+            "firstName": "mohamed",
+            "lastName": "mohamed",
+            "__v": 0
+        },
+        "createdAt": "2019-01-18T10:45:00.529Z",
+        "updatedAt": "2019-01-18T10:45:00.529Z"
+    }]
+ * @apiErrorExample {json} Find error
+ *    HTTP/1.1 500 Internal Server Error
+ */
+
+export async function getAllByStatus(req, res) {
+  try {
+
+    if (['inReview', 'approved', 'rejected'].indexOf(req.params.status) < 0) {
+      return res.status(400).json({
+        error: "status must be 'inReview', 'approved' or 'rejected'"
+      });
+    }
+
+    const documents = await Document.find({
+      status: req.params.status
+    }).populate({
+      path: "user",
+      select: "-major -avatar -hashedPassword"
+    })
+      // .populate({
+      //   path: "corrections",
+      //   select: "-deleted"
+      // })
       .exec();
 
     return res.json(documents);
@@ -154,41 +230,28 @@ export async function getAll(req, res) {
 
 export async function getOne(req, res) {
   try {
-    if (!req.params.id)
-      return res.status(400).json({
-        error: "Document id cannot be empty!"
-      });
-    else if (mongoose.Types.ObjectId.isValid(req.params.id)) {
-      const document = await Document.findById({
-        _id: req.params.id,
-        approved: true
-      })
-        .populate({
-          path: "user",
-          select: "-major -hashedPassword"
-        })
-        // .populate({
-        //   path: "major",
-        //   select: "-subjects -formation -level -section"
-        // })
-        // .populate({
-        //   path: "subject",
-        //   select: "-deleted"
-        // })
-        .populate({
-          path: "corrections",
-          select: "-deleted"
-        })
-        .exec();
 
-      return res.json(document);
-    } else {
-      return res.status(400).json({
-        error: "Id is not valid!"
-      });
-    }
+    const document = await Document.findById({
+      _id: req.params.id,
+      status: 'approved'
+    })
+      .populate({
+        path: "user",
+        select: "-major -hashedPassword"
+      })
+      .populate({
+        path: "corrections",
+        select: "-deleted"
+      })
+      .exec();
+
+    return res.json(document);
+
   } catch (error) {
-    console.log(error);
+    console.log(error)
+    if (error.name == 'CastError')
+      return res.status(400).json({ error: error.message })
+
     return res.status(500).end();
   }
 }
@@ -231,101 +294,43 @@ export async function getOne(req, res) {
  *    HTTP/1.1 500 Internal Server Error
  */
 
-export async function getDocByType(req, res) {
+export async function getDocBySubjectByType(req, res) {
   try {
-    if (!req.params.id)
-      return res.status(400).json({
-        error: "Subject id cannot be empty"
-      });
-    else if (mongoose.Types.ObjectId.isValid(req.params.id)) {
-      // if (!req.query.type)
-      //   return res.status(400).json({
-      //     error: "Document type cannot be empty"
-      //   });
 
-      let documents = await Document.find({
-        subject: req.params.id,
-        approved: true
-      }).populate({
-        path: "user",
-        select: "-major -avatar -hashedPassword -deleted -__v"
-      });
+    const documents = await Document.find({
+      subject: req.params.subjectId,
+      type: req.params.type,
+      status: 'approved'
+    }).populate({
+      path: "user",
+      select: "-major -avatar -hashedPassword -deleted -__v"
+    });
 
-      if (req.query.type)
-        documents = _.filter(documents, document => {
-          return document.type.toLowerCase() === req.query.type.toLowerCase();
-        });
+    return res.json(documents);
 
-      return res.json(documents);
-    } else {
-      return res.status(400).json({
-        error: "Id is not valid!"
-      });
-    }
   } catch (error) {
-    console.log(error);
+    console.log(error)
+    if (error.name == 'CastError')
+      return res.status(400).json({ error: error.message })
+
     return res.status(500).end();
   }
 }
 
-/**
- * @api {get} /documents/corrections/:id Get document's corrections
- * @apiGroup Documents
- * @apiParam {id} id Document id
- * @apiSuccessExample {json} Success
- *    HTTP/1.1 200 OK
- * [
-    {
-        "approved": false,
-        "verifiedByProf": false,
-        "score": 0,
-        "_id": "5c619b28afaefd38f005ae77",
-        "title": "correction ds analyse 2018",
-        "filePath": "/uploads/jdhgfhd.jpg",
-        "user": "5c6199dff134a742549ed42c",
-        "createdAt": "2019-02-11T15:56:24.786Z",
-        "updatedAt": "2019-02-11T15:56:24.786Z"
-    },
-    {
-        "approved": false,
-        "verifiedByProf": false,
-        "score": 0,
-        "_id": "5c619b28afaefd38f005ae76",
-        "title": "correction ds algo 2015",
-        "filePath": "/uploads/jdhgfhd.jpg",
-        "user": "5c6199dff134a742549ed42c",
-        "createdAt": "2019-02-11T15:56:24.786Z",
-        "updatedAt": "2019-02-11T15:56:24.786Z"
-    }
-]
- * @apiErrorExample {json} Document id cannot be empty
- *    HTTP/1.1 400 Not Found
- * @apiErrorExample {json} Find error
- *    HTTP/1.1 500 Internal Server Error
- */
-
-export async function getCorrections(req, res) {
+export async function getDocByUser(req, res) {
   try {
-    if (!req.params.id)
-      return res.status(400).json({
-        error: "Document id cannot be empty!"
-      });
-    else if (mongoose.Types.ObjectId.isValid(req.params.id)) {
-      const corrections = await Correction.find({
-        document: req.params.id
-      }).populate({
-        path: "user",
-        select: "-major -avatar -hashedPassword"
-      });
 
-      return res.json(corrections);
-    } else {
-      return res.status(400).json({
-        error: "Id is not valid!"
-      });
-    }
+    const documents = await Document.find({
+      user: req.params.userId
+    })
+
+    return res.status(200).json(documents)
+
   } catch (error) {
-    console.log(error);
+    console.log(error)
+    if (error.name == 'CastError')
+      return res.status(400).json({ error: error.message })
+
     return res.status(500).end();
   }
 }
@@ -393,106 +398,30 @@ export async function create(req, res) {
   try {
     let document = _.pick(
       req.body,
-      "title",
-      "filePath",
       "type",
-      "semestre",
-      "major",
       "subject",
       "year",
-      "user",
       "session",
-      "profName"
-    );
-    await Document.findOne(
-      {
-        type: document.type,
-        semestre: document.semestre,
-        major: document.major,
-        subject: document.subject,
-        year: document.year,
-        session: document.session,
-        profName: document.profName,
-        title: document.title,
-        filePath: document.filePath,
-        user: document.user,
-        approved: true
-      },
-      (err, document) => {
-        if (err) {
-          return res.status(500).end();
-        } else if (document) {
-          return res.status(208).end();
-        }
-      }
-    );
-    document.corrections = [];
-    if (req.body.corrections) {
-      for (let i = 0; i < req.body.corrections.length; ++i) {
-        document.corrections.push(req.body.corrections[i]);
-      }
-    }
+      "description",
+      "filesStaging",
+      "corrections"
+    )
+
+    if (!(document.type && document.subject && document.year && document.session && document.filesStaging))
+      return res.status(400).json({ error: 'missing body params' })
+
+    const subjectObject = await Subject.findOne({ _id: document.subject })
+
+    if (!subjectObject)
+      return res.status(400).json({ error: 'wrong subject id' })
+
+    document.user = req.user._id
+    document.status = 'inReview'
+    document.title = document.type + ' ' + subjectObject.name + ' ' + document.year
+
     document = await Document.create(document);
     return res.json(document);
-  } catch (error) {
-    console.log(error);
-    return res.status(500).end();
-  }
-}
 
-/**
- * @api {post} /documents/:id/corrections Add corrections to a document
- * @apiGroup Documents
- * @apiParam {Array} corrections Document corrections
- * @apiHeader Authorization Bearer Token
- * @apiHeader Content-Type application/x-www-form-urlencoded
- * @apiParamExample {json} Input
- *    {
- *      "corrections": ["5c41ccd20dbd0934ccc59a0e","5c41cd34dfe31425c014f85e"]
- *    }
- * @apiSuccessExample {json} Success
- *    HTTP/1.1 200 OK
- * @apiErrorExample {json} Document id or Corrections cannot be empty
- *    HTTP/1.1 400 Already Reported
- * @apiErrorExample {json} Register error
- *    HTTP/1.1 500 Internal Server Error
- */
-
-export async function addCorrections(req, res) {
-  try {
-    if (!req.params.id) {
-      return res.status(400).json({
-        error: "Document id cannot be empty!"
-      });
-    } else if (mongoose.Types.ObjectId.isValid(req.params.id)) {
-      if (!req.body.corrections) {
-        return res.status(400).json({
-          error: "Corrections Array cannot be empty!"
-        });
-      }
-      await Document.find(
-        {
-          _id: req.params.id,
-          approved: true
-        },
-        async (err, document) => {
-          if (err) {
-            return res.status(500).end();
-          } else if (document) {
-            document.corrections = [];
-            for (let i = 0; i < req.body.corrections.length; ++i) {
-              document.corrections.push(req.body.corrections[i]);
-            }
-            await document.save();
-            return res.status(200).end();
-          }
-        }
-      );
-    } else {
-      return res.status(400).json({
-        error: "Id is not valid!"
-      });
-    }
   } catch (error) {
     console.log(error);
     return res.status(500).end();
@@ -541,62 +470,43 @@ export async function addCorrections(req, res) {
 
 export async function update(req, res) {
   try {
-    if (!req.params.id)
-      return res.status(400).json({
-        error: "Document id cannot be empty!"
-      });
-    else if (mongoose.Types.ObjectId.isValid(req.params.id)) {
-      const document = _.pick(
-        req.body,
-        "title",
-        "description",
-        "filePath",
-        "type",
-        "semestre",
-        "major",
-        "subject",
-        "year",
-        "user",
-        "session",
-        "profName",
-        "corrections"
-      );
-      await Document.findOne(
-        {
-          type: document.type,
-          description: document.description,
-          semestre: document.semestre,
-          major: document.major,
-          subject: document.subject,
-          year: document.year,
-          session: document.session,
-          profName: document.profName,
-          title: document.title,
-          filePath: document.filePath
-        },
-        (err, document) => {
-          if (err) {
-            return res.status(500).end();
-          } else if (document) {
-            return res.status(208).end();
-          }
-        }
-      );
-      await Document.update(
-        {
-          _id: req.params.id
-        },
-        {
-          $set: document
-        }
-      );
 
-      return res.status(204).end();
-    } else {
-      return res.status(400).json({
-        error: "Id is not valid!"
-      });
+    let currentDocument = await Document.findOne({ _id: req.params.id })
+
+    if (req.body.title)
+      currentDocument.title = req.body.title
+
+    if (req.body.description)
+      currentDocument.description = req.body.description
+
+    if (req.body.type)
+      currentDocument.type = req.body.type
+
+    if (req.body.semestre)
+      currentDocument.semestre = req.body.semestre
+
+    if (req.body.year)
+      currentDocument.year = req.body.year
+
+    if (req.body.session)
+      currentDocument.session = req.body.session
+
+    if (req.body.status)
+      currentDocument.status = req.body.status
+
+    if (req.body.subject) {
+      const subject = await Subject.findOne({ _id: req.body.subject })
+
+      if (!subject)
+        return res.status(400).json({ error: 'wrong subject id' })
+
+      currentDocument.subject = req.body.subject
     }
+
+    await Document.save()
+
+    return res.status(204).end();
+
   } catch (error) {
     console.log(error);
     if (error.name === "CastError")
@@ -624,50 +534,17 @@ export async function update(req, res) {
 
 export async function remove(req, res) {
   try {
-    if (!req.params.id)
-      return res.status(400).json({
-        error: "Document id cannot be empty!"
-      });
-    else if (mongoose.Types.ObjectId.isValid(req.params.id)) {
-      await Document.remove({
-        _id: req.params.id
-      });
 
-      return res.status(204).end();
-    } else {
-      return res.status(400).json({
-        error: "Id is not valid!"
-      });
-    }
+    await Document.delete({ _id: req.params.id });
+
+    return res.status(204).end();
+
   } catch (error) {
     console.log(error);
     if (error.name === "CastError")
-      return res.status(400).json({
-        error: error.message
-      });
+      return res.status(400).json({ error: error.message });
 
     return res.status(500).end();
   }
 }
 
-export async function getDocByUser(req, res) {
-  try {
-    if (!req.params.id)
-      return res.status(400).json({
-        error: "User id cannot be empty"
-      });
-    else if (mongoose.Types.ObjectId.isValid(req.params.id)) {
-      let documents = await Document.find({
-        user: req.params.id
-      });
-      return res.status(200).json(documents);
-    } else {
-      return res.status(400).json({
-        error: "Id is not valid!"
-      });
-    }
-  } catch (error) {
-    console.log(error);
-    return res.status(500).end();
-  }
-}

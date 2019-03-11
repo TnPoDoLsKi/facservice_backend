@@ -143,6 +143,44 @@ export async function getOne(req, res) {
 }
 
 /**
+ * @api {get} /subjects/:id Get one Subject
+ * @apiGroup Subjects
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 OK
+ * {
+    "semestre": 1,
+    "documents": [],
+    "_id": "5c3e3542077225388404c0d8",
+    "name": "Mathématiques discrètes",
+    "createdAt": "2019-01-15T19:32:18.963Z",
+    "updatedAt": "2019-01-15T19:32:18.963Z"
+* }
+ * @apiErrorExample {json} Subject id cannot be empty
+ *    HTTP/1.1 400 Not Found
+ * @apiErrorExample {json} Find error
+ *    HTTP/1.1 500 Internal Server Error
+ */
+export async function getByMajor(req, res) {
+  try {
+
+    let subjects = await Subject.find({
+      majors: {
+        $in: req.params.id
+      }
+    });
+
+    return res.json(subjects);
+
+  } catch (error) {
+    console.log(error);
+    if (error.name == 'CastError')
+      return res.status(400).json({ error: error.message })
+
+    return res.status(500).end();
+  }
+}
+
+/**
  * @api {put} /subjects/:id Update a Subject
  * @apiGroup Subjects
  * @apiParam {id} id Subject id

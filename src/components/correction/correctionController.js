@@ -1,5 +1,4 @@
 import _ from "lodash";
-import mongoose from "mongoose";
 import { Correction } from "../../config/models";
 
 /**
@@ -131,33 +130,81 @@ export async function getAll(req, res) {
 
 export async function getOne(req, res) {
   try {
-    if (!req.params.id)
-      return res.status(400).json({
-        error: "Correction id cannot be empty!"
-      });
-    else if (mongoose.Types.ObjectId.isValid(req.params.id)) {
-      const correction = await Correction.findById({
-        _id: req.params.id
-      })
-        .populate({
-          path: "user",
-          select: "-major -avatar -hashedPassword"
-        })
-        // .populate({
-        //   path: "document",
-        //   select: "-approved"
-        // })
-        .exec();
 
-      return res.json(correction);
-    } else {
-      return res.status(400).json({
-        error: "Id is not valid!"
-      });
-    }
+    const correction = await Correction.findById({
+      _id: req.params.id
+    })
+      .populate({
+        path: "user",
+        select: "-major -avatar -hashedPassword"
+      })
+      .populate({
+        path: "document",
+        select: "-approved"
+      })
+      .exec();
+
+    return res.json(correction);
+
   } catch (error) {
     console.log(error);
     return res.status(500).end();
+  }
+}
+
+/**
+ * @api {get} /documents/corrections/:id Get document's corrections
+ * @apiGroup Documents
+ * @apiParam {id} id Document id
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 OK
+ * [
+    {
+        "approved": false,
+        "verifiedByProf": false,
+        "score": 0,
+        "_id": "5c619b28afaefd38f005ae77",
+        "title": "correction ds analyse 2018",
+        "filePath": "/uploads/jdhgfhd.jpg",
+        "user": "5c6199dff134a742549ed42c",
+        "createdAt": "2019-02-11T15:56:24.786Z",
+        "updatedAt": "2019-02-11T15:56:24.786Z"
+    },
+    {
+        "approved": false,
+        "verifiedByProf": false,
+        "score": 0,
+        "_id": "5c619b28afaefd38f005ae76",
+        "title": "correction ds algo 2015",
+        "filePath": "/uploads/jdhgfhd.jpg",
+        "user": "5c6199dff134a742549ed42c",
+        "createdAt": "2019-02-11T15:56:24.786Z",
+        "updatedAt": "2019-02-11T15:56:24.786Z"
+    }
+]
+ * @apiErrorExample {json} Document id cannot be empty
+ *    HTTP/1.1 400 Not Found
+ * @apiErrorExample {json} Find error
+ *    HTTP/1.1 500 Internal Server Error
+ */
+
+export async function getAllByDocument(req, res) {
+  try {
+
+    const corrections = await Correction.find({ document: req.params.documentId })
+      .populate({
+        path: "user",
+        select: "-major -avatar -hashedPassword"
+      });
+
+    return res.json(corrections);
+
+  } catch (error) {
+    console.log(error)
+    if (error.name == 'CastError')
+      return res.status(400).json({ error: error.message })
+
+      return res.status(500).end();
   }
 }
 
@@ -187,25 +234,26 @@ export async function getOne(req, res) {
 
 export async function create(req, res) {
   try {
-    let correction = _.pick(req.body, "title", "filePath", "user", "document");
-    await Correction.findOne(
-      {
-        document: correction.document,
-        title: correction.title,
-        user: correction.user
-      },
-      (err, result) => {
-        if (err) {
-          return res.status(500).end();
-        } else if (result) {
-          return res.status(208).end();
-        }
-      }
-    );
+    let correction = _.pick(req.body, "filesStaging", "document");
+
+    if (!(correction.filesStaging && correction.document))
+      return res.status(400).json({ error: 'missing body params' })
+
+    const document = await Document.findOne({ _id: document })
+    if (!document)
+      return res.status(400).json({ error: 'wrong subject id' })
+
+    correction.title = 'corrigé de ' + document.title
+    correction.status = 'inReview'
     correction = await Correction.create(correction);
-    return res.json(correction).end();
+
+    return res.json(correction)
+
   } catch (error) {
-    console.log(error);
+    console.log(error)
+    if (error.name == 'CastError')
+      return res.status(400).json({ error: error.message })
+
     return res.status(500).end();
   }
 }
@@ -238,37 +286,30 @@ export async function create(req, res) {
 
 export async function update(req, res) {
   try {
-    if (!req.params.id)
+
+    let correction = await Correction.findOne({ _id: req.params.id })
+    if (!correction)
       return res.status(400).json({
-        error: "Correction id cannot be empty!"
+        error: "Correction not found !"
       });
-    else if (mongoose.Types.ObjectId.isValid(req.params.id)) {
-      let correction = await Correction.findOne({
-        _id: req.params.id
-      });
-      if (!correction)
-        return res.status(400).json({
-          error: "Correction not found !"
-        });
+
+    if (req.body.title)
       correction.title = req.body.title;
-      correction.filePath = req.body.filePath;
-      correction.user = req.body.user;
+
+    if (req.body.document)
       correction.document = req.body.document;
 
-      await correction.save();
+    if (req.body.status)
+      correction.status = document.status
 
-      return res.status(200).end();
-    } else {
-      return res.status(400).json({
-        error: "Id is not valid!"
-      });
-    }
+    await correction.save();
+
+    return res.status(200).end();
+
   } catch (error) {
     console.log(error);
     if (error.name === "CastError")
-      return res.status(400).json({
-        error: error.message
-      });
+      return res.status(400).json({ error: error.message });
 
     return res.status(500).end();
   }
@@ -290,22 +331,13 @@ export async function update(req, res) {
 
 export async function remove(req, res) {
   try {
-    if (!req.params.id)
-      return res.status(400).json({
-        error: "Correction id cannot be empty!"
-      });
-    else if (mongoose.Types.ObjectId.isValid(req.params.id)) {
-      await Correction.remove({
-        _id: req.params.id
-      });
 
-      return res.status(204).end();
-    } else {
-      return res.status(400).json({
-        error: "Id is not valid!"
-      });
-    }
+    await Correction.delete({ _id: req.params.id });
+
+    return res.status(204).end();
+
   } catch (error) {
+
     console.log(error);
     if (error.name === "CastError")
       return res.status(400).json({
