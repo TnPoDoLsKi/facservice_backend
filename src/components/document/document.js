@@ -42,7 +42,7 @@ const documentSchema = new mongoose.Schema(
     },
     session: {
       type: String,
-      enum: ["Principale", "Controle"],
+      enum: ["Principale", "Rattrapage"],
       default: "Principale"
     },
     profName: {
