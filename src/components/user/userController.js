@@ -183,29 +183,39 @@ export async function update(req, res) {
           if (err) {
             return res.status(500).end(err);
           }
-          await user.comparePassword(req.body.oldPassword, (err, equal) => {
-            if (equal && !err) {
-              console.log("equal");
-              const salt = bcrypt.genSaltSync(10);
-              user.password = bcrypt.hashSync(req.body.password, salt);
-            } else {
-              console.log("not equal");
-              return res.status(401).json({ error: "old password is wrong" });
+          await user.comparePassword(
+            req.body.oldPassword,
+            async (err, equal) => {
+              if (equal && !err) {
+                const salt = bcrypt.genSaltSync(10);
+                user.hashedPassword = bcrypt.hashSync(req.body.password, salt);
+                await User.update(
+                  {
+                    _id: req.params.id
+                  },
+                  {
+                    $set: user
+                  }
+                );
+                return res.status(200).end();
+              } else {
+                console.log("not equal");
+                return res.status(401).json({ error: "old password is wrong" });
+              }
             }
-          });
+          );
         });
+      } else {
+        await User.update(
+          {
+            _id: req.params.id
+          },
+          {
+            $set: user
+          }
+        );
+        return res.status(200).end();
       }
-
-      await User.update(
-        {
-          _id: req.params.id
-        },
-        {
-          $set: user
-        }
-      );
-
-      return res.status(200).end();
     } else {
       return res.status(400).json({
         error: "Id is not valid!"
