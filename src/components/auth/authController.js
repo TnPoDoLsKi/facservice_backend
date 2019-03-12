@@ -1,8 +1,8 @@
 import _ from "lodash";
-import User from "../user/user";
-import jwt from "jsonwebtoken";
-import { SECRET } from "../../config/env";
-import Major from "../major/major";
+import crypto from 'crypto'
+import { User, Major } from '../../config/models'
+
+const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 
 /**
  * @api {post} /auth/signup Create User
@@ -34,67 +34,46 @@ import Major from "../major/major";
  * @apiErrorExample {json} Register error
  *    HTTP/1.1 500 Internal Server Error
  */
-export async function create(req, res) {
+export async function signUp(req, res) {
   try {
     const user = _.pick(
       req.body,
       "email",
-      "type",
       "firstName",
       "lastName",
-      "password"
+      "password",
+      "major"
     );
 
-    if (
-      !req.body.email ||
-      !req.body.type ||
-      !req.body.firstName ||
-      !req.body.lastName ||
-      !req.body.password
-    ) {
-      return res.status(400).end();
-    } else {
-      if (req.body.major) {
-        await Major.findOne(
-          {
-            name: req.body.major
-          },
-          (err, foundMajor) => {
-            if (err) {
-              return res.status(500).end();
-            } else if (!foundMajor) {
-              return res.status(406).end();
-            } else {
-              user.major = foundMajor._id;
-            }
-          }
-        );
+    if (!user.email || !user.password || !user.major || !user.firstName || !user.lastName)
+      return res.status(400).json({ error: 'missing body params' })
 
-        await User.findOne(
-          {
-            email: user.email
-          },
-          (err, user) => {
-            if (err) {
-              return res.status(500).end({
-                error: err
-              });
-            } else if (user) {
-              return res.status(208).end();
-            }
-          }
-        );
+    if (!emailRegex.test(user.email))
+      return res.status(400).json({ error: 'Wrong email form' })
 
-        await User.create(user);
+    const existingUser = await User.findOne({ email: user.email })
 
-        return res.status(201).end();
-      } else {
-        return res.status(406).end();
-      }
-    }
-  } catch (err) {
-    res.status(500).end();
-    console.log(err);
+    if (existingUser)
+      return res.status(400).json({ error: 'email already exist' })
+
+    if (user.password.length < 8)
+      return res.status(400).json({ error: 'Password should contain eight characters or more' })
+
+    const major = await Major.findOne({ _id: user.major })
+
+    if (!major)
+      return res.status(400).json({ error: 'wrong major id' })
+
+    await User.create(user);
+
+    return res.status(201).end();
+
+  } catch (error) {
+    console.log(error)
+    if (error.name == 'CastError')
+      return res.status(400).json({ error: error.message })
+
+    return res.status(500).end()
   }
 }
 
@@ -130,48 +109,28 @@ export async function create(req, res) {
 
 export async function signIn(req, res) {
   try {
-    await User.findOne(
-      {
-        email: req.body.email
-      },
-      (err, user) => {
-        if (err) {
-          return res.status(500).end(err);
-        }
-        if (!user) {
-          return res.status(400).end();
-        }
 
-        user.comparePassword(req.body.password, (err, equal) => {
-          if (equal && !err) {
-            const userData = _.pick(
-              user,
-              "_id",
-              "firstName",
-              "lastName",
-              "email",
-              "type",
-              "major",
-              "avatar"
-            );
-            const token = jwt.sign(userData, SECRET, {
-              expiresIn: 604800
-            });
+    if (!(req.body.email && req.body.password))
+      return res.status(400).json({ error: 'missing body params' })
 
-            req.session.token = token;
-            req.session.userData = userData;
+    let user = await User.findOne({ email: req.body.email })
 
-            return res.json({
-              user: userData,
-              token: token
-            });
-          } else {
-            console.log(equal, err);
-            return res.status(401).end();
-          }
-        });
-      }
-    );
+    if (!user)
+      return res.status(400).json({ error: 'Wrong email address' })
+
+    if (!user.comparePassword(req.body.password))
+      return res.status(401).json({ error: 'Wrong password' })
+
+    user.token = crypto.createHash('sha256').update(crypto.randomBytes(48).toString('hex')).digest('hex')
+    await user.save()
+
+    req.session.token = user.token
+
+    user = user.toJSON()
+    delete user.hashedPassword
+
+    return res.json(user)
+
   } catch (err) {
     return res.status(500).end();
   }
@@ -189,9 +148,17 @@ export async function signIn(req, res) {
 
 export async function signOut(req, res) {
   try {
-    req.session.destroy();
-    return res.status(200).end();
-  } catch (err) {
-    return res.status(500).end();
+
+    req.user.token = null
+    delete req.session.token
+
+    await req.user.save()
+
+    return res.status(204).end()
+
+  } catch (error) {
+
+    console.log(error)
+    return res.status(500).end()
   }
 }

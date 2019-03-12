@@ -268,7 +268,7 @@ export async function update(req, res) {
 export async function remove(req, res) {
   try {
 
-    await Subject.delete({ _id: req.params.id });
+    await Subject.delete({ _id: req.params.id }, req.user._id);
     return res.status(200).end();
 
   } catch (error) {

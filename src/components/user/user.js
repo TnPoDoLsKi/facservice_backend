@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema(
     },
     type: {
       type: String,
-      enum: ["admin", "prof", "student"],
+      enum: ["admin", "professor", "student"],
       default: "student"
     },
     avatar: {
@@ -30,6 +30,13 @@ const userSchema = new mongoose.Schema(
     major: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Major"
+    },
+    token: {
+      type: String
+    },
+    suspended: {
+      type: Boolean,
+      default: false
     }
   },
   {
@@ -37,30 +44,20 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-userSchema.virtual("password").set(function(password) {
+userSchema.virtual("password").set(function (password) {
   this.hashedPassword = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
 });
 
-userSchema.methods.comparePassword = function(password, callback) {
-  bcrypt.compare(password, this.hashedPassword, (err, equal) => {
-    if (err) {
-      return callback(err);
-    }
-    callback(null, equal);
-  });
-};
+userSchema.methods = {
+  comparePassword(candidatePassword) {
+    return bcrypt.compareSync(candidatePassword, this.hashedPassword)
+  }
+}
 
 userSchema.plugin(mongooseDelete, {
   overrideMethods: "all",
   deletedAt: true,
   deletedBy: true
 });
-
-userSchema.methods.toJSON = function() {
-  var obj = this.toObject();
-  delete obj.__v;
-  delete obj.deleted;
-  return obj;
-};
 
 export default mongoose.model("User", userSchema);

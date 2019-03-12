@@ -6,6 +6,9 @@ const documentSchema = new mongoose.Schema(
     title: {
       type: String
     },
+    description: {
+      type: String
+    },
     filePath: {
       type: String
     },
@@ -26,8 +29,8 @@ const documentSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ['inReview', 'approved', 'rejected'],
-      default: 'inReview'
+      enum: ['pending', 'approved', 'rejected'],
+      default: 'pending'
     },
     NBDowloads: {
       type: Number,
@@ -45,14 +48,9 @@ const documentSchema = new mongoose.Schema(
     profName: {
       type: String
     },
-    corrections: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "correction"
-      }
-    ],
-    description: {
-      type: String
+    hasCorrection: {
+      type: Boolean,
+      default: false
     }
   },
   {

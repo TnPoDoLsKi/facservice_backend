@@ -65,13 +65,8 @@ export async function getAll(req, res) {
   try {
     const documents = await Document.find().populate({
       path: "user",
-      select: "-major -avatar -hashedPassword"
-    })
-      // .populate({
-      //   path: "corrections",
-      //   select: "-deleted"
-      // })
-      .exec();
+      select: "firstName lastName -_id"
+    }).select("-filesStaging")
 
     return res.json(documents);
   } catch (error) {
@@ -143,9 +138,9 @@ export async function getAll(req, res) {
 export async function getAllByStatus(req, res) {
   try {
 
-    if (['inReview', 'approved', 'rejected'].indexOf(req.params.status) < 0) {
+    if (['pending', 'approved', 'rejected'].indexOf(req.params.status) < 0) {
       return res.status(400).json({
-        error: "status must be 'inReview', 'approved' or 'rejected'"
+        error: "status must be 'pending', 'approved' or 'rejected'"
       });
     }
 
@@ -153,15 +148,11 @@ export async function getAllByStatus(req, res) {
       status: req.params.status
     }).populate({
       path: "user",
-      select: "-major -avatar -hashedPassword"
-    })
-      // .populate({
-      //   path: "corrections",
-      //   select: "-deleted"
-      // })
-      .exec();
+      select: "firstName lastName -_id"
+    }).select("-filesStaging")
 
     return res.json(documents);
+
   } catch (error) {
     console.log(error);
     return res.status(500).end();
@@ -234,16 +225,10 @@ export async function getOne(req, res) {
     const document = await Document.findById({
       _id: req.params.id,
       status: 'approved'
-    })
-      .populate({
-        path: "user",
-        select: "-major -hashedPassword"
-      })
-      .populate({
-        path: "corrections",
-        select: "-deleted"
-      })
-      .exec();
+    }).populate({
+      path: "user",
+      select: "firstName lastName -_id"
+    }).select("-filesStaging")
 
     return res.json(document);
 
@@ -297,14 +282,22 @@ export async function getOne(req, res) {
 export async function getDocBySubjectByType(req, res) {
   try {
 
+    if (['DS', 'EX', 'C', 'TD', 'TP', 'DS1', 'DS2'].indexOf(req.params.type) < 0)
+      return res.status(400).json({ error: 'wrong document type' })
+
+    const subjectObject = await Subject.findOne({ _id: req.params.subjectId })
+
+    if (!subjectObject)
+      return res.status(400).json({ error: 'wrong subject id' })
+
     const documents = await Document.find({
       subject: req.params.subjectId,
       type: req.params.type,
       status: 'approved'
     }).populate({
       path: "user",
-      select: "-major -avatar -hashedPassword -deleted -__v"
-    });
+      select: "firstName lastName -_id"
+    }).select("-filesStaging")
 
     return res.json(documents);
 
@@ -321,7 +314,7 @@ export async function getDocByUser(req, res) {
   try {
 
     const documents = await Document.find({
-      user: req.params.userId
+      user: req.user._id
     })
 
     return res.status(200).json(documents)
@@ -407,23 +400,35 @@ export async function create(req, res) {
       "corrections"
     )
 
-    if (!(document.type && document.subject && document.year && document.session && document.filesStaging))
+    if (!(document.type && document.subject && document.year && document.filesStaging))
       return res.status(400).json({ error: 'missing body params' })
+
+    if (['DS', 'EX', 'C', 'TD', 'TP', 'DS1', 'DS2'].indexOf(document.type) < 0)
+      return res.status(400).json({ error: 'wrong document type' })
+
+    if (isNaN(document.year))
+      return res.status(400).json({ error: 'year must be a number' })
 
     const subjectObject = await Subject.findOne({ _id: document.subject })
 
     if (!subjectObject)
       return res.status(400).json({ error: 'wrong subject id' })
 
+    if (req.body.session && ['Principale', 'Controle'].indexOf(req.body.session) < 0)
+      return res.status(400).json({ error: 'wrong document session' })
+
     document.user = req.user._id
-    document.status = 'inReview'
+    document.status = 'pending'
     document.title = document.type + ' ' + subjectObject.name + ' ' + document.year
 
     document = await Document.create(document);
     return res.json(document);
 
   } catch (error) {
-    console.log(error);
+    console.log(error)
+    if (error.name == 'CastError')
+      return res.status(400).json({ error: error.message })
+
     return res.status(500).end();
   }
 }
@@ -471,6 +476,7 @@ export async function create(req, res) {
 export async function update(req, res) {
   try {
 
+    let docStatusChanged = false
     let currentDocument = await Document.findOne({ _id: req.params.id })
 
     if (req.body.title)
@@ -479,20 +485,38 @@ export async function update(req, res) {
     if (req.body.description)
       currentDocument.description = req.body.description
 
-    if (req.body.type)
-      currentDocument.type = req.body.type
+    if (req.body.year) {
+      if (isNaN(req.body.year))
+        return res.status(400).json({ error: 'year must be a number' })
 
-    if (req.body.semestre)
-      currentDocument.semestre = req.body.semestre
-
-    if (req.body.year)
       currentDocument.year = req.body.year
+    }
 
-    if (req.body.session)
+    if (req.body.type) {
+      if (['DS', 'EX', 'C', 'TD', 'TP', 'DS1', 'DS2'].indexOf(req.body.type) < 0)
+        return res.status(400).json({ error: 'wrong document type' })
+
+      currentDocument.type = req.body.type
+    }
+
+    if (req.body.session) {
+      if (['Principale', 'Controle'].indexOf(req.body.session) < 0)
+        return res.status(400).json({ error: 'wrong document session' })
+
       currentDocument.session = req.body.session
+    }
 
-    if (req.body.status)
+    if (req.body.status) {
+      if (['pending', 'approved', 'rejected'].indexOf(req.body.status) < 0)
+        return res.status(400).json({ error: 'wrong document status' })
+
+      if (!(['pending', 'rejected'].includes(req.body.status) && ['pending', 'rejected'].includes(currentDocument.status)) &&
+        (req.body.status != currentDocument.status))
+        
+        docStatusChanged = true
+
       currentDocument.status = req.body.status
+    }
 
     if (req.body.subject) {
       const subject = await Subject.findOne({ _id: req.body.subject })
@@ -503,7 +527,68 @@ export async function update(req, res) {
       currentDocument.subject = req.body.subject
     }
 
-    await Document.save()
+    await currentDocument.save()
+
+    if (docStatusChanged) {
+      let subject = await Subject.findOne({ _id: currentDocument.subject })
+
+      if (req.body.status == 'approved') {
+
+        switch (currentDocument.type) {
+          case 'DS':
+            subject.documentsCount.DS++
+            break;
+
+          case 'EX':
+            subject.documentsCount.EX++
+            break;
+
+          case 'C':
+            subject.documentsCount.C++
+            break;
+
+          case 'TD':
+            subject.documentsCount.TD++
+            break;
+
+          case 'TP':
+            subject.documentsCount.TP++
+            break;
+
+          default:
+            break;
+        }
+      } else {
+
+        switch (currentDocument.type) {
+          case 'DS':
+            subject.documentsCount.DS--
+            break;
+
+          case 'EX':
+            subject.documentsCount.EX--
+            break;
+
+          case 'C':
+            subject.documentsCount.C--
+            break;
+
+          case 'TD':
+            subject.documentsCount.TD--
+            break;
+
+          case 'TP':
+            subject.documentsCount.TP--
+            break;
+
+          default:
+            break;
+        }
+
+      }
+
+      await subject.save()
+    }
 
     return res.status(204).end();
 
@@ -535,7 +620,7 @@ export async function update(req, res) {
 export async function remove(req, res) {
   try {
 
-    await Document.delete({ _id: req.params.id });
+    await Document.delete({ _id: req.params.id }, req.user._id);
 
     return res.status(204).end();
 

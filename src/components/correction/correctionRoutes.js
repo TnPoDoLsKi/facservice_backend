@@ -9,7 +9,4 @@ export default function(router) {
   router.post("/corrections", create);
   router.put("/corrections/:id", update);
   router.delete("/corrections/:id", remove);
-  
-  router.post("/documents/corrections/:id", addCorrections);
-
 }

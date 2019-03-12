@@ -244,7 +244,7 @@ export async function create(req, res) {
       return res.status(400).json({ error: 'wrong subject id' })
 
     correction.title = 'corrigé de ' + document.title
-    correction.status = 'inReview'
+    correction.status = 'pending'
     correction = await Correction.create(correction);
 
     return res.json(correction)
@@ -332,7 +332,7 @@ export async function update(req, res) {
 export async function remove(req, res) {
   try {
 
-    await Correction.delete({ _id: req.params.id });
+    await Correction.delete({ _id: req.params.id }, req.user._id);
 
     return res.status(204).end();
 

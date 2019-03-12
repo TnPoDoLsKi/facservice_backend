@@ -19,11 +19,11 @@ const subjectSchema = new mongoose.Schema(
       ref: "Major"
     }],
     documentsCount: {
-      ds: { type: Number, default: 0 },
-      ex: { type: Number, default: 0 },
-      c: { type: Number, default: 0 },
-      td: { type: Number, default: 0 },
-      tp: { type: Number, default: 0 }
+      DS: { type: Number, default: 0 },
+      EX: { type: Number, default: 0 },
+      C: { type: Number, default: 0 },
+      TD: { type: Number, default: 0 },
+      TP: { type: Number, default: 0 }
     }
   },
   {

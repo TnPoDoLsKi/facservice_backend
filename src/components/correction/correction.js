@@ -14,8 +14,8 @@ const correctionSchema = new mongoose.Schema(
     }],
     status: {
       type: String,
-      enum: ['inReview', 'approved', 'rejected'],
-      default: 'inReview'
+      enum: ['pending', 'approved', 'rejected'],
+      default: 'pending'
     },
     verifiedByProf: {
       type: Boolean,
