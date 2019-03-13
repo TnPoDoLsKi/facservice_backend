@@ -68,9 +68,9 @@ export async function getOne(req, res) {
 }
 
 /**
- * @api {get} /subjects/byMajor/:id Get one Subject
+ * @api {get} /subjects/byMajor/:major Get subjects by major
  * @apiGroup Subjects
- * @apiParam {id} byMajor Major id
+ * @apiParam {id} major major id
  * @apiSuccessExample {json} Success
  *    HTTP/1.1 200 OK
 [

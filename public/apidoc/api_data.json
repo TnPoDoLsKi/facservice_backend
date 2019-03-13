@@ -429,7 +429,7 @@
       "examples": [
         {
           "title": "Success",
-          "content": "   HTTP/1.1 201 OK\n[\n     {\n        \"type\": \"DS\",\n        \"semestre\": 1,\n        \"approved\": false,\n        \"session\": \"Principale\",\n        \"corrections\": [],\n        \"_id\": \"5c41ae2c6c942e059c10737d\",\n        \"title\": \"dsAlgo\",\n        \"filePath\": \"/uploads/hjkhdfkjl.pdf\",\n        \"major\": \"5c3f8bee091f3c3290ac10b2\",\n        \"subject\": \"5c41b2d82383c111b4ffad1d\",\n        \"year\": 2016,\n        \"user\": \"5c2426542a7e2f361896f812\",\n        \"createdAt\": \"2019-01-18T10:45:00.529Z\",\n        \"updatedAt\": \"2019-01-18T10:45:00.529Z\"\n    },\n    {\n        \"type\": \"EX\",\n        \"semestre\": 1,\n        \"approved\": false,\n        \"session\": \"Principale\",\n        \"corrections\": [\n            \"5c41ccd20dbd0934ccc59a0e\",\n            \"5c41cd34dfe31425c014f85e\"\n        ],\n        \"_id\": \"5c41df5e0000d416fc5158fd\",\n        \"title\": \"EXAlgo\",\n        \"filePath\": \"/uploads/hjkhdfkjl.pdf\",\n        \"major\": \"5c3f8bee091f3c3290ac10b2\",\n        \"subject\": \"5c3f8bed091f3c3290ac1083\",\n        \"year\": 2016,\n        \"user\": \"5c2426542a7e2f361896f812\",\n        \"profName\": \"Sami Ashour\",\n        \"createdAt\": \"2019-01-18T14:14:54.344Z\",\n        \"updatedAt\": \"2019-01-18T14:14:54.344Z\"\n    }]",
+          "content": "   HTTP/1.1 201 OK\n[\n    {\n      \"type\": \"DS\",\n      \"status\": \"approved\",\n      \"NBDowloads\": 215,\n      \"session\": \"Rattrapage\",\n      \"hasCorrection\": true,\n      \"deleted\": false,\n      \"_id\": \"5c87918f905e0b33f609b360\",\n      \"filePath\": \"https://igc.tn/documents/file.pdf\",\n      \"subject\": \"5c8269c447baab426f6cbcfc\",\n      \"year\": 2014,\n      \"user\": {\n          \"avatar\": \"https://igc.tn/img/portfolio/HC1-Prev.jpg\",\n          \"firstName\": \"Wael\",\n          \"lastName\": \"Ben Taleb\"\n      },\n      \"major\": {\n          \"_id\": \"5c8269c447baab426f6cbcfa\",\n          \"name\": \"LFSI 2\"\n      },\n      \"title\": \"DS Francais 2014\",\n      \"createdAt\": \"2019-03-12T11:01:35.921Z\",\n      \"updatedAt\": \"2019-03-12T22:56:21.614Z\",\n      \"__v\": 0,\n      \"description\": \"DS Francais 2014 description\"\n    },\n    {\n      \"type\": \"DS\",\n      \"status\": \"approved\",\n      \"NBDowloads\": 215,\n      \"session\": \"Rattrapage\",\n      \"hasCorrection\": true,\n      \"deleted\": false,\n      \"_id\": \"5c87918f905e0b33f609b361\",\n      \"filePath\": \"https://igc.tn/documents/file.pdf\",\n      \"subject\": \"5c8269c447baab426f6cbcfc\",\n      \"year\": 2014,\n      \"user\": {\n          \"avatar\": \"https://igc.tn/img/portfolio/HC1-Prev.jpg\",\n          \"firstName\": \"Wael\",\n          \"lastName\": \"Ben Taleb\"\n      },\n      \"major\": {\n        \"_id\": \"5c8269c447baab426f6cbcfa\",\n        \"name\": \"Ing 1\"\n      },\n      \"title\": \"DS Anglais 2014\",\n      \"createdAt\": \"2019-03-12T11:01:35.921Z\",\n      \"updatedAt\": \"2019-03-12T22:56:21.614Z\",\n      \"__v\": 0,\n      \"description\": \"DS Anglais 2014 description\"\n    }\n]",
           "type": "json"
         }
       ]
@@ -605,9 +605,22 @@
   },
   {
     "type": "get",
-    "url": "/levels",
-    "title": "Get all levels",
+    "url": "/levels/byForamtion/:formation",
+    "title": "Get levels by formation",
     "group": "Levels",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "id",
+            "optional": false,
+            "field": "formation",
+            "description": "<p>formation id</p>"
+          }
+        ]
+      }
+    },
     "success": {
       "examples": [
         {
@@ -629,13 +642,26 @@
     "version": "0.0.0",
     "filename": "src/components/level/levelController.js",
     "groupTitle": "Levels",
-    "name": "GetLevels"
+    "name": "GetLevelsByforamtionFormation"
   },
   {
     "type": "get",
-    "url": "/majors",
-    "title": "Get all majors",
+    "url": "/majors/byLevel/:level",
+    "title": "Get majors by level",
     "group": "Majors",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "id",
+            "optional": false,
+            "field": "level",
+            "description": "<p>level id</p>"
+          }
+        ]
+      }
+    },
     "success": {
       "examples": [
         {
@@ -657,12 +683,12 @@
     "version": "0.0.0",
     "filename": "src/components/major/majorController.js",
     "groupTitle": "Majors",
-    "name": "GetMajors"
+    "name": "GetMajorsBylevelLevel"
   },
   {
     "type": "get",
-    "url": "/subjects/byMajor/:id",
-    "title": "Get one Subject",
+    "url": "/subjects/byMajor/:major",
+    "title": "Get subjects by major",
     "group": "Subjects",
     "parameter": {
       "fields": {
@@ -671,8 +697,8 @@
             "group": "Parameter",
             "type": "id",
             "optional": false,
-            "field": "byMajor",
-            "description": "<p>Major id</p>"
+            "field": "major",
+            "description": "<p>major id</p>"
           }
         ]
       }
@@ -703,7 +729,7 @@
     "version": "0.0.0",
     "filename": "src/components/subject/subjectController.js",
     "groupTitle": "Subjects",
-    "name": "GetSubjectsBymajorId"
+    "name": "GetSubjectsBymajorMajor"
   },
   {
     "type": "get",
@@ -749,5 +775,55 @@
     "filename": "src/components/user/userController.js",
     "groupTitle": "Users",
     "name": "GetUser"
+  },
+  {
+    "type": "put",
+    "url": "/users",
+    "title": "Update profile",
+    "group": "Users",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer Token</p>"
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "examples": [
+        {
+          "title": "Input",
+          "content": "{\n  \"email\": \"waelben7@gmail.com\",\n  \"firstName\": \"Wael\",\n  \"lastName\": \"Ben Taleb\",\n  \"major\": \"5c8265367e19d73dba8355a6\",\n  \"oldPassword\": \"12345678\",\n  \"password\": \"87654321\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Not Authorized",
+          "content": "HTTP/1.1 401 Not Authorized",
+          "type": "json"
+        },
+        {
+          "title": "Bad Request",
+          "content": "HTTP/1.1 400 Bad Request",
+          "type": "json"
+        },
+        {
+          "title": "Internal Server Error",
+          "content": "HTTP/1.1 500 Internal Server Error",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "src/components/user/userController.js",
+    "groupTitle": "Users",
+    "name": "PutUsers"
   }
 ]

@@ -59,6 +59,29 @@ export async function getCurrent(req, res) {
   }
 }
 
+/**
+ * @api {put} /users Update profile
+ * @apiGroup Users
+ * @apiHeader Authorization Bearer Token
+ * 
+ * @apiParamExample {json} Input
+ *    {
+ *      "email": "waelben7@gmail.com",
+ *      "firstName": "Wael",
+ *      "lastName": "Ben Taleb",
+ *      "major": "5c8265367e19d73dba8355a6",
+ *      "oldPassword": "12345678",
+ *      "password": "87654321"
+ *    }
+ * 
+ * @apiErrorExample Not Authorized
+ *    HTTP/1.1 401 Not Authorized
+ * @apiErrorExample Bad Request
+ *    HTTP/1.1 400 Bad Request
+ * @apiErrorExample Internal Server Error
+ *    HTTP/1.1 500 Internal Server Error
+ */
+
 export async function update(req, res) {
   try {
 
@@ -89,12 +112,12 @@ export async function update(req, res) {
       req.user.password = req.body.password
     }
 
-    if (req.body.type) {
-      if (['admin', 'professor', 'student'].indexOf(req.body.type) < 0)
-        return res.status(400).json({ error: 'wrong user type' })
+    // if (req.body.type) {
+    //   if (['admin', 'professor', 'student'].indexOf(req.body.type) < 0)
+    //     return res.status(400).json({ error: 'wrong user type' })
 
-      req.user.type = req.body.type
-    }
+    //   req.user.type = req.body.type
+    // }
 
     if (req.body.firstName)
       req.user.firstName = req.body.firstName

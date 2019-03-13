@@ -227,43 +227,60 @@ export async function getDocByUser(req, res) {
  *    }
  * @apiSuccessExample {json} Success
  *    HTTP/1.1 201 OK
- * [
-     {
-        "type": "DS",
-        "semestre": 1,
-        "approved": false,
-        "session": "Principale",
-        "corrections": [],
-        "_id": "5c41ae2c6c942e059c10737d",
-        "title": "dsAlgo",
-        "filePath": "/uploads/hjkhdfkjl.pdf",
-        "major": "5c3f8bee091f3c3290ac10b2",
-        "subject": "5c41b2d82383c111b4ffad1d",
-        "year": 2016,
-        "user": "5c2426542a7e2f361896f812",
-        "createdAt": "2019-01-18T10:45:00.529Z",
-        "updatedAt": "2019-01-18T10:45:00.529Z"
+  * [
+    {
+      "type": "DS",
+      "status": "approved",
+      "NBDowloads": 215,
+      "session": "Rattrapage",
+      "hasCorrection": true,
+      "deleted": false,
+      "_id": "5c87918f905e0b33f609b360",
+      "filePath": "https://igc.tn/documents/file.pdf",
+      "subject": "5c8269c447baab426f6cbcfc",
+      "year": 2014,
+      "user": {
+          "avatar": "https://igc.tn/img/portfolio/HC1-Prev.jpg",
+          "firstName": "Wael",
+          "lastName": "Ben Taleb"
+      },
+      "major": {
+          "_id": "5c8269c447baab426f6cbcfa",
+          "name": "LFSI 2"
+      },
+      "title": "DS Francais 2014",
+      "createdAt": "2019-03-12T11:01:35.921Z",
+      "updatedAt": "2019-03-12T22:56:21.614Z",
+      "__v": 0,
+      "description": "DS Francais 2014 description"
     },
     {
-        "type": "EX",
-        "semestre": 1,
-        "approved": false,
-        "session": "Principale",
-        "corrections": [
-            "5c41ccd20dbd0934ccc59a0e",
-            "5c41cd34dfe31425c014f85e"
-        ],
-        "_id": "5c41df5e0000d416fc5158fd",
-        "title": "EXAlgo",
-        "filePath": "/uploads/hjkhdfkjl.pdf",
-        "major": "5c3f8bee091f3c3290ac10b2",
-        "subject": "5c3f8bed091f3c3290ac1083",
-        "year": 2016,
-        "user": "5c2426542a7e2f361896f812",
-        "profName": "Sami Ashour",
-        "createdAt": "2019-01-18T14:14:54.344Z",
-        "updatedAt": "2019-01-18T14:14:54.344Z"
-    }]
+      "type": "DS",
+      "status": "approved",
+      "NBDowloads": 215,
+      "session": "Rattrapage",
+      "hasCorrection": true,
+      "deleted": false,
+      "_id": "5c87918f905e0b33f609b361",
+      "filePath": "https://igc.tn/documents/file.pdf",
+      "subject": "5c8269c447baab426f6cbcfc",
+      "year": 2014,
+      "user": {
+          "avatar": "https://igc.tn/img/portfolio/HC1-Prev.jpg",
+          "firstName": "Wael",
+          "lastName": "Ben Taleb"
+      },
+      "major": {
+        "_id": "5c8269c447baab426f6cbcfa",
+        "name": "Ing 1"
+      },
+      "title": "DS Anglais 2014",
+      "createdAt": "2019-03-12T11:01:35.921Z",
+      "updatedAt": "2019-03-12T22:56:21.614Z",
+      "__v": 0,
+      "description": "DS Anglais 2014 description"
+    }
+]
  * @apiErrorExample {json} Name param cannot be empty
  *    HTTP/1.1 400 Bad Request
  * @apiErrorExample {json} Register error

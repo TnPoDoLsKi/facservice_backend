@@ -24,7 +24,7 @@ export async function create(req, res) {
     const level = await Level.create(req.body);
 
     return res.json(level);
-    
+
   } catch (error) {
     console.log(error);
     if (error.name == 'CastError')
@@ -34,9 +34,21 @@ export async function create(req, res) {
   }
 }
 
+export async function getAll(req, res) {
+  try {
+    const levels = await Level.find();
+
+    return res.json(levels);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).end();
+  }
+}
+
 /**
- * @api {get} /levels Get all levels
+ * @api {get} /levels/byForamtion/:formation Get levels by formation
  * @apiGroup Levels
+ * @apiParam {id} formation formation id
  * @apiSuccessExample {json} Success
  *    HTTP/1.1 200 OK
   [
@@ -65,9 +77,15 @@ export async function create(req, res) {
  *    HTTP/1.1 500 Internal Server Error
  */
 
-export async function getAll(req, res) {
+export async function getByForamtion(req, res) {
   try {
-    const levels = await Level.find();
+
+    const formation = await Formation.findOne({ _id: req.params.formation });
+
+    if (!formation)
+      return res.status(400).json({ error: "wrong formation id " })
+
+    const levels = await Level.find({ formation: req.params.formation });
 
     return res.json(levels);
   } catch (error) {
@@ -76,7 +94,7 @@ export async function getAll(req, res) {
   }
 }
 
- export async function getOne(req, res) {
+export async function getOne(req, res) {
   try {
 
     const level = await Level.findById({
@@ -94,7 +112,7 @@ export async function getAll(req, res) {
   }
 }
 
- export async function update(req, res) {
+export async function update(req, res) {
   try {
 
     let level = await Level.findOne({ _id: req.params.id });
@@ -133,7 +151,7 @@ export async function getAll(req, res) {
   }
 }
 
- export async function remove(req, res) {
+export async function remove(req, res) {
   try {
 
     await Level.delete({ _id: req.params.id }, req.user._id);

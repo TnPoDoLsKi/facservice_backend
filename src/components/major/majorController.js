@@ -34,9 +34,21 @@ export async function create(req, res) {
   }
 }
 
+export async function getAll(req, res) {
+  try {
+    const majors = await Major.find()
+
+    return res.json(majors);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).end();
+  }
+}
+
 /**
- * @api {get} /majors Get all majors
+ * @api {get} /majors/byLevel/:level Get majors by level
  * @apiGroup Majors
+ * @apiParam {id} level level id 
  * @apiSuccessExample {json} Success
  *    HTTP/1.1 200 OK
  [
@@ -61,9 +73,16 @@ export async function create(req, res) {
  *    HTTP/1.1 500 Internal Server Error
  */
 
-export async function getAll(req, res) {
+export async function getByLevel(req, res) {
   try {
-    const majors = await Major.find()
+    const level = await Level.findOne({ _id: req.params.level });
+
+    if (!level)
+      return res.status(400).json({
+        error: "wrong level id !"
+      });
+
+    const majors = await Major.find({ level: req.params.level })
 
     return res.json(majors);
   } catch (error) {
