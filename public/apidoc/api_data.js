@@ -605,7 +605,7 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "/levels/byForamtion/:formation",
+    "url": "/levels/byFormation/:formation",
     "title": "Get levels by formation",
     "group": "Levels",
     "parameter": {
@@ -642,7 +642,7 @@ define({ "api": [
     "version": "0.0.0",
     "filename": "src/components/level/levelController.js",
     "groupTitle": "Levels",
-    "name": "GetLevelsByforamtionFormation"
+    "name": "GetLevelsByformationFormation"
   },
   {
     "type": "get",
