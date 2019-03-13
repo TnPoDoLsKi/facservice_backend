@@ -235,24 +235,10 @@ export async function getDocByUser(req, res) {
 /**
  * @api {get} /documents/search/:query Search all documents
  * @apiGroup Documents
- * @apiParam {String} name S
- * @apiParam {String} type document type (optional)
- * @apiParam {ID} majorID major id (optional)
+ * @apiParam {String} name search query (query param)
+ * @apiParam {String} type document type must be in 'DS', 'EX', 'C', 'TD', 'TP' (query param)
+ * @apiParam {id} majorID major id (query param)
  *
- * @apiParamExample {json} Input
- *    {
- *      "name": "algo"
- *    }
- * @apiParamExample {json} Input
- *    {
- *       "name": "algo",
- *       "majorID": "5c41ae2c6c942e059c10737d"
- *    }
- * @apiParamExample {json} Input
- *    {
- *       "name": "algo",
- *       "type": "ds"
- *    }
  * @apiSuccessExample {json} Success
  *    HTTP/1.1 201 OK
   * [
@@ -304,10 +290,10 @@ export async function getDocByUser(req, res) {
           "firstName": "Wael",
           "lastName": "Ben Taleb"
       },
-      "major": {
+      "majors": [{
         "_id": "5c8269c447baab426f6cbcfa",
-        "name": "Ing 1"
-      },
+        "name": "FIA1"
+      }],
       "title": "DS Anglais 2014",
       "createdAt": "2019-03-12T11:01:35.921Z",
       "updatedAt": "2019-03-12T22:56:21.614Z",
@@ -401,10 +387,10 @@ export async function search(req, res) {
  * @apiSuccessExample {json} Success
  *    HTTP/1.1 200 OK
  * {
-    "type": "DS",
+    "type": "DS",  // document type must be in 'DS', 'EX', 'C', 'TD', 'TP'
     "status": "pending",
     "NBDowloads": 0,
-    "session": "Rattrapage",
+    "session": "Rattrapage",    // document session must be in 'Principale', 'Rattrapage'
     "hasCorrection": false,
     "_id": "5c88f050737cb969e1f1cbda",
     "deleted": false,

@@ -389,47 +389,30 @@ define({ "api": [
             "type": "String",
             "optional": false,
             "field": "name",
-            "description": "<p>S</p>"
+            "description": "<p>search query (query param)</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
             "optional": false,
             "field": "type",
-            "description": "<p>document type (optional)</p>"
+            "description": "<p>document type must be in 'DS', 'EX', 'C', 'TD', 'TP' (query param)</p>"
           },
           {
             "group": "Parameter",
-            "type": "ID",
+            "type": "id",
             "optional": false,
             "field": "majorID",
-            "description": "<p>major id (optional)</p>"
+            "description": "<p>major id (query param)</p>"
           }
         ]
-      },
-      "examples": [
-        {
-          "title": "Input",
-          "content": "{\n  \"name\": \"algo\"\n}",
-          "type": "json"
-        },
-        {
-          "title": "Input",
-          "content": "{\n   \"name\": \"algo\",\n   \"majorID\": \"5c41ae2c6c942e059c10737d\"\n}",
-          "type": "json"
-        },
-        {
-          "title": "Input",
-          "content": "{\n   \"name\": \"algo\",\n   \"type\": \"ds\"\n}",
-          "type": "json"
-        }
-      ]
+      }
     },
     "success": {
       "examples": [
         {
           "title": "Success",
-          "content": "   HTTP/1.1 201 OK\n[\n    {\n      \"type\": \"DS\",\n      \"status\": \"approved\",\n      \"NBDowloads\": 215,\n      \"session\": \"Rattrapage\",\n      \"hasCorrection\": true,\n      \"deleted\": false,\n      \"_id\": \"5c87918f905e0b33f609b360\",\n      \"filePath\": \"https://igc.tn/documents/file.pdf\",\n      \"subject\": \"5c8269c447baab426f6cbcfc\",\n      \"year\": 2014,\n      \"user\": {\n          \"avatar\": \"https://igc.tn/img/portfolio/HC1-Prev.jpg\",\n          \"firstName\": \"Wael\",\n          \"lastName\": \"Ben Taleb\"\n      },\n      \"majors\": [\n        {\n          \"_id\": \"5c8269c447baab426f6cbcfa\",\n          \"name\": \"FIA2-GL\"\n        },\n        {\n          \"_id\": \"5c8269c447baab426f6cbcfa\",\n          \"name\": \"FIA2-II\"\n        }\n      ],\n      \"title\": \"DS Francais 2014\",\n      \"createdAt\": \"2019-03-12T11:01:35.921Z\",\n      \"updatedAt\": \"2019-03-12T22:56:21.614Z\",\n      \"__v\": 0,\n      \"description\": \"DS Francais 2014 description\"\n    },\n    {\n      \"type\": \"DS\",\n      \"status\": \"approved\",\n      \"NBDowloads\": 215,\n      \"session\": \"Rattrapage\",\n      \"hasCorrection\": true,\n      \"deleted\": false,\n      \"_id\": \"5c87918f905e0b33f609b361\",\n      \"filePath\": \"https://igc.tn/documents/file.pdf\",\n      \"subject\": \"5c8269c447baab426f6cbcfc\",\n      \"year\": 2014,\n      \"user\": {\n          \"avatar\": \"https://igc.tn/img/portfolio/HC1-Prev.jpg\",\n          \"firstName\": \"Wael\",\n          \"lastName\": \"Ben Taleb\"\n      },\n      \"major\": {\n        \"_id\": \"5c8269c447baab426f6cbcfa\",\n        \"name\": \"Ing 1\"\n      },\n      \"title\": \"DS Anglais 2014\",\n      \"createdAt\": \"2019-03-12T11:01:35.921Z\",\n      \"updatedAt\": \"2019-03-12T22:56:21.614Z\",\n      \"__v\": 0,\n      \"description\": \"DS Anglais 2014 description\"\n    }\n]",
+          "content": "   HTTP/1.1 201 OK\n[\n    {\n      \"type\": \"DS\",\n      \"status\": \"approved\",\n      \"NBDowloads\": 215,\n      \"session\": \"Rattrapage\",\n      \"hasCorrection\": true,\n      \"deleted\": false,\n      \"_id\": \"5c87918f905e0b33f609b360\",\n      \"filePath\": \"https://igc.tn/documents/file.pdf\",\n      \"subject\": \"5c8269c447baab426f6cbcfc\",\n      \"year\": 2014,\n      \"user\": {\n          \"avatar\": \"https://igc.tn/img/portfolio/HC1-Prev.jpg\",\n          \"firstName\": \"Wael\",\n          \"lastName\": \"Ben Taleb\"\n      },\n      \"majors\": [\n        {\n          \"_id\": \"5c8269c447baab426f6cbcfa\",\n          \"name\": \"FIA2-GL\"\n        },\n        {\n          \"_id\": \"5c8269c447baab426f6cbcfa\",\n          \"name\": \"FIA2-II\"\n        }\n      ],\n      \"title\": \"DS Francais 2014\",\n      \"createdAt\": \"2019-03-12T11:01:35.921Z\",\n      \"updatedAt\": \"2019-03-12T22:56:21.614Z\",\n      \"__v\": 0,\n      \"description\": \"DS Francais 2014 description\"\n    },\n    {\n      \"type\": \"DS\",\n      \"status\": \"approved\",\n      \"NBDowloads\": 215,\n      \"session\": \"Rattrapage\",\n      \"hasCorrection\": true,\n      \"deleted\": false,\n      \"_id\": \"5c87918f905e0b33f609b361\",\n      \"filePath\": \"https://igc.tn/documents/file.pdf\",\n      \"subject\": \"5c8269c447baab426f6cbcfc\",\n      \"year\": 2014,\n      \"user\": {\n          \"avatar\": \"https://igc.tn/img/portfolio/HC1-Prev.jpg\",\n          \"firstName\": \"Wael\",\n          \"lastName\": \"Ben Taleb\"\n      },\n      \"majors\": [{\n        \"_id\": \"5c8269c447baab426f6cbcfa\",\n        \"name\": \"FIA1\"\n      }],\n      \"title\": \"DS Anglais 2014\",\n      \"createdAt\": \"2019-03-12T11:01:35.921Z\",\n      \"updatedAt\": \"2019-03-12T22:56:21.614Z\",\n      \"__v\": 0,\n      \"description\": \"DS Anglais 2014 description\"\n    }\n]",
           "type": "json"
         }
       ]
@@ -483,7 +466,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success",
-          "content": "   HTTP/1.1 200 OK\n{\n    \"type\": \"DS\",\n    \"status\": \"pending\",\n    \"NBDowloads\": 0,\n    \"session\": \"Rattrapage\",\n    \"hasCorrection\": false,\n    \"_id\": \"5c88f050737cb969e1f1cbda\",\n    \"deleted\": false,\n    \"subject\": \"5c41b2d82383c111b4ffad1a\",\n    \"year\": 2017,\n    \"user\": \"5c8783b34a35cd28fa5bea3b\",\n    \"title\": \"DS physique 2015\",\n    \"description\": \"Good\",\n    \"createdAt\": \"2019-03-13T11:58:08.713Z\",\n    \"updatedAt\": \"2019-03-13T11:58:08.713Z\",\n    \"__v\": 0\n}",
+          "content": "   HTTP/1.1 200 OK\n{\n    \"type\": \"DS\",  // document type must be in 'DS', 'EX', 'C', 'TD', 'TP'\n    \"status\": \"pending\",\n    \"NBDowloads\": 0,\n    \"session\": \"Rattrapage\",    // document session must be in 'Principale', 'Rattrapage'\n    \"hasCorrection\": false,\n    \"_id\": \"5c88f050737cb969e1f1cbda\",\n    \"deleted\": false,\n    \"subject\": \"5c41b2d82383c111b4ffad1a\",\n    \"year\": 2017,\n    \"user\": \"5c8783b34a35cd28fa5bea3b\",\n    \"title\": \"DS physique 2015\",\n    \"description\": \"Good\",\n    \"createdAt\": \"2019-03-13T11:58:08.713Z\",\n    \"updatedAt\": \"2019-03-13T11:58:08.713Z\",\n    \"__v\": 0\n}",
           "type": "json"
         }
       ]
