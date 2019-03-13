@@ -1,63 +1,6 @@
 import _ from "lodash";
 import { Correction, Document } from "../../config/models";
 
-/**
- * @api {get} /corrections Get all corrections
- * @apiGroup Corrections
- * @apiSuccess {Number} _id Correction id
- * @apiSuccess {Boolean} approved Whether the correction document is approved by the admin
- * @apiSuccess {Number} score Correction score
- * @apiSuccess {String} title Correction title
- * @apiSuccess {String} filePath Correction file path
- * @apiSuccess {Object} user Correction Owner
- * @apiSuccess {Object} document Correction document
- * @apiSuccess {Date} updated_at Update's date
- * @apiSuccess {Date} created_at Register's date
- * @apiSuccessExample {json} Success
- *    HTTP/1.1 200 OK
- * [
-    {
-        "approved": false,
-        "score": 0,
-        "_id": "5c41e6b8f6417937d0a24ace",
-        "title": "correction ex 2016",
-        "filePath": "/uploads/jdhgfhd.jpg",
-        "user": {
-            "type": "student",
-            "_id": "5c2426542a7e2f361896f812",
-            "email": "mohamed@test.com",
-            "hashedPassword": "$2b$10$7iOFilgwRN/qoXNA5KJuVuyiofVXvjmVEcn0MVivS4F7ne.vI9MWq",
-            "firstName": "mohamed",
-            "lastName": "mohamed",
-            "major": "5c1fb346e28363333004f02c",
-        },
-        "document": {
-            "type": "EX",
-            "semestre": 1,
-            "approved": false,
-            "NBDowloads": 0,
-            "session": "Principale",
-            "corrections": [
-                "5c41ccd20dbd0934ccc59a0e",
-                "5c41cd34dfe31425c014f85e"
-            ],
-            "_id": "5c41df5e0000d416fc5158fd",
-            "title": "EXAlgo",
-            "filePath": "/uploads/hjkhdfkjl.pdf",
-            "major": "5c3f8bee091f3c3290ac10b2",
-            "subject": "5c3f8bed091f3c3290ac1083",
-            "year": 2016,
-            "user": "5c2426542a7e2f361896f812",
-            "profName": "Sami Ashour"
-        },
-        "createdAt": "2019-01-18T14:46:16.612Z",
-        "updatedAt": "2019-01-18T14:46:16.612Z"
-    }
-]
- * @apiErrorExample {json} Find error
- *    HTTP/1.1 500 Internal Server Error
- */
-
 export async function getAll(req, res) {
   try {
     const corrections = await Correction.find()
@@ -72,57 +15,6 @@ export async function getAll(req, res) {
     return res.status(500).end();
   }
 }
-
-/**
- * @api {get} /corrections/:id Get one correction
- * @apiGroup Corrections
- * @apiParam {id} id Correction id
- * @apiSuccess {Number} _id Correction id
- * @apiSuccess {Boolean} approved Whether the correction document is approved by the admin
- * @apiSuccess {Number} score Correction score
- * @apiSuccess {String} title Correction title
- * @apiSuccess {String} filePath Correction file path
- * @apiSuccess {Object} user Correction Owner
- * @apiSuccess {Object} document Correction document
- * @apiSuccessExample {json} Success
- *    HTTP/1.1 200 OK
- *    {
-    "approved": false,
-    "score": 0,
-    "_id": "5c41e6cdf6417937d0a24acf",
-    "title": "correction ds 2018",
-    "filePath": "/uploads/jdhgfhd.jpg",
-    "user": {
-        "type": "student",
-        "_id": "5c2426542a7e2f361896f812",
-        "email": "mohamed@test.com",
-        "firstName": "mohamed",
-        "lastName": "mohamed"
-    },
-    "document": {
-        "type": "EX",
-        "semestre": 1,
-        "NBDowloads": 0,
-        "session": "Principale",
-        "corrections": [
-            "5c41ccd20dbd0934ccc59a0e",
-            "5c41cd34dfe31425c014f85e"
-        ],
-        "_id": "5c41df5e0000d416fc5158fd",
-        "title": "EXAlgo",
-        "filePath": "/uploads/hjkhdfkjl.pdf",
-        "major": "5c3f8bee091f3c3290ac10b2",
-        "subject": "5c3f8bed091f3c3290ac1083",
-        "year": 2016,
-        "user": "5c2426542a7e2f361896f812",
-        "profName": "Sami Ashour"
-    }
-}
- * @apiErrorExample {json} Correction id cannot be empty
- *    HTTP/1.1 400 Not Found
- * @apiErrorExample {json} Find error
- *    HTTP/1.1 500 Internal Server Error
- */
 
 export async function getOne(req, res) {
   try {
@@ -145,45 +37,57 @@ export async function getOne(req, res) {
 }
 
 /**
- * @api {get} /documents/corrections/:id Get document's corrections
- * @apiGroup Documents
+ * @api {get} /corrections/byDocument/:id Get document's corrections
+ * @apiGroup Corrections
  * @apiParam {id} id Document id
  * @apiSuccessExample {json} Success
  *    HTTP/1.1 200 OK
- * [
+ [
     {
-        "approved": false,
+        "status": "approved",
         "verifiedByProf": false,
         "score": 0,
-        "_id": "5c619b28afaefd38f005ae77",
-        "title": "correction ds analyse 2018",
-        "filePath": "/uploads/jdhgfhd.jpg",
-        "user": "5c6199dff134a742549ed42c",
-        "createdAt": "2019-02-11T15:56:24.786Z",
-        "updatedAt": "2019-02-11T15:56:24.786Z"
+        "deleted": false,
+        "_id": "5c8826a5f9a4c66ce1eb1d5d",
+        "document": "5c87918f905e0b33f609b360",
+        "title": "corrigé de DS Physique 2014",
+        "user": {
+            "avatar": "https://igc.tn/img/portfolio/HC1-Prev.jpg",
+            "firstName": "Wael",
+            "lastName": "Ben Taleb"
+        },
+        "createdAt": "2019-03-12T21:37:41.572Z",
+        "updatedAt": "2019-03-12T22:40:30.601Z",
+        "__v": 0
     },
     {
-        "approved": false,
+        "status": "approved",
         "verifiedByProf": false,
         "score": 0,
-        "_id": "5c619b28afaefd38f005ae76",
-        "title": "correction ds algo 2015",
-        "filePath": "/uploads/jdhgfhd.jpg",
-        "user": "5c6199dff134a742549ed42c",
-        "createdAt": "2019-02-11T15:56:24.786Z",
-        "updatedAt": "2019-02-11T15:56:24.786Z"
+        "deleted": false,
+        "_id": "5c88270ef9a4c66ce1eb1d5e",
+        "document": "5c87918f905e0b33f609b360",
+        "title": "corrigé de EX Analyse 2014 ",
+        "user": {
+            "avatar": "https://igc.tn/img/portfolio/HC1-Prev.jpg",
+            "firstName": "Wael",
+            "lastName": "Ben Taleb"
+        },
+        "createdAt": "2019-03-12T21:39:26.070Z",
+        "updatedAt": "2019-03-12T22:26:16.867Z",
+        "__v": 0
     }
 ]
- * @apiErrorExample {json} Document id cannot be empty
- *    HTTP/1.1 400 Not Found
- * @apiErrorExample {json} Find error
+ * @apiErrorExample Bad Request
+ *    HTTP/1.1 400 Bad Request
+ * @apiErrorExample Internal Server Error
  *    HTTP/1.1 500 Internal Server Error
  */
 
 export async function getAllByDocument(req, res) {
   try {
 
-    const corrections = await Correction.find({ document: req.params.documentId })
+    const corrections = await Correction.find({ document: req.params.documentId, status: 'approved' })
       .populate({
         path: "user",
         select: "firstName lastName avatar -_id"
@@ -201,26 +105,34 @@ export async function getAllByDocument(req, res) {
 }
 
 /**
- * @api {post} /corrections Create Correction
+ * @api {post} /corrections Create a correction
  * @apiGroup Corrections
- * @apiParam {String} title Correction title
- * @apiParam {String} filePath Correction document file url
- * @apiParam {String} user Correction owner (id)
- * @apiParam {String} document Correction document (id)
  * @apiHeader Authorization Bearer Token
- * @apiHeader Content-Type application/x-www-form-urlencoded
  * @apiParamExample {json} Input
  *    {
- *      "title": "correction ds analyse 2018",
- *      "filePath": "/uploads/jdhgfhd.jpg",
- *      "user": "5c2426542a7e2f361896f812",
- *      "document": "5c41df5e0000d416fc5158fd"
+ *      "filesStaging": ["https://igc.tn/img/portfolio/HC1-Prev.jpg", "https://igc.tn/img/portfolio/A2-Prev.jpg"],
+ *      "document": "5c41b2d82383c111b4ffad1a"
  *    }
  * @apiSuccessExample {json} Success
- *    HTTP/1.1 200 Created
- * @apiErrorExample {json} Correction already exists
- *    HTTP/1.1 208 Already Reported
- * @apiErrorExample {json} Register error
+ *    HTTP/1.1 200 OK
+      {
+        "status": "pending",
+        "verifiedByProf": false,
+        "score": 0,
+        "_id": "5c88f1c4719c206b4524de83",
+        "deleted": false,
+        "document": "5c41b2d82383c111b4ffad1a",
+        "title": "corrigé de EX physique 2015",
+        "user": "5c8783b34a35cd28fa5bea3b",
+        "createdAt": "2019-03-13T12:04:20.911Z",
+        "updatedAt": "2019-03-13T12:04:20.911Z",
+        "__v": 0
+      }
+ * @apiErrorExample Not Authorized
+ *    HTTP/1.1 401 Not Authorized
+ * @apiErrorExample Bad Request
+ *    HTTP/1.1 400 Bad Request
+ * @apiErrorExample Internal Server Error
  *    HTTP/1.1 500 Internal Server Error
  */
 
@@ -240,6 +152,9 @@ export async function create(req, res) {
     correction.user = req.user._id
 
     correction = await Correction.create(correction);
+    
+    correction = correction.toJSON()
+    delete correction.filesStaging
 
     return res.json(correction)
 
@@ -251,32 +166,6 @@ export async function create(req, res) {
     return res.status(500).end();
   }
 }
-
-/**
- * @api {put} /corrections/:id Update Correction
- * @apiGroup Corrections
- * @apiParam {id} id Correction id
- * @apiParam {String} title Correction title
- * @apiParam {String} filePath Correction document file url
- * @apiParam {String} user Correction owner (id)
- * @apiParam {String} document Correction document (id)
- * @apiHeader Authorization Bearer Token
- * @apiHeader Content-Type application/x-www-form-urlencoded
- * @apiParamExample {json} Input
- *    {
- *      "id": "5c41e6cdf6417937d0a24acf",
- *      "title": "correction ds analyse 2018",
- *      "filePath": "/uploads/jdhgfhd.jpg",
- *      "user": "5c2426542a7e2f361896f812",
- *      "document": "5c41df5e0000d416fc5158fd"
- *    }
- * @apiSuccessExample {json} Success
- *    HTTP/1.1 200 Updated
- * @apiErrorExample {json} Correction id cannot be empty
- *    HTTP/1.1 400 Not Found
- * @apiErrorExample {json} Register error
- *    HTTP/1.1 500 Internal Server Error
- */
 
 export async function update(req, res) {
   try {
@@ -331,20 +220,6 @@ export async function update(req, res) {
     return res.status(500).end();
   }
 }
-
-/**
- * @api {delete} /corrections/:id Delete Correction
- * @apiGroup Corrections
- * @apiParam {id} id Correction id
- * @apiHeader Authorization Bearer Token
- * @apiHeader Content-Type application/x-www-form-urlencoded
- * @apiSuccessExample {json} Success
- *    HTTP/1.1 204 Deleted (No Content)
- * @apiErrorExample {json} Correction id cannot be empty
- *    HTTP/1.1 400 Not Found
- * @apiErrorExample {json} Register error
- *    HTTP/1.1 500 Internal Server Error
- */
 
 export async function remove(req, res) {
   try {

@@ -1,65 +1,6 @@
 import _ from "lodash";
-import { Document, Subject } from "../../config/models";
-
-/**
- * @api {get} /documents Get all documents
- * @apiGroup Documents
- * @apiSuccess {Number} _id Document id
- * @apiSuccess {Boolean} approved Whether the document is approved by the admin
- * @apiSuccess {String} type Document type (DS, Ex, ...)
- * @apiSuccess {Number} semestre Document semester (1 or 2)
- * @apiSuccess {String} title Document title
- * @apiSuccess {String} session Document session (Principale, Rattrapage)
- * @apiSuccess {String} filePath Document file path
- * @apiSuccess {Object} user Document Owner
- * @apiSuccess {Object} corrections Document corrections (a table of objects)
- * @apiSuccess {Object} major Document major
- * @apiSuccess {Object} subject Document subject
- * @apiSuccess {Number} year Document year
- * @apiSuccess {Date} updated_at Update's date
- * @apiSuccess {Date} created_at Register's date
- * @apiSuccessExample {json} Success
- *    HTTP/1.1 200 OK
- * [
-     {
-        "type": "DS",
-        "semestre": 1,
-        "approved": true,
-        "session": "Principale",
-        "corrections": [],
-        "_id": "5c41ae2c6c942e059c10737d",
-        "title": "dsAlgo",
-        "filePath": "/uploads/hjkhdfkjl.pdf",
-        "major": {
-            "_id": "5c3f8bee091f3c3290ac10b2",
-            "name": "FIA1",
-            "description": "1ere année Formation d'Ingénieur"
-        },
-        "subject": {
-            "semestre": 1,
-            "documents": [],
-            "_id": "5c41b2d82383c111b4ffad1d",
-            "name": "Algorithmique et structures de données",
-            "createdAt": "2019-01-18T11:04:56.121Z",
-            "updatedAt": "2019-01-18T11:04:56.121Z",
-            "__v": 0
-        },
-        "year": 2016,
-        "user": {
-            "type": "student",
-            "deleted": false,
-            "_id": "5c2426542a7e2f361896f812",
-            "email": "mohamed@test.com",
-            "firstName": "mohamed",
-            "lastName": "mohamed",
-            "__v": 0
-        },
-        "createdAt": "2019-01-18T10:45:00.529Z",
-        "updatedAt": "2019-01-18T10:45:00.529Z"
-    }]
- * @apiErrorExample {json} Find error
- *    HTTP/1.1 500 Internal Server Error
- */
+import Fuse from "fuse.js";
+import { Document, Subject, Major } from "../../config/models";
 
 export async function getAll(req, res) {
   try {
@@ -74,66 +15,6 @@ export async function getAll(req, res) {
     return res.status(500).end();
   }
 }
-
-/**
- * @api {get} /documents Get all documents
- * @apiGroup Documents
- * @apiSuccess {Number} _id Document id
- * @apiSuccess {Boolean} approved Whether the document is approved by the admin
- * @apiSuccess {String} type Document type (DS, Ex, ...)
- * @apiSuccess {Number} semestre Document semester (1 or 2)
- * @apiSuccess {String} title Document title
- * @apiSuccess {String} session Document session (Principale, Rattrapage)
- * @apiSuccess {String} filePath Document file path
- * @apiSuccess {Object} user Document Owner
- * @apiSuccess {Object} corrections Document corrections (a table of objects)
- * @apiSuccess {Object} major Document major
- * @apiSuccess {Object} subject Document subject
- * @apiSuccess {Number} year Document year
- * @apiSuccess {Date} updated_at Update's date
- * @apiSuccess {Date} created_at Register's date
- * @apiSuccessExample {json} Success
- *    HTTP/1.1 200 OK
- * [
-     {
-        "type": "DS",
-        "semestre": 1,
-        "approved": true,
-        "session": "Principale",
-        "corrections": [],
-        "_id": "5c41ae2c6c942e059c10737d",
-        "title": "dsAlgo",
-        "filePath": "/uploads/hjkhdfkjl.pdf",
-        "major": {
-            "_id": "5c3f8bee091f3c3290ac10b2",
-            "name": "FIA1",
-            "description": "1ere année Formation d'Ingénieur"
-        },
-        "subject": {
-            "semestre": 1,
-            "documents": [],
-            "_id": "5c41b2d82383c111b4ffad1d",
-            "name": "Algorithmique et structures de données",
-            "createdAt": "2019-01-18T11:04:56.121Z",
-            "updatedAt": "2019-01-18T11:04:56.121Z",
-            "__v": 0
-        },
-        "year": 2016,
-        "user": {
-            "type": "student",
-            "deleted": false,
-            "_id": "5c2426542a7e2f361896f812",
-            "email": "mohamed@test.com",
-            "firstName": "mohamed",
-            "lastName": "mohamed",
-            "__v": 0
-        },
-        "createdAt": "2019-01-18T10:45:00.529Z",
-        "updatedAt": "2019-01-18T10:45:00.529Z"
-    }]
- * @apiErrorExample {json} Find error
- *    HTTP/1.1 500 Internal Server Error
- */
 
 export async function getAllByStatus(req, res) {
   try {
@@ -163,59 +44,33 @@ export async function getAllByStatus(req, res) {
  * @api {get} /documents/:id Get one document
  * @apiGroup Documents
  * @apiParam {id} id Document id
- * @apiSuccess {Number} _id Document id
- * @apiSuccess {Boolean} approved Whether the document is approved by the admin
- * @apiSuccess {String} type Document type (DS, Ex, ...)
- * @apiSuccess {Number} semestre Document semester (1 or 2)
- * @apiSuccess {String} title Document title
- * @apiSuccess {String} session Document session (Principale, Rattrapage)
- * @apiSuccess {String} filePath Document file path
- * @apiSuccess {Object} user Document Owner
- * @apiSuccess {Object} corrections Document corrections (a table of objects)
- * @apiSuccess {Object} major Document major
- * @apiSuccess {Object} subject Document subject
- * @apiSuccess {Number} year Document year
- * @apiSuccess {Date} updated_at Update's date
- * @apiSuccess {Date} created_at Register's date
  * @apiSuccessExample {json} Success
  *    HTTP/1.1 200 OK
- * {
+{
     "type": "DS",
-    "semestre": 1,
-    "approved": true,
-    "session": "Principale",
-    "corrections": [],
-    "_id": "5c41ae2c6c942e059c10737d",
-    "title": "dsAlgo",
-    "filePath": "/uploads/hjkhdfkjl.pdf",
-    "major": {
-        "_id": "5c3f8bee091f3c3290ac10b2",
-        "name": "FIA1",
-        "description": "1ere année Formation d'Ingénieur"
-    },
-    "subject": {
-        "semestre": 1,
-        "documents": [],
-        "_id": "5c41b2d82383c111b4ffad1d",
-        "name": "Algorithmique et structures de données",
-        "createdAt": "2019-01-18T11:04:56.121Z",
-        "updatedAt": "2019-01-18T11:04:56.121Z"
-    },
-    "year": 2016,
+    "status": "approved",
+    "NBDowloads": 215,
+    "session": "Rattrapage",
+    "hasCorrection": true,
+    "deleted": false,
+    "_id": "5c87918f905e0b33f609b360",
+    "filePath": "https://igc.tn/documents/file.pdf",
+    "subject": "5c8269c447baab426f6cbcfc",
+    "year": 2014,
     "user": {
-        "type": "student",
-        "deleted": false,
-        "_id": "5c2426542a7e2f361896f812",
-        "email": "mohamed@test.com",
-        "firstName": "mohamed",
-        "lastName": "mohamed"
+        "avatar": "https://igc.tn/img/portfolio/HC1-Prev.jpg",
+        "firstName": "Wael",
+        "lastName": "Ben Taleb"
     },
-    "createdAt": "2019-01-18T10:45:00.529Z",
-    "updatedAt": "2019-01-18T10:45:00.529Z"
+    "title": "DS Francais 2014",
+    "createdAt": "2019-03-12T11:01:35.921Z",
+    "updatedAt": "2019-03-12T22:56:21.614Z",
+    "__v": 0,
+    "description": "DS Francais 2014 description"
 }
- * @apiErrorExample {json} Document id cannot be empty
- *    HTTP/1.1 400 Not Found
- * @apiErrorExample {json} Find error
+ * @apiErrorExample Bad Request
+ *    HTTP/1.1 400 Bad Request
+ * @apiErrorExample Internal Server Error
  *    HTTP/1.1 500 Internal Server Error
  */
 
@@ -242,40 +97,61 @@ export async function getOne(req, res) {
 }
 
 /**
- * @api {get} /documents/subject/:id Get documents by type 
+ * @api {get} /documents/bySubject/:subjectId/byType/:type Get documents by subject and type 
  * @apiGroup Documents
- * @apiParam {id} id Subject id
+ * @apiParam {id} subjectId Subject id
  * @apiParam {String} type Document type (DS, EX, C, TP, TD)
- * @apiParamExample {json} Input
- *    {
- *      "type": "ex"
- *    }
  * @apiSuccessExample {json} Success
  *    HTTP/1.1 200 OK
  * [
     {
-        "type": "EX",
-        "semestre": 1,
-        "approved": true,
-        "NBDowloads": 0,
-        "verifiedByProf": false,
-        "session": "Principale",
-        "corrections": [],
-        "_id": "5c63689000aa6a06a4dfd577",
-        "title": "EX Algo 2017",
-        "filePath": "/uploads/jdhgfhd.jpg",
-        "user": "5c63688f00aa6a06a4dfd573",
-        "major": "5c63688f00aa6a06a4dfd571",
-        "subject": "5c63688e00aa6a06a4dfd540",
-        "year": 2017,
-        "profName": "profX",
-        "createdAt": "2019-02-13T00:45:04.446Z",
-        "updatedAt": "2019-02-13T00:45:04.446Z"
+      "type": "DS",
+      "status": "approved",
+      "NBDowloads": 215,
+      "session": "Rattrapage",
+      "hasCorrection": true,
+      "deleted": false,
+      "_id": "5c87918f905e0b33f609b360",
+      "filePath": "https://igc.tn/documents/file.pdf",
+      "subject": "5c8269c447baab426f6cbcfc",
+      "year": 2014,
+      "user": {
+          "avatar": "https://igc.tn/img/portfolio/HC1-Prev.jpg",
+          "firstName": "Wael",
+          "lastName": "Ben Taleb"
+      },
+      "title": "DS Francais 2014",
+      "createdAt": "2019-03-12T11:01:35.921Z",
+      "updatedAt": "2019-03-12T22:56:21.614Z",
+      "__v": 0,
+      "description": "DS Francais 2014 description"
+    },
+    {
+      "type": "DS",
+      "status": "approved",
+      "NBDowloads": 215,
+      "session": "Rattrapage",
+      "hasCorrection": true,
+      "deleted": false,
+      "_id": "5c87918f905e0b33f609b361",
+      "filePath": "https://igc.tn/documents/file.pdf",
+      "subject": "5c8269c447baab426f6cbcfc",
+      "year": 2014,
+      "user": {
+          "avatar": "https://igc.tn/img/portfolio/HC1-Prev.jpg",
+          "firstName": "Wael",
+          "lastName": "Ben Taleb"
+      },
+      "title": "DS Anglais 2014",
+      "createdAt": "2019-03-12T11:01:35.921Z",
+      "updatedAt": "2019-03-12T22:56:21.614Z",
+      "__v": 0,
+      "description": "DS Anglais 2014 description"
     }
 ]
- * @apiErrorExample {json} Subject id cannot be empty
- *    HTTP/1.1 400 Not Found
- * @apiErrorExample {json} Find error
+ * @apiErrorExample Bad Request
+ *    HTTP/1.1 400 Bad Request
+ * @apiErrorExample Internal Server Error
  *    HTTP/1.1 500 Internal Server Error
  */
 
@@ -329,61 +205,168 @@ export async function getDocByUser(req, res) {
 }
 
 /**
- * @api {post} /documents Create a document
+ * @api {get} /documents/search/:query Search all documents
  * @apiGroup Documents
- * @apiParam {String} title Document title
- * @apiParam {String} filePath Document document file url
- * @apiParam {String} user Document owner (id)
- * @apiParam {String} year Document year
- * @apiParam {String} type Document type
- * @apiParam {String} semestre Document semestre
- * @apiParam {String} major Document major (id)
- * @apiParam {String} subject Document subject (id)
- * @apiParam {String} session Document session
- * @apiParam {String} profName Document professor
- * @apiParam {Array} corrections Document corrections
- * @apiHeader Authorization Bearer Token
- * @apiHeader Content-Type application/x-www-form-urlencoded
+ * @apiParam {String} name S
+ * @apiParam {String} type document type (optional)
+ * @apiParam {ID} majorID major id (optional)
+ *
  * @apiParamExample {json} Input
  *    {
- *      "title": "ds analyse 2018",
+ *      "name": "algo"
+ *    }
+ * @apiParamExample {json} Input
+ *    {
+ *       "name": "algo",
+ *       "majorID": "5c41ae2c6c942e059c10737d"
+ *    }
+ * @apiParamExample {json} Input
+ *    {
+ *       "name": "algo",
+ *       "type": "ds"
+ *    }
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 201 OK
+ * [
+     {
+        "type": "DS",
+        "semestre": 1,
+        "approved": false,
+        "session": "Principale",
+        "corrections": [],
+        "_id": "5c41ae2c6c942e059c10737d",
+        "title": "dsAlgo",
+        "filePath": "/uploads/hjkhdfkjl.pdf",
+        "major": "5c3f8bee091f3c3290ac10b2",
+        "subject": "5c41b2d82383c111b4ffad1d",
+        "year": 2016,
+        "user": "5c2426542a7e2f361896f812",
+        "createdAt": "2019-01-18T10:45:00.529Z",
+        "updatedAt": "2019-01-18T10:45:00.529Z"
+    },
+    {
+        "type": "EX",
+        "semestre": 1,
+        "approved": false,
+        "session": "Principale",
+        "corrections": [
+            "5c41ccd20dbd0934ccc59a0e",
+            "5c41cd34dfe31425c014f85e"
+        ],
+        "_id": "5c41df5e0000d416fc5158fd",
+        "title": "EXAlgo",
+        "filePath": "/uploads/hjkhdfkjl.pdf",
+        "major": "5c3f8bee091f3c3290ac10b2",
+        "subject": "5c3f8bed091f3c3290ac1083",
+        "year": 2016,
+        "user": "5c2426542a7e2f361896f812",
+        "profName": "Sami Ashour",
+        "createdAt": "2019-01-18T14:14:54.344Z",
+        "updatedAt": "2019-01-18T14:14:54.344Z"
+    }]
+ * @apiErrorExample {json} Name param cannot be empty
+ *    HTTP/1.1 400 Bad Request
+ * @apiErrorExample {json} Register error
+ *    HTTP/1.1 500 Internal Server Error
+ */
+
+export async function search(req, res) {
+  try {
+
+    if (!req.query.name)
+      return res.status(400).end();
+
+    let queryOptions = {
+      status: 'approved'
+    }
+
+    if (req.query.type)
+      queryOptions.type = req.query.type
+
+    if (req.query.majorID) {
+      let subjects = await Subject.find({ majors: { $in: req.query.majorID } }).select("_id")
+      subjects = subjects.map(item => item._id)
+      console.log(subjects)
+      queryOptions.subject = { $in: subjects }
+    }
+
+    let documents = await Document.find(queryOptions)
+      .populate({
+        path: "user",
+        select: "-major -avatar -hashedPassword"
+      })
+      .populate({
+        path: "major",
+        select: "-subjects -formation -level -section"
+      })
+
+    const options = {
+      shouldSort: true,
+      includeScore: true,
+      threshold: 0.21,
+      location: 0,
+      distance: 100,
+      maxPatternLength: 32,
+      minMatchCharLength: 2,
+      keys: ["type", "title", "session", "year"]
+    };
+
+    const fuse = new Fuse(documents, options);
+    const result = fuse.search(req.query.name);
+
+    let docs = result.map(resl => {
+      return resl.item;
+    });
+
+    return res.json(docs);
+
+  } catch (err) {
+    console.log(err);
+    if (error.name == 'CastError')
+      return res.status(400).json({ error: error.message })
+
+    return res.status(500).end();
+  }
+}
+
+
+/**
+ * @api {post} /documents Create a document
+ * @apiGroup Documents
+ * @apiHeader Authorization Bearer Token
+ * @apiParamExample {json} Input
+ *    {
  *      "type": "DS",
- *      "filePath": "/uploads/jdhgfhd.jpg",
- *      "user": "5c2426542a7e2f361896f812",
- *      "major": "5c41df5e0000d416fc5158fd",
+ *      "filesStaging": ["https://igc.tn/img/portfolio/HC1-Prev.jpg", "https://igc.tn/img/portfolio/A2-Prev.jpg"],
  *      "subject": "5c41b2d82383c111b4ffad1a",
  *      "year": "2017",
- *      "semestre": "1",
- *      "profName": "profX",
- *      "session": "Rattrapage",
- *      "corrections": ["5c41ccd20dbd0934ccc59a0e","5c41cd34dfe31425c014f85e"]
+ *      "description": "Good",
+ *      "session": "Rattrapage"
  *    }
  * @apiSuccessExample {json} Success
  *    HTTP/1.1 200 OK
  * {
     "type": "DS",
-    "semestre": 1,
-    "approved": false,
+    "status": "pending",
+    "NBDowloads": 0,
     "session": "Rattrapage",
-    "corrections": [],
-    "_id": "5c4f8ce1fcf8b220f82633dd",
-    "title": "ds analyse 2018",
-    "filePath": "/uploads/jdhgfhd.jpg",
-    "major": "5c41df5e0000d416fc5158fd",
+    "hasCorrection": false,
+    "_id": "5c88f050737cb969e1f1cbda",
+    "deleted": false,
     "subject": "5c41b2d82383c111b4ffad1a",
     "year": 2017,
-    "user": "5c2426542a7e2f361896f812",
-    "profName": "profX",
-    "corrections" : [ 
-        ObjectId("5c41ccd20dbd0934ccc59a0e"), 
-        ObjectId("5c41cd34dfe31425c014f85e")
-    ],
-    "createdAt": "2019-01-28T23:14:41.584Z",
-    "updatedAt": "2019-01-28T23:14:41.584Z"
+    "user": "5c8783b34a35cd28fa5bea3b",
+    "title": "DS physique 2015",
+    "description": "Good",
+    "createdAt": "2019-03-13T11:58:08.713Z",
+    "updatedAt": "2019-03-13T11:58:08.713Z",
+    "__v": 0
 }
- * @apiErrorExample {json} Document already exists
- *    HTTP/1.1 208 Already Reported
- * @apiErrorExample {json} Register error
+ * @apiErrorExample Not Authorized
+ *    HTTP/1.1 401 Not Authorized
+ * @apiErrorExample Bad Request
+ *    HTTP/1.1 400 Bad Request
+ * @apiErrorExample Internal Server Error
  *    HTTP/1.1 500 Internal Server Error
  */
 
@@ -396,8 +379,7 @@ export async function create(req, res) {
       "year",
       "session",
       "description",
-      "filesStaging",
-      "corrections"
+      "filesStaging"
     )
 
     if (!(document.type && document.subject && document.year && document.filesStaging))
@@ -422,6 +404,10 @@ export async function create(req, res) {
     document.title = document.type + ' ' + subjectObject.name + ' ' + document.year
 
     document = await Document.create(document);
+
+    document = document.toJSON()
+    delete document.filesStaging
+
     return res.json(document);
 
   } catch (error) {
@@ -432,46 +418,6 @@ export async function create(req, res) {
     return res.status(500).end();
   }
 }
-
-/**
- * @api {put} /documents/:id Update a document
- * @apiGroup Documents
- * @apiParam {id} id documents id
- * @apiParam {String} title Document title
- * @apiParam {String} filePath Document document file url
- * @apiParam {String} user Document owner (id)
- * @apiParam {String} year Document year
- * @apiParam {String} type Document type
- * @apiParam {String} semestre Document semestre
- * @apiParam {String} major Document major (id)
- * @apiParam {String} subject Document subject (id)
- * @apiParam {String} session Document session
- * @apiParam {String} profName Document professor
- * @apiParam {Array} corrections Document corrections
- * @apiHeader Authorization Bearer Token
- * @apiHeader Content-Type application/x-www-form-urlencoded
- * @apiParamExample {json} Input
-{
-        "id": "5c4f8da2fcf8b220f82633de",
- *      "title": "ds analyse 2018",
- *      "type": "DS",
- *      "filePath": "/uploads/jdhgfhd.jpg",
- *      "user": "5c2426542a7e2f361896f812",
- *      "major": "5c41df5e0000d416fc5158fd",
- *      "subject": "5c41b2d82383c111b4ffad1a",
- *      "year": "2017",
- *      "semestre": "1",
- *      "profName": "profX",
- *      "session": "Rattrapage",
- *      "corrections": ["5c41ccd20dbd0934ccc59a0e","5c41cd34dfe31425c014f85e"]
- *    }
- * @apiSuccessExample {json} Success
- *    HTTP/1.1 204 Updated
- * @apiErrorExample {json} Document id cannot be empty
- *    HTTP/1.1 400 Not Found
- * @apiErrorExample {json} Register error
- *    HTTP/1.1 500 Internal Server Error
- */
 
 export async function update(req, res) {
   try {
@@ -603,20 +549,6 @@ export async function update(req, res) {
   }
 }
 
-/**
- * @api {delete} /documents/:id Delete a document
- * @apiGroup Documents
- * @apiParam {id} id documents id
- * @apiHeader Authorization Bearer Token
- * @apiHeader Content-Type application/x-www-form-urlencoded
- * @apiSuccessExample {json} Success
- *    HTTP/1.1 204 Deleted (No Content)
- * @apiErrorExample {json} Document id cannot be empty
- *    HTTP/1.1 400 Not Found
- * @apiErrorExample {json} Register error
- *    HTTP/1.1 500 Internal Server Error
- */
-
 export async function remove(req, res) {
   try {
 
@@ -625,7 +557,7 @@ export async function remove(req, res) {
     await Document.delete({ _id: req.params.id }, req.user._id);
 
     let subject = await Subject.findOne({ _id: currentDocument.subject })
-    
+
     switch (currentDocument.type) {
       case 'DS':
         subject.documentsCount.DS--

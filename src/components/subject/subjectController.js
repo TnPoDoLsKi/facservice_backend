@@ -1,37 +1,6 @@
 import _ from "lodash";
 import { Subject, Major } from "../../config/models";
 
-/**
- * @api {post} /subjects Create a subject
- * @apiGroup Subjects
- * @apiParam {String} name Subject name
- * @apiParam {String} semestre Subject semestre(1 or 2)
- * @apiParam {String} major Subject major(id)
- * @apiHeader Authorization Bearer Token
- * @apiHeader Content-Type application/x-www-form-urlencoded
- * @apiParamExample {json} Input
- *    {
- *      "semestre": 1,
-        "name": "Mathématiques discrètes",
-        "major": "5c50a4d00712811970128921"
- *    }
- * @apiSuccessExample {json} Success
- *    HTTP/1.1 200 OK
- * {
-        "_id": "5c5080a2bb95dc104b9934b3",
-        "semestre": 1,
-        "name": "Mathématiques discrètes",
-        "major": "5c50a4d00712811970128921"
-        "createdAt": "2019-01-29T16:34:42.203Z",
-        "updatedAt": "2019-01-29T16:34:42.203Z"
-    }
- * @apiErrorExample {json} Subject already exists
- *    HTTP/1.1 208 Already Reported
- * @apiErrorExample {json} Name, Description and Major are required
- *    HTTP/1.1 400 Internal Server Error
- * @apiErrorExample {json} Register error
- *    HTTP/1.1 500 Internal Server Error
- */
 export async function create(req, res) {
   try {
     if (!req.body.name)
@@ -72,32 +41,6 @@ export async function create(req, res) {
   }
 }
 
-/**
- * @api {get} /subjects Get all subjects
- * @apiGroup Subjects
- * @apiSuccessExample {json} Success
- *    HTTP/1.1 200 OK
- * [
-    {
-        "semestre": 1,
-        "documents": [],
-        "_id": "5c3e3542077225388404c0d8",
-        "name": "Mathématiques discrètes",
-        "createdAt": "2019-01-15T19:32:18.963Z",
-        "updatedAt": "2019-01-15T19:32:18.963Z"
-    },
-    {
-        "semestre": 1,
-        "documents": [],
-        "_id": "5c3e3542077225388404c0d9",
-        "name": "Probabilité et Statistiques",
-        "createdAt": "2019-01-15T19:32:18.963Z",
-        "updatedAt": "2019-01-15T19:32:18.963Z"
-    }
-]
- * @apiErrorExample {json} Find error
- *    HTTP/1.1 500 Internal Server Error
- */
 export async function getAll(req, res) {
   try {
     const subject = await Subject.find();
@@ -109,24 +52,6 @@ export async function getAll(req, res) {
   }
 }
 
-/**
- * @api {get} /subjects/:id Get one Subject
- * @apiGroup Subjects
- * @apiSuccessExample {json} Success
- *    HTTP/1.1 200 OK
- * {
-    "semestre": 1,
-    "documents": [],
-    "_id": "5c3e3542077225388404c0d8",
-    "name": "Mathématiques discrètes",
-    "createdAt": "2019-01-15T19:32:18.963Z",
-    "updatedAt": "2019-01-15T19:32:18.963Z"
-* }
- * @apiErrorExample {json} Subject id cannot be empty
- *    HTTP/1.1 400 Not Found
- * @apiErrorExample {json} Find error
- *    HTTP/1.1 500 Internal Server Error
- */
 export async function getOne(req, res) {
   try {
 
@@ -143,23 +68,53 @@ export async function getOne(req, res) {
 }
 
 /**
- * @api {get} /subjects/:id Get one Subject
+ * @api {get} /subjects/byMajor/:id Get one Subject
  * @apiGroup Subjects
+ * @apiParam {id} byMajor Major id
  * @apiSuccessExample {json} Success
  *    HTTP/1.1 200 OK
- * {
-    "semestre": 1,
-    "documents": [],
-    "_id": "5c3e3542077225388404c0d8",
-    "name": "Mathématiques discrètes",
-    "createdAt": "2019-01-15T19:32:18.963Z",
-    "updatedAt": "2019-01-15T19:32:18.963Z"
-* }
- * @apiErrorExample {json} Subject id cannot be empty
- *    HTTP/1.1 400 Not Found
- * @apiErrorExample {json} Find error
+[
+    {
+        "documentsCount": {
+            "DS": 3,
+            "EX": 2,
+            "C": 0,
+            "TD": 2,
+            "TP": 0
+        },
+        "semestre": 2,
+        "deleted": false,
+        "_id": "5c8269c447baab426f6cbcfc",
+        "name": "physique",
+        "createdAt": "2019-03-08T13:10:28.761Z",
+        "updatedAt": "2019-03-12T22:56:21.620Z",
+        "__v": 1,
+        "description": "Subject description"
+    },
+    {
+        "documentsCount": {
+            "DS": 0,
+            "EX": 9,
+            "C": 0,
+            "TD": 2,
+            "TP": 2
+        },
+        "semestre": 1,
+        "deleted": false,
+        "_id": "5c826a05a3bddb42a13118e7",
+        "name": "physique",
+        "description": "Subject description",
+        "createdAt": "2019-03-08T13:11:33.708Z",
+        "updatedAt": "2019-03-08T13:11:33.708Z",
+        "__v": 0
+    }
+]
+ * @apiErrorExample Bad Request
+ *    HTTP/1.1 400 Bad Request
+ * @apiErrorExample Internal Server Error
  *    HTTP/1.1 500 Internal Server Error
  */
+
 export async function getByMajor(req, res) {
   try {
 
@@ -167,7 +122,7 @@ export async function getByMajor(req, res) {
       majors: {
         $in: req.params.id
       }
-    });
+    }).select('-majors')
 
     return res.json(subjects);
 
@@ -180,28 +135,6 @@ export async function getByMajor(req, res) {
   }
 }
 
-/**
- * @api {put} /subjects/:id Update a Subject
- * @apiGroup Subjects
- * @apiParam {id} id Subject id
- * @apiParam {String} name Subject name
- * @apiParam {String} description Subject description
- * @apiHeader Authorization Bearer Token
- * @apiHeader Content-Type application/x-www-form-urlencoded
- * @apiParamExample {json} Input
- * {
- *      "name": "II",
-        "description": "Informatique Industrielle",
- *    }
- * @apiSuccessExample {json} Success
- *    HTTP/1.1 204 Updated
- * @apiErrorExample {json} Name and Description are required
- *    HTTP/1.1 400 Not Found
- * @apiErrorExample {json} Subject not found
- *    HTTP/1.1 401 Not Found
- * @apiErrorExample {json} Register error
- *    HTTP/1.1 500 Internal Server Error
- */
 export async function update(req, res) {
   try {
 
@@ -252,19 +185,6 @@ export async function update(req, res) {
   }
 }
 
-/**
- * @api {delete} /subjects/:id Delete a subject
- * @apiGroup Subjects
- * @apiParam {id} id Subject id
- * @apiHeader Authorization Bearer Token
- * @apiHeader Content-Type application/x-www-form-urlencoded
- * @apiSuccessExample {json} Success
- *    HTTP/1.1 204 Deleted (No Content)
- * @apiErrorExample {json} Ssubject id cannot be empty
- *    HTTP/1.1 400 Not Found
- * @apiErrorExample {json} Register error
- *    HTTP/1.1 500 Internal Server Error
- */
 export async function remove(req, res) {
   try {
 

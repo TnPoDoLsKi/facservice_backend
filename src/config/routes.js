@@ -8,7 +8,6 @@ import userRoute from "../components/user/userRoutes";
 import authRoute from "../components/auth/authRoutes";
 import documentRoute from "../components/document/documentRoutes";
 import correctionRoute from "../components/correction/correctionRoutes";
-import searchRoute from "../components/search/searchRoutes";
 
 const router = express.Router();
 
@@ -20,6 +19,5 @@ userRoute(router);
 authRoute(router);
 documentRoute(router);
 correctionRoute(router);
-searchRoute(router);
 
 export default router;

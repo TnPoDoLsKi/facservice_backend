@@ -10,28 +10,20 @@ const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+")
  * @apiGroup Auth
  * @apiParam {String} email User email
  * @apiParam {String} password User password
- * @apiParam {String} type User type [admin, student, prof]
  * @apiParam {String} firstName User first name
  * @apiParam {String} lastName User last name
- * @apiParam {String} major User major
+ * @apiParam {String} major User major (id)
  * @apiParamExample {json} Input
  *    {
  *      "email": "test@gmail",
- *      "password": "test123",
- *      "type": "admin",
- *      "firstName": "admin",
- *      "lastName": "admin",
- *      "major": "Prepa-A1"
+ *      "password": "test1234",
+ *      "firstName": "flen",
+ *      "lastName": "ben felten",
+ *      "major": "5c8269c447baab426f6cbcfc"
  *    }
- * @apiSuccessExample {json} Success
- *    HTTP/1.1 201 Created
- * @apiErrorExample {json} User already exists
- *    HTTP/1.1 208 Already Reported
- * @apiErrorExample {json} Major specified doesn't exist
- *    HTTP/1.1 406 Not Acceptable
- * @apiErrorExample {json} User info cannot be empty
+ * @apiErrorExample Bad Request
  *    HTTP/1.1 400 Bad Request
- * @apiErrorExample {json} Register error
+ * @apiErrorExample Internal Server Error
  *    HTTP/1.1 500 Internal Server Error
  */
 export async function signUp(req, res) {
@@ -86,25 +78,20 @@ export async function signUp(req, res) {
  * @apiParamExample {json} Input
  *    {
  *      "email": "test@gmail.com",
- *      "password": "test123"
+ *      "password": "test1234"
  *    }
- * @apiSuccess {String} token Signin token
- * @apiSuccess {Object} user User information
  * @apiSuccessExample {json} Success
  *    HTTP/1.1 200 OK
- *    {
- *      "user": {
- *          "firstName": "admin",
- *          "lastName": "admin",
- *          "email": "test@gmail.com",
- *          "type": "admin"
- *      },
- *      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaXJzdE5hbWUiOiJhZG1pbiIsImxhc3ROYW1lIjoiYWRtaW4iLCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwidHlwZSI6InN0dWRlbnQiLCJpYXQiOjE1NDgyNTA3OTUsImV4cCI6MTU0ODg1NTU5NX0.kHn_wwhlgNyR7-CI0S57GDElALmJ9YWxnkRUZ1pga0s"
- *    }
- * @apiErrorExample {json} Register error
- *    HTTP/1.1 500 Internal Server Error
- * @apiErrorExample {json} User specified doesn't exist
+      {
+          "major": "5c8265367e19d73dba8355a6",
+          "token": "0fa1b8121408dd0266b61778650723338852a3b8de14f1005169b8637aef7707"
+      }
+ * @apiErrorExample Not Authorized
+ *    HTTP/1.1 401 Not Authorized
+ * @apiErrorExample Bad Request
  *    HTTP/1.1 400 Bad Request
+ * @apiErrorExample Internal Server Error
+ *    HTTP/1.1 500 Internal Server Error
  */
 
 export async function signIn(req, res) {
@@ -127,7 +114,7 @@ export async function signIn(req, res) {
     req.session.token = user.token
 
     user = user.toJSON()
-    delete user.hashedPassword
+    user = _.pick(user, 'major', 'token')
 
     return res.json(user)
 
@@ -140,9 +127,10 @@ export async function signIn(req, res) {
  * @api {post} /auth/signout Sign Out
  * @apiName Signout
  * @apiGroup Auth
- * @apiSuccessExample {json} Success
- *    HTTP/1.1 200 OK
- * @apiErrorExample {json} Register error
+ * @apiHeader Authorization Bearer Token
+ * @apiErrorExample Not Authorized
+ *    HTTP/1.1 401 Not Authorized
+ * @apiErrorExample Internal Server Error
  *    HTTP/1.1 500 Internal Server Error
  */
 

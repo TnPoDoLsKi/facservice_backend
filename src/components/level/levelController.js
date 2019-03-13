@@ -1,37 +1,7 @@
 import _ from "lodash";
 import { Level, Formation } from "../../config/models";
 
-/**
- * @api {post} /levels Create a level
- * @apiGroup Levels
- * @apiParam {String} name Level name
- * @apiParam {String} description Level description
- * @apiParam {String} formation Level formation(ID)
- * @apiHeader Authorization Bearer Token
- * @apiHeader Content-Type application/x-www-form-urlencoded
- * @apiParamExample {json} Input
- *    {
- *      "name": "1",
- *      "description": "1ere année",
- *      "formation": "5c5080a2bb95dc104b9934b3"
- *    }
- * @apiSuccessExample {json} Success
- *    HTTP/1.1 200 OK
- * {
-        "_id": "5c5080a2bb95dc104b9934b3",
-        "name": "1",
-        "description": "1ere année",
-        "formation": "5c5080a2bb95dc104b9934b3",
-        "createdAt": "2019-01-29T16:34:42.203Z",
-        "updatedAt": "2019-01-29T16:34:42.203Z"
-    }
- * @apiErrorExample {json} Level already exists
- *    HTTP/1.1 208 Already Reported
- * @apiErrorExample {json} Name and Description are required
- *    HTTP/1.1 400 Internal Server Error
- * @apiErrorExample {json} Register error
- *    HTTP/1.1 500 Internal Server Error
- */
+
 export async function create(req, res) {
   try {
     if (!req.body.name)
@@ -69,35 +39,32 @@ export async function create(req, res) {
  * @apiGroup Levels
  * @apiSuccessExample {json} Success
  *    HTTP/1.1 200 OK
- * [
+  [
     {
-        "_id": "5c3e21856891a52950272390",
-        "name": "2",
-        "description": "2eme année",
-        "formation": "5c3e21856891a5295027238f",
-        "createdAt": "2019-01-15T18:08:05.242Z",
-        "updatedAt": "2019-01-15T18:08:05.242Z"
+        "deleted": false,
+        "_id": "5c826194157314398aa8c05e",
+        "description": "level description",
+        "name": "2er",
+        "formation": "5c8263677c8e2f4013c6986f",
+        "createdAt": "2019-03-08T12:35:32.637Z",
+        "updatedAt": "2019-03-08T12:44:37.914Z",
+        "__v": 0
     },
     {
-        "_id": "5c3e21856891a5295027238f",
-        "name": "1",
-        "description": "1ere année",
-        "formation": "5c3e21856891a5295027238f",
-        "createdAt": "2019-01-15T18:08:05.241Z",
-        "updatedAt": "2019-01-15T18:08:05.241Z"
-    },
-    {
-        "_id": "5c3e21856891a52950272391",
-        "name": "3",
-        "description": "3eme année",
-        "formation": "5c3e21856891a5295027238f",
-        "createdAt": "2019-01-15T18:08:05.242Z",
-        "updatedAt": "2019-01-15T18:08:05.242Z"
+        "deleted": false,
+        "_id": "5c8267d27c8e2f4013c69a27",
+        "description": "level description",
+        "name": "1er",
+        "formation": "5c8263677c8e2f4013c6986f",
+        "createdAt": "2019-03-08T12:35:32.637Z",
+        "updatedAt": "2019-03-08T12:44:37.914Z",
+        "__v": 0
     }
-]
- * @apiErrorExample {json} Find error
+  ]
+ * @apiErrorExample Internal Server Error
  *    HTTP/1.1 500 Internal Server Error
  */
+
 export async function getAll(req, res) {
   try {
     const levels = await Level.find();
@@ -109,24 +76,7 @@ export async function getAll(req, res) {
   }
 }
 
-/**
- * @api {get} /levels/:id Get one level
- * @apiGroup Levels
- * @apiSuccessExample {json} Success
- *    HTTP/1.1 200 OK
- * {
-    "_id": "5c3e21856891a52950272390",
-    "name": "A2",
-    "description": "2eme année",
-    "createdAt": "2019-01-15T18:08:05.242Z",
-    "updatedAt": "2019-01-15T18:08:05.242Z"
-}
- * @apiErrorExample {json} Level id cannot be empty
- *    HTTP/1.1 400 Not Found
- * @apiErrorExample {json} Find error
- *    HTTP/1.1 500 Internal Server Error
- */
-export async function getOne(req, res) {
+ export async function getOne(req, res) {
   try {
 
     const level = await Level.findById({
@@ -144,30 +94,7 @@ export async function getOne(req, res) {
   }
 }
 
-/**
- * @api {put} /levels Update a level
- * @apiGroup Levels
- * @apiParam {id} id Level id
- * @apiParam {String} name Level name
- * @apiParam {String} description Level description
- * @apiParam {String} formation Level formation(ID)
- * @apiHeader Authorization Bearer Token
- * @apiHeader Content-Type application/x-www-form-urlencoded
- * @apiParamExample {json} Input
- * {
- *      "name": "A2",
-        "description": "2eme année"
- *    }
- * @apiSuccessExample {json} Success
- *    HTTP/1.1 204 Updated
- * @apiErrorExample {json} Name and Description are required
- *    HTTP/1.1 400 Not Found
- * @apiErrorExample {json} Level not found
- *    HTTP/1.1 401 Not Found
- * @apiErrorExample {json} Register error
- *    HTTP/1.1 500 Internal Server Error
- */
-export async function update(req, res) {
+ export async function update(req, res) {
   try {
 
     let level = await Level.findOne({ _id: req.params.id });
@@ -206,20 +133,7 @@ export async function update(req, res) {
   }
 }
 
-/**
- * @api {delete} /levels Delete a level
- * @apiGroup Levels
- * @apiParam {id} id level id
- * @apiHeader Authorization Bearer Token
- * @apiHeader Content-Type application/x-www-form-urlencoded
- * @apiSuccessExample {json} Success
- *    HTTP/1.1 204 Deleted (No Content)
- * @apiErrorExample {json} Level id cannot be empty
- *    HTTP/1.1 400 Not Found
- * @apiErrorExample {json} Register error
- *    HTTP/1.1 500 Internal Server Error
- */
-export async function remove(req, res) {
+ export async function remove(req, res) {
   try {
 
     await Level.delete({ _id: req.params.id }, req.user._id);
