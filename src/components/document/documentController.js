@@ -377,20 +377,20 @@ export async function search(req, res) {
  * @apiHeader Authorization Bearer Token
  * @apiParamExample {json} Input
  *    {
- *      "type": "DS",
- *      "filesStaging": ["https://igc.tn/img/portfolio/HC1-Prev.jpg", "https://igc.tn/img/portfolio/A2-Prev.jpg"],
+ *      "type": "DS", // document type must be in 'DS', 'EX', 'C', 'TD', 'TP'
+ *      "session": "Rattrapage" // document session must be in 'Principale', 'Rattrapage',
  *      "subject": "5c41b2d82383c111b4ffad1a",
  *      "year": "2017",
- *      "description": "Good",
- *      "session": "Rattrapage"
+ *      "filesStaging": ["https://igc.tn/img/portfolio/HC1-Prev.jpg", "https://igc.tn/img/portfolio/A2-Prev.jpg"],
+ *      "description": "Good"
  *    }
  * @apiSuccessExample {json} Success
  *    HTTP/1.1 200 OK
  * {
-    "type": "DS",  // document type must be in 'DS', 'EX', 'C', 'TD', 'TP'
+    "type": "DS",  
     "status": "pending",
     "NBDowloads": 0,
-    "session": "Rattrapage",    // document session must be in 'Principale', 'Rattrapage'
+    "session": "Rattrapage",    
     "hasCorrection": false,
     "_id": "5c88f050737cb969e1f1cbda",
     "deleted": false,
