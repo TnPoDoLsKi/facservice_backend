@@ -272,10 +272,16 @@ export async function getDocByUser(req, res) {
           "firstName": "Wael",
           "lastName": "Ben Taleb"
       },
-      "major": {
+      "majors": [
+        {
           "_id": "5c8269c447baab426f6cbcfa",
-          "name": "LFSI 2"
-      },
+          "name": "FIA2-GL"
+        },
+        {
+          "_id": "5c8269c447baab426f6cbcfa",
+          "name": "FIA2-II"
+        }
+      ],
       "title": "DS Francais 2014",
       "createdAt": "2019-03-12T11:01:35.921Z",
       "updatedAt": "2019-03-12T22:56:21.614Z",
@@ -334,14 +340,14 @@ export async function search(req, res) {
       queryOptions.subject = { $in: subjects }
     }
 
-    let documents = await Document.find(queryOptions)
+    const documents = await Document.find(queryOptions)
       .populate({
         path: "user",
         select: "firstName lastName avatar -_id"
       })
       .populate({
         path: "subject",
-        populate: { path: 'majors' }
+        populate: { path: 'majors', select: '_id name' }
       })
       .select("-filesStaging")
 
@@ -359,11 +365,16 @@ export async function search(req, res) {
     const fuse = new Fuse(documents, options);
     const result = fuse.search(req.query.name);
 
-    let docs = result.map(resl => {
-      return resl.item;
+    const documentsResult = result.map(result => {
+      result.item = result.item.toJSON()
+
+      result.item.majors = result.item.subject.majors
+      result.item.subject = result.item.subject._id
+
+      return result.item;
     });
 
-    return res.json(docs);
+    return res.json(documentsResult);
 
   } catch (err) {
     console.log(err);
