@@ -46,7 +46,7 @@ export async function getAll(req, res) {
 }
 
 /**
- * @api {get} /levels/byForamtion/:formation Get levels by formation
+ * @api {get} /levels/byFormation/:formation Get levels by formation
  * @apiGroup Levels
  * @apiParam {id} formation formation id
  * @apiSuccessExample {json} Success
@@ -77,7 +77,7 @@ export async function getAll(req, res) {
  *    HTTP/1.1 500 Internal Server Error
  */
 
-export async function getByForamtion(req, res) {
+export async function getByFormation(req, res) {
   try {
 
     const formation = await Formation.findOne({ _id: req.params.formation });

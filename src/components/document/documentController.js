@@ -314,7 +314,7 @@ export async function search(req, res) {
       })
       .populate({
         path: "major",
-        select: "-subjects -formation -level -section"
+        select: "_id name"
       })
 
     const options = {
@@ -345,7 +345,6 @@ export async function search(req, res) {
     return res.status(500).end();
   }
 }
-
 
 /**
  * @api {post} /documents Create a document
