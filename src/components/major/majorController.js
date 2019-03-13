@@ -34,6 +34,35 @@ export async function create(req, res) {
   }
 }
 
+/**
+ * @api {get} /majors/ Get all majors
+ * @apiGroup Majors
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 OK
+ [
+    {
+        "deleted": false,
+        "_id": "5c82650d1227833d35ac2a29",
+        "description": "major description",
+        "name": "LFSI 1",
+        "level": "5c8267d27c8e2f4013c69a27",
+        "__v": 0
+    },
+    {
+        "deleted": false,
+        "_id": "5c8265367e19d73dba8355a6",
+        "name": "Prepa 2",
+        "description": "major description",
+        "level": "5c826194157314398aa8c05e",
+        "__v": 0
+    }
+]
+ * @apiErrorExample {json} Name param cannot be empty
+ *    HTTP/1.1 400 Bad Request
+ * @apiErrorExample Internal Server Error
+ *    HTTP/1.1 500 Internal Server Error
+ */
+
 export async function getAll(req, res) {
   try {
     const majors = await Major.find()
@@ -69,6 +98,8 @@ export async function getAll(req, res) {
         "__v": 0
     }
 ]
+ * @apiErrorExample {json} Name param cannot be empty
+ *    HTTP/1.1 400 Bad Request
  * @apiErrorExample Internal Server Error
  *    HTTP/1.1 500 Internal Server Error
  */
@@ -87,6 +118,9 @@ export async function getByLevel(req, res) {
     return res.json(majors);
   } catch (error) {
     console.log(error);
+    if (error.name == 'CastError')
+      return res.status(400).json({ error: error.message })
+
     return res.status(500).end();
   }
 }

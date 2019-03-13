@@ -83,6 +83,8 @@ export async function signUp(req, res) {
  * @apiSuccessExample {json} Success
  *    HTTP/1.1 200 OK
       {
+          "firstName": "Wael",
+          "lastName": "Ben Taleb",
           "major": "5c8265367e19d73dba8355a6",
           "token": "0fa1b8121408dd0266b61778650723338852a3b8de14f1005169b8637aef7707"
       }
@@ -114,7 +116,7 @@ export async function signIn(req, res) {
     req.session.token = user.token
 
     user = user.toJSON()
-    user = _.pick(user, 'major', 'token')
+    user = _.pick(user, 'firstName', 'lastName', 'major', 'token')
 
     return res.json(user)
 

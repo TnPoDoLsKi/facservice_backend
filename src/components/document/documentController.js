@@ -1,6 +1,6 @@
 import _ from "lodash";
 import Fuse from "fuse.js";
-import { Document, Subject, Major } from "../../config/models";
+import { Document, Subject } from "../../config/models";
 
 export async function getAll(req, res) {
   try {
@@ -159,7 +159,7 @@ export async function getDocBySubjectByType(req, res) {
   try {
 
     if (!['DS', 'EX', 'C', 'TD', 'TP'].includes(req.params.type))
-      return res.status(400).json({ error: 'wrong document type' })
+      return res.status(400).json({ error: "document type must be in 'DS', 'EX', 'C', 'TD', 'TP'" })
 
     const subjectObject = await Subject.findOne({ _id: req.params.subjectId })
 
@@ -185,6 +185,34 @@ export async function getDocBySubjectByType(req, res) {
     return res.status(500).end();
   }
 }
+
+export async function getDocBySubject(req, res) {
+  try {
+
+    const subjectObject = await Subject.findOne({ _id: req.params.subjectId })
+
+    if (!subjectObject)
+      return res.status(400).json({ error: 'wrong subject id' })
+
+    const documents = await Document.find({
+      subject: req.params.subjectId,
+      status: 'approved'
+    }).populate({
+      path: "user",
+      select: "firstName lastName avatar -_id"
+    }).select("-filesStaging")
+
+    return res.json(documents);
+
+  } catch (error) {
+    console.log(error)
+    if (error.name == 'CastError')
+      return res.status(400).json({ error: error.message })
+
+    return res.status(500).end();
+  }
+}
+
 
 export async function getDocByUser(req, res) {
   try {
@@ -303,19 +331,19 @@ export async function search(req, res) {
     if (req.query.majorID) {
       let subjects = await Subject.find({ majors: { $in: req.query.majorID } }).select("_id")
       subjects = subjects.map(item => item._id)
-      console.log(subjects)
       queryOptions.subject = { $in: subjects }
     }
 
     let documents = await Document.find(queryOptions)
       .populate({
         path: "user",
-        select: "-major -avatar -hashedPassword"
+        select: "firstName lastName avatar -_id"
       })
       .populate({
-        path: "major",
-        select: "_id name"
+        path: "subject",
+        populate: { path: 'majors' }
       })
+      .select("-filesStaging")
 
     const options = {
       shouldSort: true,
@@ -402,7 +430,7 @@ export async function create(req, res) {
       return res.status(400).json({ error: 'missing body params' })
 
     if (!['DS', 'EX', 'C', 'TD', 'TP'].includes(document.type))
-      return res.status(400).json({ error: 'wrong document type' })
+      return res.status(400).json({ error: "document type must be in 'DS', 'EX', 'C', 'TD', 'TP'" })
 
     if (isNaN(document.year))
       return res.status(400).json({ error: 'year must be a number' })
@@ -413,7 +441,7 @@ export async function create(req, res) {
       return res.status(400).json({ error: 'wrong subject id' })
 
     if (req.body.session && !['Principale', 'Rattrapage'].includes(req.body.session))
-      return res.status(400).json({ error: 'wrong document session' })
+      return res.status(400).json({ error: "document session must be in 'Principale', 'Rattrapage'" })
 
     document.status = 'pending'
     document.user = req.user._id
@@ -456,14 +484,14 @@ export async function update(req, res) {
 
     if (req.body.type) {
       if (!['DS', 'EX', 'C', 'TD', 'TP'].includes(req.body.type))
-        return res.status(400).json({ error: 'wrong document type' })
+        return res.status(400).json({ error: "document type must be in 'DS', 'EX', 'C', 'TD', 'TP'" })
 
       currentDocument.type = req.body.type
     }
 
     if (req.body.session) {
       if (!['Principale', 'Rattrapage'].includes(req.body.session))
-        return res.status(400).json({ error: 'wrong document session' })
+        return res.status(400).json({ error: "document session must be in 'Principale', 'Rattrapage'" })
 
       currentDocument.session = req.body.session
     }
