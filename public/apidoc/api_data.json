@@ -36,7 +36,7 @@
       "examples": [
         {
           "title": "Success",
-          "content": "HTTP/1.1 200 OK\n   {\n       \"major\": \"5c8265367e19d73dba8355a6\",\n       \"token\": \"0fa1b8121408dd0266b61778650723338852a3b8de14f1005169b8637aef7707\"\n   }",
+          "content": "HTTP/1.1 200 OK\n   {\n       \"firstName\": \"Wael\",\n       \"lastName\": \"Ben Taleb\",\n       \"major\": \"5c8265367e19d73dba8355a6\",\n       \"token\": \"0fa1b8121408dd0266b61778650723338852a3b8de14f1005169b8637aef7707\"\n   }",
           "type": "json"
         }
       ]
@@ -646,6 +646,39 @@
   },
   {
     "type": "get",
+    "url": "/majors/",
+    "title": "Get all majors",
+    "group": "Majors",
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "   HTTP/1.1 200 OK\n [\n    {\n        \"deleted\": false,\n        \"_id\": \"5c82650d1227833d35ac2a29\",\n        \"description\": \"major description\",\n        \"name\": \"LFSI 1\",\n        \"level\": \"5c8267d27c8e2f4013c69a27\",\n        \"__v\": 0\n    },\n    {\n        \"deleted\": false,\n        \"_id\": \"5c8265367e19d73dba8355a6\",\n        \"name\": \"Prepa 2\",\n        \"description\": \"major description\",\n        \"level\": \"5c826194157314398aa8c05e\",\n        \"__v\": 0\n    }\n]",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Name param cannot be empty",
+          "content": "HTTP/1.1 400 Bad Request",
+          "type": "json"
+        },
+        {
+          "title": "Internal Server Error",
+          "content": "HTTP/1.1 500 Internal Server Error",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "src/components/major/majorController.js",
+    "groupTitle": "Majors",
+    "name": "GetMajors"
+  },
+  {
+    "type": "get",
     "url": "/majors/byLevel/:level",
     "title": "Get majors by level",
     "group": "Majors",
@@ -673,6 +706,11 @@
     },
     "error": {
       "examples": [
+        {
+          "title": "Name param cannot be empty",
+          "content": "HTTP/1.1 400 Bad Request",
+          "type": "json"
+        },
         {
           "title": "Internal Server Error",
           "content": "HTTP/1.1 500 Internal Server Error",
