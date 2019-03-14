@@ -1,8 +1,8 @@
 import _ from "lodash";
-import crypto from 'crypto'
-import { User, Major } from '../../config/models'
+import crypto from "crypto";
+import { User, Major } from "../../config/models";
 
-const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 /**
  * @api {post} /auth/signup Create User
@@ -37,35 +37,41 @@ export async function signUp(req, res) {
       "major"
     );
 
-    if (!user.email || !user.password || !user.major || !user.firstName || !user.lastName)
-      return res.status(400).json({ error: 'missing body params' })
+    if (
+      !user.email ||
+      !user.password ||
+      !user.major ||
+      !user.firstName ||
+      !user.lastName
+    )
+      return res.status(400).json({ error: "missing body params" });
 
     if (!emailRegex.test(user.email))
-      return res.status(400).json({ error: 'Wrong email form' })
+      return res.status(400).json({ error: "Wrong email form" });
 
-    const existingUser = await User.findOne({ email: user.email })
+    const existingUser = await User.findOne({ email: user.email });
 
     if (existingUser)
-      return res.status(400).json({ error: 'email already exist' })
+      return res.status(400).json({ error: "email already exist" });
 
     if (user.password.length < 8)
-      return res.status(400).json({ error: 'Password should contain eight characters or more' })
+      return res
+        .status(400)
+        .json({ error: "Password should contain eight characters or more" });
 
-    const major = await Major.findOne({ _id: user.major })
+    const major = await Major.findOne({ _id: user.major });
 
-    if (!major)
-      return res.status(400).json({ error: 'wrong major id' })
+    if (!major) return res.status(400).json({ error: "wrong major id" });
 
     await User.create(user);
 
     return res.status(201).end();
-
   } catch (error) {
-    if (error.name == 'CastError')
-      return res.status(400).json({ error: error.message })
-    console.log(error)
+    if (error.name == "CastError")
+      return res.status(400).json({ error: error.message });
+    console.log(error);
 
-    return res.status(500).end()
+    return res.status(500).end();
   }
 }
 
@@ -99,30 +105,30 @@ export async function signUp(req, res) {
 
 export async function signIn(req, res) {
   try {
-
     if (!(req.body.email && req.body.password))
-      return res.status(400).json({ error: 'missing body params' })
+      return res.status(400).json({ error: "missing body params" });
 
-    let user = await User.findOne({ email: req.body.email }).populate('major')
+    let user = await User.findOne({ email: req.body.email }).populate("major");
 
-    if (!user)
-      return res.status(400).json({ error: 'Wrong email address' })
+    if (!user) return res.status(400).json({ error: "Wrong email address" });
 
     if (!user.comparePassword(req.body.password))
-      return res.status(401).json({ error: 'Wrong password' })
+      return res.status(401).json({ error: "Wrong password" });
 
-    user.token = crypto.createHash('sha256').update(crypto.randomBytes(48).toString('hex')).digest('hex')
-    await user.save()
+    user.token = crypto
+      .createHash("sha256")
+      .update(crypto.randomBytes(48).toString("hex"))
+      .digest("hex");
+    await user.save();
 
-    req.session.token = user.token
+    req.session.token = user.token;
 
-    user = user.toJSON()
-    user = _.pick(user, 'firstName', 'lastName', 'major', 'token')
-    user.majorName = user.major.name
-    user.major = user.major._id
+    user = user.toJSON();
+    user = _.pick(user, "firstName", "lastName", "major", "token");
+    user.majorName = user.major.name;
+    user.major = user.major._id;
 
-    return res.json(user)
-
+    return res.json(user);
   } catch (err) {
     return res.status(500).end();
   }
@@ -141,18 +147,15 @@ export async function signIn(req, res) {
 
 export async function signOut(req, res) {
   try {
+    req.user.token = null;
+    delete req.session.token;
 
-    req.user.token = null
-    delete req.session.token
+    await req.user.save();
 
-    await req.user.save()
-
-    return res.status(204).end()
-
+    return res.status(204).end();
   } catch (error) {
-
-    console.log(error)
-    return res.status(500).end()
+    console.log(error);
+    return res.status(500).end();
   }
 }
 

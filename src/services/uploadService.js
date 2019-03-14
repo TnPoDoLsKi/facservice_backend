@@ -10,7 +10,7 @@ import path from "path";
  * @apiSuccessExample {json} Uploaded
  *    HTTP/1.1 200 OK
  * [ "http://igc.tn:3005/api/uploads/upload_5cbbe9e1efb762ef40c52a9c9610e5b0.jpg", "http://igc.tn:3005/api/uploads/upload_5cbbe9e1efb762ef40c52a9c9610e5b0.jpg" ]
- * 
+ *
  * @apiErrorExample Not Authorized
  *    HTTP/1.1 401 Not Authorized
  * @apiErrorExample Bad Request

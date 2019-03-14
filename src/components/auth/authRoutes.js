@@ -1,7 +1,13 @@
-import { signUp, signIn, signOut, testMailer, activeAccount } from "./authController";
-import {isLoggedIn} from "../../services/middlewares"
+import {
+  signUp,
+  signIn,
+  signOut,
+  testMailer,
+  activeAccount
+} from "./authController";
+import { isLoggedIn } from "../../services/middlewares";
 
-export default function (router) {
+export default function(router) {
   router.post("/auth/signup", signUp);
   router.post("/auth/signin", signIn);
   router.get("/mailing", testMailer);

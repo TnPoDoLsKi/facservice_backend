@@ -160,11 +160,9 @@ export async function getOne(req, res) {
 export async function getDocBySubjectByType(req, res) {
   try {
     if (!["DS", "EX", "C", "TD", "TP"].includes(req.params.type))
-      return res
-        .status(400)
-        .json({
-          error: "document type must be in 'DS', 'EX', 'C', 'TD', 'TP'"
-        });
+      return res.status(400).json({
+        error: "document type must be in 'DS', 'EX', 'C', 'TD', 'TP'"
+      });
 
     const subjectObject = await Subject.findOne({ _id: req.params.subjectId });
 
@@ -335,7 +333,7 @@ export async function search(req, res) {
       })
       .populate({
         path: "subject",
-        populate: { path: 'majors', select: '_id name' }
+        populate: { path: "majors", select: "_id name" }
       })
       .select("-filesStaging");
 
@@ -354,20 +352,19 @@ export async function search(req, res) {
     const result = fuse.search(req.query.name);
 
     const documentsResult = result.map(result => {
-      result.item = result.item.toJSON()
+      result.item = result.item.toJSON();
 
-      result.item.majors = result.item.subject.majors
-      result.item.subject = result.item.subject._id
+      result.item.majors = result.item.subject.majors;
+      result.item.subject = result.item.subject._id;
 
       return result.item;
     });
 
     return res.json(documentsResult);
-
   } catch (err) {
     console.log(err);
-    if (error.name == "CastError")
-      return res.status(400).json({ error: error.message });
+    if (err.name == "CastError")
+      return res.status(400).json({ error: err.message });
 
     return res.status(500).end();
   }
@@ -436,11 +433,9 @@ export async function create(req, res) {
       return res.status(400).json({ error: "missing body params" });
 
     if (!["DS", "EX", "C", "TD", "TP"].includes(document.type))
-      return res
-        .status(400)
-        .json({
-          error: "document type must be in 'DS', 'EX', 'C', 'TD', 'TP'"
-        });
+      return res.status(400).json({
+        error: "document type must be in 'DS', 'EX', 'C', 'TD', 'TP'"
+      });
 
     if (isNaN(document.year))
       return res.status(400).json({ error: "year must be a number" });
@@ -454,11 +449,9 @@ export async function create(req, res) {
       req.body.session &&
       !["Principale", "Rattrapage"].includes(req.body.session)
     )
-      return res
-        .status(400)
-        .json({
-          error: "document session must be in 'Principale', 'Rattrapage'"
-        });
+      return res.status(400).json({
+        error: "document session must be in 'Principale', 'Rattrapage'"
+      });
 
     document.status = "pending";
     document.user = req.user._id;
@@ -499,22 +492,18 @@ export async function update(req, res) {
 
     if (req.body.type) {
       if (!["DS", "EX", "C", "TD", "TP"].includes(req.body.type))
-        return res
-          .status(400)
-          .json({
-            error: "document type must be in 'DS', 'EX', 'C', 'TD', 'TP'"
-          });
+        return res.status(400).json({
+          error: "document type must be in 'DS', 'EX', 'C', 'TD', 'TP'"
+        });
 
       currentDocument.type = req.body.type;
     }
 
     if (req.body.session) {
       if (!["Principale", "Rattrapage"].includes(req.body.session))
-        return res
-          .status(400)
-          .json({
-            error: "document session must be in 'Principale', 'Rattrapage'"
-          });
+        return res.status(400).json({
+          error: "document session must be in 'Principale', 'Rattrapage'"
+        });
 
       currentDocument.session = req.body.session;
     }

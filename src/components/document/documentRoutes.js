@@ -13,11 +13,13 @@ import {
 import { upload } from "../../services/uploadService";
 import { isLoggedIn, isAdmin } from "../../services/middlewares";
 
-export default function (router) {
-
+export default function(router) {
   router.get("/documents/byStatus/:status", getAllByStatus);
   router.get("/documents/bySubject/:subjectId", getDocBySubject);
-  router.get("/documents/bySubject/:subjectId/byType/:type", getDocBySubjectByType);
+  router.get(
+    "/documents/bySubject/:subjectId/byType/:type",
+    getDocBySubjectByType
+  );
   router.get("/documents/byUser", isLoggedIn, getDocByUser);
   router.get("/documents/search/", search);
 

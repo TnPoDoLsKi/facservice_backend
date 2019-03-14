@@ -5,8 +5,7 @@ const levelSchema = new mongoose.Schema(
   {
     name: { type: String },
     description: { type: String },
-    formation:
-    {
+    formation: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Formation"
     }

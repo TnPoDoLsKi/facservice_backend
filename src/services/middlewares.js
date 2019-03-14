@@ -1,4 +1,4 @@
-import { User } from '../config/models'
+import { User } from "../config/models";
 
 export async function isLoggedIn(req, res, next) {
   try {
@@ -15,14 +15,12 @@ export async function isLoggedIn(req, res, next) {
       });
     }
 
-    const user = await User.findOne({ token: token })
+    const user = await User.findOne({ token: token });
 
-    if (!user)
-      return res.status(401).end()
+    if (!user) return res.status(401).end();
 
-    req.user = user
-    return next()
-
+    req.user = user;
+    return next();
   } catch (err) {
     console.log(err);
     return res.status(500).end();
@@ -31,12 +29,9 @@ export async function isLoggedIn(req, res, next) {
 
 export function isAdmin(req, res, next) {
   try {
+    if (req.user.type == "admin") return next();
 
-    if (req.user.type == 'admin')
-      return next()
-
-    return res.status(401).end()
-
+    return res.status(401).end();
   } catch (error) {
     res.status(500).end();
   }

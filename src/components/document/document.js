@@ -12,9 +12,11 @@ const documentSchema = new mongoose.Schema(
     filePath: {
       type: String
     },
-    filesStaging: [{
-      type: String
-    }],
+    filesStaging: [
+      {
+        type: String
+      }
+    ],
     type: {
       type: String,
       enum: ["DS", "EX", "C", "TD", "TP", "DS1", "DS2"],
@@ -29,8 +31,8 @@ const documentSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ['pending', 'approved', 'rejected'],
-      default: 'pending'
+      enum: ["pending", "approved", "rejected"],
+      default: "pending"
     },
     NBDowloads: {
       type: Number,

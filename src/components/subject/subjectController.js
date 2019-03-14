@@ -31,10 +31,9 @@ export async function create(req, res) {
     subject = await Subject.create(subject);
 
     return res.json(subject);
-
   } catch (error) {
-    if (error.name == 'CastError')
-      return res.status(400).json({ error: error.message })
+    if (error.name == "CastError")
+      return res.status(400).json({ error: error.message });
     console.log(error);
 
     return res.status(500).end();
@@ -54,13 +53,11 @@ export async function getAll(req, res) {
 
 export async function getOne(req, res) {
   try {
-
     const subject = await Subject.findById({ _id: req.params.id });
     return res.json(subject);
-
   } catch (error) {
-    if (error.name == 'CastError')
-      return res.status(400).json({ error: error.message })
+    if (error.name == "CastError")
+      return res.status(400).json({ error: error.message });
     console.log(error);
 
     return res.status(500).end();
@@ -117,18 +114,16 @@ export async function getOne(req, res) {
 
 export async function getByMajor(req, res) {
   try {
-
     let subjects = await Subject.find({
       majors: {
         $in: req.params.id
       }
-    }).select('-majors')
+    }).select("-majors");
 
     return res.json(subjects);
-
   } catch (error) {
-    if (error.name == 'CastError')
-      return res.status(400).json({ error: error.message })
+    if (error.name == "CastError")
+      return res.status(400).json({ error: error.message });
     console.log(error);
 
     return res.status(500).end();
@@ -188,18 +183,16 @@ export async function getByMajor(req, res) {
 
 export async function getByMajors(req, res) {
   try {
-
     let subjects = await Subject.find({
       majors: {
         $all: req.body.majors
       }
-    }).select('-majors')
+    }).select("-majors");
 
     return res.json(subjects);
-
   } catch (error) {
-    if (error.name == 'CastError')
-      return res.status(400).json({ error: error.message })
+    if (error.name == "CastError")
+      return res.status(400).json({ error: error.message });
     console.log(error);
 
     return res.status(500).end();
@@ -208,18 +201,15 @@ export async function getByMajors(req, res) {
 
 export async function update(req, res) {
   try {
-
     let subject = await Subject.findOne({ _id: req.params.id });
     if (!subject)
       return res.status(401).json({
         error: "subject not found !"
       });
 
-    if (req.body.name)
-      subject.name = req.body.name;
+    if (req.body.name) subject.name = req.body.name;
 
-    if (req.body.description)
-      subject.description = req.body.description;
+    if (req.body.description) subject.description = req.body.description;
 
     if (req.body.semestre) {
       if (req.body.semestre != 1 && req.body.semestre != 2)
@@ -231,7 +221,6 @@ export async function update(req, res) {
     }
 
     if (req.body.majors) {
-
       for (let major of req.body.majors) {
         major = await Major.findOne({ _id: major });
         if (!major)
@@ -246,10 +235,9 @@ export async function update(req, res) {
     await subject.save();
 
     return res.status(200).end();
-
   } catch (error) {
-    if (error.name == 'CastError')
-      return res.status(400).json({ error: error.message })
+    if (error.name == "CastError")
+      return res.status(400).json({ error: error.message });
     console.log(error);
 
     return res.status(500).end();
@@ -258,13 +246,11 @@ export async function update(req, res) {
 
 export async function remove(req, res) {
   try {
-
     await Subject.delete({ _id: req.params.id }, req.user._id);
     return res.status(200).end();
-
   } catch (error) {
-    if (error.name == 'CastError')
-      return res.status(400).json({ error: error.message })
+    if (error.name == "CastError")
+      return res.status(400).json({ error: error.message });
     console.log(error);
 
     return res.status(500).end();
