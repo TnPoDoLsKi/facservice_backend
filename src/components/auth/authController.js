@@ -102,7 +102,7 @@ export async function signIn(req, res) {
     if (!(req.body.email && req.body.password))
       return res.status(400).json({ error: 'missing body params' })
 
-    let user = await User.findOne({ email: req.body.email })
+    let user = await User.findOne({ email: req.body.email }).populate('major')
 
     if (!user)
       return res.status(400).json({ error: 'Wrong email address' })
@@ -117,6 +117,8 @@ export async function signIn(req, res) {
 
     user = user.toJSON()
     user = _.pick(user, 'firstName', 'lastName', 'major', 'token')
+    user.majorName = user.major.name
+    user.major = user.major._id
 
     return res.json(user)
 
