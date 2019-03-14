@@ -392,7 +392,7 @@ export async function search(req, res) {
     "type": "DS",  
     "status": "pending",
     "NBDowloads": 0,
-    "session": "Rattrapage",    
+    "session": "Rattrapage",
     "hasCorrection": false,
     "_id": "5c88f050737cb969e1f1cbda",
     "deleted": false,
