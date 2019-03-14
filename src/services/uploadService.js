@@ -7,14 +7,16 @@ import path from "path";
  * @apiName Upload
  * @apiParam {File} files File to upload
  * @apiHeader Authorization Bearer Token
- * @apiHeader Content-Type application/x-www-form-urlencoded
  * @apiSuccessExample {json} Uploaded
  *    HTTP/1.1 200 OK
- * [ "http://igc.tn:3005/api/uploads/upload_5cbbe9e1efb762ef40c52a9c9610e5b0.jpg" ]
- * @apiErrorExample {json} Register error
+ * [ "http://igc.tn:3005/api/uploads/upload_5cbbe9e1efb762ef40c52a9c9610e5b0.jpg", "http://igc.tn:3005/api/uploads/upload_5cbbe9e1efb762ef40c52a9c9610e5b0.jpg" ]
+ * 
+ * @apiErrorExample Not Authorized
+ *    HTTP/1.1 401 Not Authorized
+ * @apiErrorExample Bad Request
+ *    HTTP/1.1 400 Bad Request
+ * @apiErrorExample Internal Server Error
  *    HTTP/1.1 500 Internal Server Error
- * @apiErrorExample {json} Find Error
- *    HTTP/1.1 444 Request canceled
  */
 
 // upload

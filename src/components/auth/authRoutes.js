@@ -1,8 +1,8 @@
-import { create, signIn, signOut, activeAccount } from "./authController";
+import { signUp, signIn, signOut } from "./authController";
+import { isLoggedIn } from '../../services/middlewares'
 
-export default function(router) {
-  router.post("/auth/signup", create);
+export default function (router) {
+  router.post("/auth/signup", signUp);
   router.post("/auth/signin", signIn);
-  router.post("/auth/signout", signOut);
-  router.get("/activate/:token", activeAccount);
+  router.post("/auth/signout", isLoggedIn, signOut);
 }

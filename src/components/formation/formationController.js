@@ -1,34 +1,5 @@
 import _ from "lodash";
-import { Section, Formation } from "../../config/models";
-
-/**
- * @api {post} /formations Create a formation
- * @apiGroup Formations
- * @apiParam {String} name Formation name
- * @apiParam {String} description Formation description
- * @apiHeader Authorization Bearer Token
- * @apiHeader Content-Type application/x-www-form-urlencoded
- * @apiParamExample {json} Input
- *    {
- *      "name": "LFSI",
- *      "description": "Licence Fondamentale en Sciences de l'informatique"
- *    }
- * @apiSuccessExample {json} Success
- *    HTTP/1.1 200 OK
- * {
-        "_id": "5c5080a2bb95dc104b9934b3",
-        "name": "LFSI",
-        "description": "Licence Fondamentale en Sciences de l'informatique",
-        "createdAt": "2019-01-29T16:34:42.203Z",
-        "updatedAt": "2019-01-29T16:34:42.203Z"
-    }
- * @apiErrorExample {json} Formation already exists
- *    HTTP/1.1 208 Already Reported
- * @apiErrorExample {json} Name and Description are required
- *    HTTP/1.1 400 Internal Server Error
- * @apiErrorExample {json} Register error
- *    HTTP/1.1 500 Internal Server Error
- */
+import { Formation } from "../../config/models";
 
 export async function create(req, res) {
   try {
@@ -37,60 +8,9 @@ export async function create(req, res) {
         error: "name is required !"
       });
 
-    if (!req.body.description)
-      return res.status(400).json({
-        error: "description is required !"
-      });
-
-    let formation = _.pick(req.body, "name", "description");
-
-    formation = await Formation.create(formation);
+    const formation = await Formation.create(req.body);
 
     return res.json(formation);
-  } catch (error) {
-    console.log(error);
-    return res.status(500).end();
-  }
-}
-
-/**
- * @api {get} /formations/:id/levels Get all levels of a formation
- * @apiGroup Formations
- * @apiParam {id} id Formation Id
- * @apiErrorExample {json} Internal error
- *    HTTP/1.1 500 Internal Server Error
- */
-export async function getFormationLevels(req, res) {
-  try {
-    const formation = await Formation.findById({
-      _id: req.params.id
-    })
-      .populate("levels")
-      .exec();
-
-    return res.json(formation.levels);
-  } catch (error) {
-    console.log(error);
-    return res.status(500).end();
-  }
-}
-
-/**
- * @api {get} /formations/:fId/levels/:lId/sections Get all sections of a formation in a specific level
- * @apiGroup Formations
- * @apiParam {id} fId Formation Id
- * @apiParam {id} lId Level Id
- * @apiErrorExample {json} Internal error
- *    HTTP/1.1 500 Internal Server Error
- */
-export async function getFormationSections(req, res) {
-  try {
-    const sections = await Section.find({
-      formation: req.params.fId,
-      level: req.params.lId
-    });
-
-    return res.json(sections);
   } catch (error) {
     console.log(error);
     return res.status(500).end();
@@ -102,32 +22,28 @@ export async function getFormationSections(req, res) {
  * @apiGroup Formations
  * @apiSuccessExample {json} Success
  *    HTTP/1.1 200 OK
- * [
+[
     {
-        "_id": "5c5080a2bb95dc104b9934ae",
-        "name": "LaGm",
-        "description": "Licence Appliquée en Génie Mécanique",
-        "createdAt": "2019-01-29T16:34:42.202Z",
-        "updatedAt": "2019-01-29T16:34:42.202Z"
+        "deleted": false,
+        "_id": "5c825dee263bbd33636897f4",
+        "name": "master",
+        "createdAt": "2019-03-08T12:19:58.723Z",
+        "updatedAt": "2019-03-08T12:29:24.168Z",
+        "__v": 0
     },
     {
-        "_id": "5c5080a2bb95dc104b9934b3",
-        "name": "LFSI",
-        "description": "Licence Fondamentale en Sciences de l'informatique",
-        "createdAt": "2019-01-29T16:34:42.203Z",
-        "updatedAt": "2019-01-29T16:34:42.203Z"
-    },
-    {
-        "_id": "5c5080a2bb95dc104b9934b2",
-        "name": "LaEm",
-        "description": "Licence Appliquée en Electromécanique",
-        "createdAt": "2019-01-29T16:34:42.203Z",
-        "updatedAt": "2019-01-29T16:34:42.203Z"
+        "deleted": false,
+        "_id": "5c8263677c8e2f4013c6986f",
+        "name": "prepa",
+        "createdAt": "2019-03-08T12:19:58.723Z",
+        "updatedAt": "2019-03-08T12:29:24.168Z",
+        "__v": 0
     }
-  ]
- * @apiErrorExample {json} Find error
+]
+ * @apiErrorExample Internal Server Error
  *    HTTP/1.1 500 Internal Server Error
  */
+
 export async function getAll(req, res) {
   try {
     const formations = await Formation.find();
@@ -139,31 +55,8 @@ export async function getAll(req, res) {
   }
 }
 
-/**
- * @api {get} /formations/:id Get one formation
- * @apiGroup Formations
- * @apiSuccessExample {json} Success
- *    HTTP/1.1 200 OK
- * {
-    "_id": "5c5080a2bb95dc104b9934ac",
-    "name": "Prepa",
-    "description": "Préparatoire",
-    "createdAt": "2019-01-29T16:34:42.202Z",
-    "updatedAt": "2019-01-29T16:34:42.202Z"
-}
- * @apiErrorExample {json} Formation id cannot be empty
- *    HTTP/1.1 400 Not Found
- * @apiErrorExample {json} Find error
- *    HTTP/1.1 500 Internal Server Error
- */
-
 export async function getOne(req, res) {
   try {
-    if (!req.params.id)
-      return res.status(400).json({
-        error: "id cannot be empty"
-      });
-
     const formation = await Formation.findById({
       _id: req.params.id
     });
@@ -171,89 +64,49 @@ export async function getOne(req, res) {
     return res.json(formation);
   } catch (error) {
     console.log(error);
+    if (error.name == 'CastError')
+      return res.status(400).json({ error: error.message })
+
     return res.status(500).end();
   }
 }
 
-/**
- * @api {put} /formations Update a formation
- * @apiGroup Formations
- * @apiParam {id} id formation id
- * @apiParam {String} name Formation name
- * @apiParam {String} description Formation description
- * @apiHeader Authorization Bearer Token
- * @apiHeader Content-Type application/x-www-form-urlencoded
- * @apiParamExample {json} Input
- * {
- *      "name": "LFSI",
- *      "description": "Licence Fondamentale en Sciences de l'informatique"
- *    }
- * @apiSuccessExample {json} Success
- *    HTTP/1.1 204 Updated
- * @apiErrorExample {json} Name and Description are required
- *    HTTP/1.1 400 Not Found
- * @apiErrorExample {json} Formation not found
- *    HTTP/1.1 404 Not Found
- * @apiErrorExample {json} Register error
- *    HTTP/1.1 500 Internal Server Error
- */
-
 export async function update(req, res) {
   try {
-    if (!req.body.name)
-      return res.status(400).json({
-        error: "name is required !"
-      });
-
-    if (!req.body.description)
-      return res.status(400).json({
-        error: "description is required !"
-      });
 
     let formation = await Formation.findOne({
       _id: req.params.id
     });
+
     if (!formation)
       return res.status(404).json({
         error: "formation not found !"
       });
 
-    formation.description = req.body.description;
-    formation.name = req.body.name;
+    if (req.body.description)
+      formation.description = req.body.description;
+
+    if (req.body.name)
+      formation.name = req.body.name;
 
     await formation.save();
 
     return res.status(200).end();
   } catch (error) {
     console.log(error);
+    if (error.name == 'CastError')
+      return res.status(400).json({ error: error.message })
+
     return res.status(500).end();
   }
 }
 
-/**
- * @api {delete} /formations Delete a formation
- * @apiGroup Formations
- * @apiParam {id} id formation id
- * @apiHeader Authorization Bearer Token
- * @apiHeader Content-Type application/x-www-form-urlencoded
- * @apiSuccessExample {json} Success
- *    HTTP/1.1 204 Deleted (No Content)
- * @apiErrorExample {json} Formation id cannot be empty
- *    HTTP/1.1 400 Not Found
- * @apiErrorExample {json} Register error
- *    HTTP/1.1 500 Internal Server Error
- */
 export async function remove(req, res) {
   try {
-    if (!req.params.id)
-      return res.status(400).json({
-        error: "id cannot be empty"
-      });
-    const formation = await Formation.deleteOne({
-      _id: req.params.id
-    });
+    await Formation.delete({ _id: req.params.id }, req.user._id);
 
-    return res.json(formation);
+    return res.status(200).end();
+    
   } catch (error) {
     console.log(error);
     return res.status(500).end();

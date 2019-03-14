@@ -1,76 +1,14 @@
 import _ from "lodash";
-import mongoose from "mongoose";
-import { Correction } from "../../config/models";
-
-/**
- * @api {get} /corrections Get all corrections
- * @apiGroup Corrections
- * @apiSuccess {Number} _id Correction id
- * @apiSuccess {Boolean} approved Whether the correction document is approved by the admin
- * @apiSuccess {Number} score Correction score
- * @apiSuccess {String} title Correction title
- * @apiSuccess {String} filePath Correction file path
- * @apiSuccess {Object} user Correction Owner
- * @apiSuccess {Object} document Correction document
- * @apiSuccess {Date} updated_at Update's date
- * @apiSuccess {Date} created_at Register's date
- * @apiSuccessExample {json} Success
- *    HTTP/1.1 200 OK
- * [
-    {
-        "approved": false,
-        "score": 0,
-        "_id": "5c41e6b8f6417937d0a24ace",
-        "title": "correction ex 2016",
-        "filePath": "/uploads/jdhgfhd.jpg",
-        "user": {
-            "type": "student",
-            "_id": "5c2426542a7e2f361896f812",
-            "email": "mohamed@test.com",
-            "hashedPassword": "$2b$10$7iOFilgwRN/qoXNA5KJuVuyiofVXvjmVEcn0MVivS4F7ne.vI9MWq",
-            "firstName": "mohamed",
-            "lastName": "mohamed",
-            "major": "5c1fb346e28363333004f02c",
-        },
-        "document": {
-            "type": "EX",
-            "semestre": 1,
-            "approved": false,
-            "NBDowloads": 0,
-            "session": "Principale",
-            "corrections": [
-                "5c41ccd20dbd0934ccc59a0e",
-                "5c41cd34dfe31425c014f85e"
-            ],
-            "_id": "5c41df5e0000d416fc5158fd",
-            "title": "EXAlgo",
-            "filePath": "/uploads/hjkhdfkjl.pdf",
-            "major": "5c3f8bee091f3c3290ac10b2",
-            "subject": "5c3f8bed091f3c3290ac1083",
-            "year": 2016,
-            "user": "5c2426542a7e2f361896f812",
-            "profName": "Sami Ashour"
-        },
-        "createdAt": "2019-01-18T14:46:16.612Z",
-        "updatedAt": "2019-01-18T14:46:16.612Z"
-    }
-]
- * @apiErrorExample {json} Find error
- *    HTTP/1.1 500 Internal Server Error
- */
+import { Correction, Document } from "../../config/models";
 
 export async function getAll(req, res) {
   try {
     const corrections = await Correction.find()
       .populate({
-        path: "document",
-        select: "-deleted"
-      })
-      .populate({
         path: "user",
-        select: "-deleted"
-      })
-      .exec();
+        select: "firstName lastName avatar -_id"
+      }).select("-filesStaging")
+
     return res.json(corrections);
   } catch (error) {
     console.log(error);
@@ -78,239 +16,230 @@ export async function getAll(req, res) {
   }
 }
 
-/**
- * @api {get} /corrections/:id Get one correction
- * @apiGroup Corrections
- * @apiParam {id} id Correction id
- * @apiSuccess {Number} _id Correction id
- * @apiSuccess {Boolean} approved Whether the correction document is approved by the admin
- * @apiSuccess {Number} score Correction score
- * @apiSuccess {String} title Correction title
- * @apiSuccess {String} filePath Correction file path
- * @apiSuccess {Object} user Correction Owner
- * @apiSuccess {Object} document Correction document
- * @apiSuccessExample {json} Success
- *    HTTP/1.1 200 OK
- *    {
-    "approved": false,
-    "score": 0,
-    "_id": "5c41e6cdf6417937d0a24acf",
-    "title": "correction ds 2018",
-    "filePath": "/uploads/jdhgfhd.jpg",
-    "user": {
-        "type": "student",
-        "_id": "5c2426542a7e2f361896f812",
-        "email": "mohamed@test.com",
-        "firstName": "mohamed",
-        "lastName": "mohamed"
-    },
-    "document": {
-        "type": "EX",
-        "semestre": 1,
-        "NBDowloads": 0,
-        "session": "Principale",
-        "corrections": [
-            "5c41ccd20dbd0934ccc59a0e",
-            "5c41cd34dfe31425c014f85e"
-        ],
-        "_id": "5c41df5e0000d416fc5158fd",
-        "title": "EXAlgo",
-        "filePath": "/uploads/hjkhdfkjl.pdf",
-        "major": "5c3f8bee091f3c3290ac10b2",
-        "subject": "5c3f8bed091f3c3290ac1083",
-        "year": 2016,
-        "user": "5c2426542a7e2f361896f812",
-        "profName": "Sami Ashour"
-    }
-}
- * @apiErrorExample {json} Correction id cannot be empty
- *    HTTP/1.1 400 Not Found
- * @apiErrorExample {json} Find error
- *    HTTP/1.1 500 Internal Server Error
- */
-
 export async function getOne(req, res) {
   try {
-    if (!req.params.id)
-      return res.status(400).json({
-        error: "Correction id cannot be empty!"
-      });
-    else if (mongoose.Types.ObjectId.isValid(req.params.id)) {
-      const correction = await Correction.findById({
-        _id: req.params.id
-      })
-        .populate({
-          path: "user",
-          select: "-major -avatar -hashedPassword"
-        })
-        // .populate({
-        //   path: "document",
-        //   select: "-approved"
-        // })
-        .exec();
 
-      return res.json(correction);
-    } else {
-      return res.status(400).json({
-        error: "Id is not valid!"
-      });
-    }
+    const correction = await Correction.findById({ _id: req.params.id })
+      .populate({
+        path: "user",
+        select: "firstName lastName avatar -_id"
+      }).select("-filesStaging")
+
+    return res.json(correction);
+
   } catch (error) {
-    console.log(error);
+    console.log(error)
+    if (error.name == 'CastError')
+      return res.status(400).json({ error: error.message })
+
     return res.status(500).end();
   }
 }
 
 /**
- * @api {post} /corrections Create Correction
+ * @api {get} /corrections/byDocument/:id Get document's corrections
  * @apiGroup Corrections
- * @apiParam {String} title Correction title
- * @apiParam {String} filePath Correction document file url
- * @apiParam {String} user Correction owner (id)
- * @apiParam {String} document Correction document (id)
+ * @apiParam {id} id Document id
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 OK
+ [
+    {
+        "status": "approved",
+        "verifiedByProf": false,
+        "score": 0,
+        "deleted": false,
+        "_id": "5c8826a5f9a4c66ce1eb1d5d",
+        "document": "5c87918f905e0b33f609b360",
+        "title": "corrigé de DS Physique 2014",
+        "user": {
+            "avatar": "https://igc.tn/img/portfolio/HC1-Prev.jpg",
+            "firstName": "Wael",
+            "lastName": "Ben Taleb"
+        },
+        "createdAt": "2019-03-12T21:37:41.572Z",
+        "updatedAt": "2019-03-12T22:40:30.601Z",
+        "__v": 0
+    },
+    {
+        "status": "approved",
+        "verifiedByProf": false,
+        "score": 0,
+        "deleted": false,
+        "_id": "5c88270ef9a4c66ce1eb1d5e",
+        "document": "5c87918f905e0b33f609b360",
+        "title": "corrigé de EX Analyse 2014 ",
+        "user": {
+            "avatar": "https://igc.tn/img/portfolio/HC1-Prev.jpg",
+            "firstName": "Wael",
+            "lastName": "Ben Taleb"
+        },
+        "createdAt": "2019-03-12T21:39:26.070Z",
+        "updatedAt": "2019-03-12T22:26:16.867Z",
+        "__v": 0
+    }
+]
+ * @apiErrorExample Bad Request
+ *    HTTP/1.1 400 Bad Request
+ * @apiErrorExample Internal Server Error
+ *    HTTP/1.1 500 Internal Server Error
+ */
+
+export async function getAllByDocument(req, res) {
+  try {
+
+    const corrections = await Correction.find({ document: req.params.documentId, status: 'approved' })
+      .populate({
+        path: "user",
+        select: "firstName lastName avatar -_id"
+      }).select("-filesStaging")
+
+    return res.json(corrections);
+
+  } catch (error) {
+    console.log(error)
+    if (error.name == 'CastError')
+      return res.status(400).json({ error: error.message })
+
+    return res.status(500).end();
+  }
+}
+
+/**
+ * @api {post} /corrections Create a correction
+ * @apiGroup Corrections
  * @apiHeader Authorization Bearer Token
- * @apiHeader Content-Type application/x-www-form-urlencoded
  * @apiParamExample {json} Input
  *    {
- *      "title": "correction ds analyse 2018",
- *      "filePath": "/uploads/jdhgfhd.jpg",
- *      "user": "5c2426542a7e2f361896f812",
- *      "document": "5c41df5e0000d416fc5158fd"
+ *      "filesStaging": ["https://igc.tn/img/portfolio/HC1-Prev.jpg", "https://igc.tn/img/portfolio/A2-Prev.jpg"],
+ *      "document": "5c41b2d82383c111b4ffad1a"
  *    }
  * @apiSuccessExample {json} Success
- *    HTTP/1.1 200 Created
- * @apiErrorExample {json} Correction already exists
- *    HTTP/1.1 208 Already Reported
- * @apiErrorExample {json} Register error
+ *    HTTP/1.1 200 OK
+      {
+        "status": "pending",
+        "verifiedByProf": false,
+        "score": 0,
+        "_id": "5c88f1c4719c206b4524de83",
+        "deleted": false,
+        "document": "5c41b2d82383c111b4ffad1a",
+        "title": "corrigé de EX physique 2015",
+        "user": "5c8783b34a35cd28fa5bea3b",
+        "createdAt": "2019-03-13T12:04:20.911Z",
+        "updatedAt": "2019-03-13T12:04:20.911Z",
+        "__v": 0
+      }
+ * @apiErrorExample Not Authorized
+ *    HTTP/1.1 401 Not Authorized
+ * @apiErrorExample Bad Request
+ *    HTTP/1.1 400 Bad Request
+ * @apiErrorExample Internal Server Error
  *    HTTP/1.1 500 Internal Server Error
  */
 
 export async function create(req, res) {
   try {
-    let correction = _.pick(req.body, "title", "filePath", "user", "document");
-    await Correction.findOne(
-      {
-        document: correction.document,
-        title: correction.title,
-        user: correction.user
-      },
-      (err, result) => {
-        if (err) {
-          return res.status(500).end();
-        } else if (result) {
-          return res.status(208).end();
-        }
-      }
-    );
+    let correction = _.pick(req.body, "filesStaging", "document");
+
+    if (!(correction.filesStaging && correction.document))
+      return res.status(400).json({ error: 'missing body params' })
+
+    let document = await Document.findOne({ _id: correction.document })
+    if (!document)
+      return res.status(400).json({ error: 'wrong document id' })
+
+    correction.title = 'corrigé de ' + document.title
+    correction.status = 'pending'
+    correction.user = req.user._id
+
     correction = await Correction.create(correction);
-    return res.json(correction).end();
+    
+    correction = correction.toJSON()
+    delete correction.filesStaging
+
+    return res.json(correction)
+
   } catch (error) {
-    console.log(error);
+    console.log(error)
+    if (error.name == 'CastError')
+      return res.status(400).json({ error: error.message })
+
     return res.status(500).end();
   }
 }
-
-/**
- * @api {put} /corrections/:id Update Correction
- * @apiGroup Corrections
- * @apiParam {id} id Correction id
- * @apiParam {String} title Correction title
- * @apiParam {String} filePath Correction document file url
- * @apiParam {String} user Correction owner (id)
- * @apiParam {String} document Correction document (id)
- * @apiHeader Authorization Bearer Token
- * @apiHeader Content-Type application/x-www-form-urlencoded
- * @apiParamExample {json} Input
- *    {
- *      "id": "5c41e6cdf6417937d0a24acf",
- *      "title": "correction ds analyse 2018",
- *      "filePath": "/uploads/jdhgfhd.jpg",
- *      "user": "5c2426542a7e2f361896f812",
- *      "document": "5c41df5e0000d416fc5158fd"
- *    }
- * @apiSuccessExample {json} Success
- *    HTTP/1.1 200 Updated
- * @apiErrorExample {json} Correction id cannot be empty
- *    HTTP/1.1 400 Not Found
- * @apiErrorExample {json} Register error
- *    HTTP/1.1 500 Internal Server Error
- */
 
 export async function update(req, res) {
   try {
-    if (!req.params.id)
-      return res.status(400).json({
-        error: "Correction id cannot be empty!"
-      });
-    else if (mongoose.Types.ObjectId.isValid(req.params.id)) {
-      let correction = await Correction.findOne({
-        _id: req.params.id
-      });
-      if (!correction)
-        return res.status(400).json({
-          error: "Correction not found !"
-        });
+
+    let correction = await Correction.findOne({ _id: req.params.id })
+
+    if (!correction)
+      return res.status(400).json({ error: "Correction not found !" });
+
+    if (req.body.title)
       correction.title = req.body.title;
-      correction.filePath = req.body.filePath;
-      correction.user = req.body.user;
+
+    if (req.body.document) {
+      let document = await Document.findOne({ _id: req.body.document })
+      if (!document)
+        return res.status(400).json({ error: 'wrong document id' })
+
       correction.document = req.body.document;
-
-      await correction.save();
-
-      return res.status(200).end();
-    } else {
-      return res.status(400).json({
-        error: "Id is not valid!"
-      });
     }
+
+    if (req.body.status) {
+      let document = await Document.findOne({ _id: correction.document })
+
+      if (['pending', 'approved', 'rejected'].includes(req.body.status))
+        return res.status(400).json({ error: 'wrong correction status' })
+
+      if (!document.hasCorrection && req.body.status == 'approved') {
+        document.hasCorrection = true
+        await document.save()
+      }
+
+      if (['pending', 'rejected'].includes(req.body.status)) {
+        const corrections = await Correction.find({ document: correction.document, status: 'approved' })
+        if (corrections.length == 0) {
+          document.hasCorrection = false
+          await document.save()
+        }
+      }
+
+      correction.status = req.body.status
+    }
+
+    await correction.save();
+
+    return res.status(200).end();
+
   } catch (error) {
-    console.log(error);
+    console.log(error.name);
     if (error.name === "CastError")
-      return res.status(400).json({
-        error: error.message
-      });
+      return res.status(400).json({ error: error.message });
 
     return res.status(500).end();
   }
 }
 
-/**
- * @api {delete} /corrections/:id Delete Correction
- * @apiGroup Corrections
- * @apiParam {id} id Correction id
- * @apiHeader Authorization Bearer Token
- * @apiHeader Content-Type application/x-www-form-urlencoded
- * @apiSuccessExample {json} Success
- *    HTTP/1.1 204 Deleted (No Content)
- * @apiErrorExample {json} Correction id cannot be empty
- *    HTTP/1.1 400 Not Found
- * @apiErrorExample {json} Register error
- *    HTTP/1.1 500 Internal Server Error
- */
-
 export async function remove(req, res) {
   try {
-    if (!req.params.id)
-      return res.status(400).json({
-        error: "Correction id cannot be empty!"
-      });
-    else if (mongoose.Types.ObjectId.isValid(req.params.id)) {
-      await Correction.remove({
-        _id: req.params.id
-      });
 
-      return res.status(204).end();
-    } else {
-      return res.status(400).json({
-        error: "Id is not valid!"
-      });
-    }
+    const correction = await Correction.findOne({ _id: req.params.id })
+
+    await Correction.delete({ _id: req.params.id }, req.user._id);
+
+    const corrections = await Correction.find({ document: correction.document, status: 'approved' })
+
+    if (corrections.length == 0)
+      await Document.update({ _id: correction.document }, { $set: { hasCorrection: false } })
+
+    return res.status(204).end();
+
   } catch (error) {
+
     console.log(error);
     if (error.name === "CastError")
-      return res.status(400).json({
-        error: error.message
-      });
+      return res.status(400).json({ error: error.message })
 
     return res.status(500).end();
   }

@@ -6,20 +6,24 @@ const subjectSchema = new mongoose.Schema(
     name: {
       type: String
     },
+    description: {
+      type: String
+    },
     semestre: {
       type: Number,
       enum: [1, 2],
       default: 1
     },
-    documents: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Document"
-      }
-    ],
-    major: {
+    majors: [{
       type: mongoose.Schema.Types.ObjectId,
       ref: "Major"
+    }],
+    documentsCount: {
+      DS: { type: Number, default: 0 },
+      EX: { type: Number, default: 0 },
+      C: { type: Number, default: 0 },
+      TD: { type: Number, default: 0 },
+      TP: { type: Number, default: 0 }
     }
   },
   {
@@ -32,12 +36,5 @@ subjectSchema.plugin(mongooseDelete, {
   deletedAt: true,
   deletedBy: true
 });
-
-subjectSchema.methods.toJSON = function() {
-  var obj = this.toObject();
-  delete obj.__v;
-  delete obj.deleted;
-  return obj;
-};
 
 export default mongoose.model("Subject", subjectSchema);

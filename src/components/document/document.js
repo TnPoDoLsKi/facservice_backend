@@ -6,27 +6,19 @@ const documentSchema = new mongoose.Schema(
     title: {
       type: String
     },
+    description: {
+      type: String
+    },
     filePath: {
       type: String
     },
-    filesStaging: [
-      {
-        type: String
-      }
-    ],
+    filesStaging: [{
+      type: String
+    }],
     type: {
       type: String,
       enum: ["DS", "EX", "C", "TD", "TP", "DS1", "DS2"],
       default: "DS"
-    },
-    semestre: {
-      type: Number,
-      enum: [1, 2],
-      default: 1
-    },
-    major: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Major"
     },
     subject: {
       type: mongoose.Schema.Types.ObjectId,
@@ -35,9 +27,10 @@ const documentSchema = new mongoose.Schema(
     year: {
       type: Number
     },
-    approved: {
-      type: Boolean,
-      default: false
+    status: {
+      type: String,
+      enum: ['pending', 'approved', 'rejected'],
+      default: 'pending'
     },
     NBDowloads: {
       type: Number,
@@ -49,20 +42,15 @@ const documentSchema = new mongoose.Schema(
     },
     session: {
       type: String,
-      enum: ["Principale", "Controle"],
+      enum: ["Principale", "Rattrapage"],
       default: "Principale"
     },
     profName: {
       type: String
     },
-    corrections: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "correction"
-      }
-    ],
-    description: {
-      type: String
+    hasCorrection: {
+      type: Boolean,
+      default: false
     }
   },
   {
@@ -75,12 +63,5 @@ documentSchema.plugin(mongooseDelete, {
   deletedAt: true,
   deletedBy: true
 });
-
-documentSchema.methods.toJSON = function() {
-  var obj = this.toObject();
-  delete obj.__v;
-  delete obj.deleted;
-  return obj;
-};
 
 export default mongoose.model("document", documentSchema);

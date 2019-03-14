@@ -1,8 +1,6 @@
-import jwt from "jsonwebtoken";
-import { SECRET } from "../config/env";
-import atob from "atob";
+import { User } from '../config/models'
 
-export function isLoggedIn(req, res, next) {
+export async function isLoggedIn(req, res, next) {
   try {
     let token = null;
 
@@ -13,19 +11,18 @@ export function isLoggedIn(req, res, next) {
       token = req.session.token;
     } else {
       return res.status(401).json({
-        error: "Authorization required !"
+        error: "Authorization token required !"
       });
     }
 
-    jwt.verify(token, SECRET, (err, user) => {
-      if (err) {
-        return res.status(401).json({
-          error: err.name
-        });
-      }
-      req.user = user;
-      next();
-    });
+    const user = await User.findOne({ token: token })
+
+    if (!user)
+      return res.status(401).end()
+
+    req.user = user
+    return next()
+
   } catch (err) {
     console.log(err);
     return res.status(500).end();
@@ -34,34 +31,12 @@ export function isLoggedIn(req, res, next) {
 
 export function isAdmin(req, res, next) {
   try {
-    if ("authorization" in req.headers) {
-      const bearer = req.headers["authorization"];
 
-      const token = bearer.split(" ")[1];
+    if (req.user.type == 'admin')
+      return next()
 
-      if (!token) {
-        return res.status(403).send({
-          auth: false,
-          message: "No token provided"
-        });
-      } else {
-        const base64Url = token.split(".")[1];
+    return res.status(401).end()
 
-        const base64 = base64Url.replace("-", "+").replace("_", "/");
-
-        const payload = JSON.parse(atob(base64));
-
-        if (payload.type === "admin") {
-          next();
-        } else {
-          res.status(403).end();
-        }
-      }
-    } else {
-      res.status(401).json({
-        error: "Authorization required !"
-      });
-    }
   } catch (error) {
     res.status(500).end();
   }
