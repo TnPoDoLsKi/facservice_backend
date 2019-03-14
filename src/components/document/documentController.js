@@ -4,10 +4,12 @@ import { Document, Subject } from "../../config/models";
 
 export async function getAll(req, res) {
   try {
-    const documents = await Document.find().populate({
-      path: "user",
-      select: "firstName lastName avatar -_id"
-    }).select("-filesStaging")
+    const documents = await Document.find()
+      .populate({
+        path: "user",
+        select: "firstName lastName avatar -_id"
+      })
+      .select("-filesStaging");
 
     return res.json(documents);
   } catch (error) {
@@ -18,8 +20,7 @@ export async function getAll(req, res) {
 
 export async function getAllByStatus(req, res) {
   try {
-
-    if (!['pending', 'approved', 'rejected'].includes(req.params.status)) {
+    if (!["pending", "approved", "rejected"].includes(req.params.status)) {
       return res.status(400).json({
         error: "status must be 'pending', 'approved' or 'rejected'"
       });
@@ -27,13 +28,14 @@ export async function getAllByStatus(req, res) {
 
     const documents = await Document.find({
       status: req.params.status
-    }).populate({
-      path: "user",
-      select: "firstName lastName avatar -_id"
-    }).select("-filesStaging")
+    })
+      .populate({
+        path: "user",
+        select: "firstName lastName avatar -_id"
+      })
+      .select(req.params.status == "pending" ? "" : "-filesStaging");
 
     return res.json(documents);
-
   } catch (error) {
     console.log(error);
     return res.status(500).end();
@@ -76,22 +78,21 @@ export async function getAllByStatus(req, res) {
 
 export async function getOne(req, res) {
   try {
-
     const document = await Document.findById({
       _id: req.params.id,
-      status: 'approved'
-    }).populate({
-      path: "user",
-      select: "firstName lastName avatar -_id"
-    }).select("-filesStaging")
+      status: "approved"
+    })
+      .populate({
+        path: "user",
+        select: "firstName lastName avatar -_id"
+      })
+      .select("-filesStaging");
 
     return res.json(document);
-
   } catch (error) {
-    if (error.name == 'CastError')
-      return res.status(400).json({ error: error.message })
-    console.log(error)
-
+    console.log(error);
+    if (error.name == "CastError")
+      return res.status(400).json({ error: error.message });
     return res.status(500).end();
   }
 }
@@ -157,30 +158,34 @@ export async function getOne(req, res) {
 
 export async function getDocBySubjectByType(req, res) {
   try {
+    if (!["DS", "EX", "C", "TD", "TP"].includes(req.params.type))
+      return res
+        .status(400)
+        .json({
+          error: "document type must be in 'DS', 'EX', 'C', 'TD', 'TP'"
+        });
 
-    if (!['DS', 'EX', 'C', 'TD', 'TP'].includes(req.params.type))
-      return res.status(400).json({ error: "document type must be in 'DS', 'EX', 'C', 'TD', 'TP'" })
-
-    const subjectObject = await Subject.findOne({ _id: req.params.subjectId })
+    const subjectObject = await Subject.findOne({ _id: req.params.subjectId });
 
     if (!subjectObject)
-      return res.status(400).json({ error: 'wrong subject id' })
+      return res.status(400).json({ error: "wrong subject id" });
 
     const documents = await Document.find({
       subject: req.params.subjectId,
       type: req.params.type,
-      status: 'approved'
-    }).populate({
-      path: "user",
-      select: "firstName lastName avatar -_id"
-    }).select("-filesStaging")
+      status: "approved"
+    })
+      .populate({
+        path: "user",
+        select: "firstName lastName avatar -_id"
+      })
+      .select("-filesStaging");
 
     return res.json(documents);
-
   } catch (error) {
-    if (error.name == 'CastError')
-      return res.status(400).json({ error: error.message })
-    console.log(error)
+    console.log(error);
+    if (error.name == "CastError")
+      return res.status(400).json({ error: error.message });
 
     return res.status(500).end();
   }
@@ -188,45 +193,42 @@ export async function getDocBySubjectByType(req, res) {
 
 export async function getDocBySubject(req, res) {
   try {
-
-    const subjectObject = await Subject.findOne({ _id: req.params.subjectId })
+    const subjectObject = await Subject.findOne({ _id: req.params.subjectId });
 
     if (!subjectObject)
-      return res.status(400).json({ error: 'wrong subject id' })
+      return res.status(400).json({ error: "wrong subject id" });
 
     const documents = await Document.find({
       subject: req.params.subjectId,
-      status: 'approved'
-    }).populate({
-      path: "user",
-      select: "firstName lastName avatar -_id"
-    }).select("-filesStaging")
+      status: "approved"
+    })
+      .populate({
+        path: "user",
+        select: "firstName lastName avatar -_id"
+      })
+      .select("-filesStaging");
 
     return res.json(documents);
-
   } catch (error) {
-    if (error.name == 'CastError')
-      return res.status(400).json({ error: error.message })
-    console.log(error)
+    console.log(error);
+    if (error.name == "CastError")
+      return res.status(400).json({ error: error.message });
 
     return res.status(500).end();
   }
 }
 
-
 export async function getDocByUser(req, res) {
   try {
-
     const documents = await Document.find({
       user: req.user._id
-    })
+    });
 
-    return res.status(200).json(documents)
-
+    return res.status(200).json(documents);
   } catch (error) {
-    if (error.name == 'CastError')
-      return res.status(400).json({ error: error.message })
-    console.log(error)
+    console.log(error);
+    if (error.name == "CastError")
+      return res.status(400).json({ error: error.message });
 
     return res.status(500).end();
   }
@@ -309,21 +311,20 @@ export async function getDocByUser(req, res) {
 
 export async function search(req, res) {
   try {
-
-    if (!req.query.name)
-      return res.status(400).end();
+    if (!req.query.name) return res.status(400).end();
 
     let queryOptions = {
-      status: 'approved'
-    }
+      status: "approved"
+    };
 
-    if (req.query.type)
-      queryOptions.type = req.query.type
+    if (req.query.type) queryOptions.type = req.query.type;
 
     if (req.query.majorID) {
-      let subjects = await Subject.find({ majors: { $in: req.query.majorID } }).select("_id")
-      subjects = subjects.map(item => item._id)
-      queryOptions.subject = { $in: subjects }
+      let subjects = await Subject.find({
+        majors: { $in: req.query.majorID }
+      }).select("_id");
+      subjects = subjects.map(item => item._id);
+      queryOptions.subject = { $in: subjects };
     }
 
     const documents = await Document.find(queryOptions)
@@ -335,7 +336,7 @@ export async function search(req, res) {
         path: "subject",
         populate: { path: 'majors', select: '_id name' }
       })
-      .select("-filesStaging")
+      .select("-filesStaging");
 
     const options = {
       shouldSort: true,
@@ -360,12 +361,11 @@ export async function search(req, res) {
       return result.item;
     });
 
-    return res.json(documentsResult);
-
+    return res.json(documentsResult
   } catch (err) {
     console.log(err);
-    if (error.name == 'CastError')
-      return res.status(400).json({ error: error.message })
+    if (error.name == "CastError")
+      return res.status(400).json({ error: error.message });
 
     return res.status(500).end();
   }
@@ -390,7 +390,7 @@ export async function search(req, res) {
     "type": "DS",  
     "status": "pending",
     "NBDowloads": 0,
-    "session": "Rattrapage",    
+    "session": "Rattrapage",
     "hasCorrection": false,
     "_id": "5c88f050737cb969e1f1cbda",
     "deleted": false,
@@ -421,40 +421,58 @@ export async function create(req, res) {
       "session",
       "description",
       "filesStaging"
+    );
+
+    if (
+      !(
+        document.type &&
+        document.subject &&
+        document.year &&
+        document.filesStaging
+      )
     )
+      return res.status(400).json({ error: "missing body params" });
 
-    if (!(document.type && document.subject && document.year && document.filesStaging))
-      return res.status(400).json({ error: 'missing body params' })
-
-    if (!['DS', 'EX', 'C', 'TD', 'TP'].includes(document.type))
-      return res.status(400).json({ error: "document type must be in 'DS', 'EX', 'C', 'TD', 'TP'" })
+    if (!["DS", "EX", "C", "TD", "TP"].includes(document.type))
+      return res
+        .status(400)
+        .json({
+          error: "document type must be in 'DS', 'EX', 'C', 'TD', 'TP'"
+        });
 
     if (isNaN(document.year))
-      return res.status(400).json({ error: 'year must be a number' })
+      return res.status(400).json({ error: "year must be a number" });
 
-    const subjectObject = await Subject.findOne({ _id: document.subject })
+    const subjectObject = await Subject.findOne({ _id: document.subject });
 
     if (!subjectObject)
-      return res.status(400).json({ error: 'wrong subject id' })
+      return res.status(400).json({ error: "wrong subject id" });
 
-    if (req.body.session && !['Principale', 'Rattrapage'].includes(req.body.session))
-      return res.status(400).json({ error: "document session must be in 'Principale', 'Rattrapage'" })
+    if (
+      req.body.session &&
+      !["Principale", "Rattrapage"].includes(req.body.session)
+    )
+      return res
+        .status(400)
+        .json({
+          error: "document session must be in 'Principale', 'Rattrapage'"
+        });
 
-    document.status = 'pending'
-    document.user = req.user._id
-    document.title = document.type + ' ' + subjectObject.name + ' ' + document.year
+    document.status = "pending";
+    document.user = req.user._id;
+    document.title =
+      document.type + " " + subjectObject.name + " " + document.year;
 
     document = await Document.create(document);
 
-    document = document.toJSON()
-    delete document.filesStaging
+    document = document.toJSON();
+    delete document.filesStaging;
 
     return res.json(document);
-
   } catch (error) {
-    if (error.name == 'CastError')
-      return res.status(400).json({ error: error.message })
-    console.log(error)
+    console.log(error);
+    if (error.name == "CastError")
+      return res.status(400).json({ error: error.message });
 
     return res.status(500).end();
   }
@@ -462,123 +480,128 @@ export async function create(req, res) {
 
 export async function update(req, res) {
   try {
+    let docStatusChanged = false;
+    let currentDocument = await Document.findOne({ _id: req.params.id });
 
-    let docStatusChanged = false
-    let currentDocument = await Document.findOne({ _id: req.params.id })
-
-    if (req.body.title)
-      currentDocument.title = req.body.title
+    if (req.body.title) currentDocument.title = req.body.title;
 
     if (req.body.description)
-      currentDocument.description = req.body.description
+      currentDocument.description = req.body.description;
 
     if (req.body.year) {
       if (isNaN(req.body.year))
-        return res.status(400).json({ error: 'year must be a number' })
+        return res.status(400).json({ error: "year must be a number" });
 
-      currentDocument.year = req.body.year
+      currentDocument.year = req.body.year;
     }
 
     if (req.body.type) {
-      if (!['DS', 'EX', 'C', 'TD', 'TP'].includes(req.body.type))
-        return res.status(400).json({ error: "document type must be in 'DS', 'EX', 'C', 'TD', 'TP'" })
+      if (!["DS", "EX", "C", "TD", "TP"].includes(req.body.type))
+        return res
+          .status(400)
+          .json({
+            error: "document type must be in 'DS', 'EX', 'C', 'TD', 'TP'"
+          });
 
-      currentDocument.type = req.body.type
+      currentDocument.type = req.body.type;
     }
 
     if (req.body.session) {
-      if (!['Principale', 'Rattrapage'].includes(req.body.session))
-        return res.status(400).json({ error: "document session must be in 'Principale', 'Rattrapage'" })
+      if (!["Principale", "Rattrapage"].includes(req.body.session))
+        return res
+          .status(400)
+          .json({
+            error: "document session must be in 'Principale', 'Rattrapage'"
+          });
 
-      currentDocument.session = req.body.session
+      currentDocument.session = req.body.session;
     }
 
     if (req.body.status) {
-      if (!['pending', 'approved', 'rejected'].includes(req.body.status))
-        return res.status(400).json({ error: 'wrong document status' })
+      if (!["pending", "approved", "rejected"].includes(req.body.status))
+        return res.status(400).json({ error: "wrong document status" });
 
-      if (!(!['pending', 'rejected'].includes(req.body.status) && !['pending', 'rejected'].includes(currentDocument.status)) &&
-        (req.body.status != currentDocument.status))
+      if (
+        !(
+          !["pending", "rejected"].includes(req.body.status) &&
+          !["pending", "rejected"].includes(currentDocument.status)
+        ) &&
+        req.body.status != currentDocument.status
+      )
+        docStatusChanged = true;
 
-        docStatusChanged = true
-
-      currentDocument.status = req.body.status
+      currentDocument.status = req.body.status;
     }
 
     if (req.body.subject) {
-      const subject = await Subject.findOne({ _id: req.body.subject })
+      const subject = await Subject.findOne({ _id: req.body.subject });
 
-      if (!subject)
-        return res.status(400).json({ error: 'wrong subject id' })
+      if (!subject) return res.status(400).json({ error: "wrong subject id" });
 
-      currentDocument.subject = req.body.subject
+      currentDocument.subject = req.body.subject;
     }
 
-    await currentDocument.save()
+    await currentDocument.save();
 
     if (docStatusChanged) {
-      let subject = await Subject.findOne({ _id: currentDocument.subject })
+      let subject = await Subject.findOne({ _id: currentDocument.subject });
 
-      if (req.body.status == 'approved') {
-
+      if (req.body.status == "approved") {
         switch (currentDocument.type) {
-          case 'DS':
-            subject.documentsCount.DS++
+          case "DS":
+            subject.documentsCount.DS++;
             break;
 
-          case 'EX':
-            subject.documentsCount.EX++
+          case "EX":
+            subject.documentsCount.EX++;
             break;
 
-          case 'C':
-            subject.documentsCount.C++
+          case "C":
+            subject.documentsCount.C++;
             break;
 
-          case 'TD':
-            subject.documentsCount.TD++
+          case "TD":
+            subject.documentsCount.TD++;
             break;
 
-          case 'TP':
-            subject.documentsCount.TP++
+          case "TP":
+            subject.documentsCount.TP++;
             break;
 
           default:
             break;
         }
       } else {
-
         switch (currentDocument.type) {
-          case 'DS':
-            subject.documentsCount.DS--
+          case "DS":
+            subject.documentsCount.DS--;
             break;
 
-          case 'EX':
-            subject.documentsCount.EX--
+          case "EX":
+            subject.documentsCount.EX--;
             break;
 
-          case 'C':
-            subject.documentsCount.C--
+          case "C":
+            subject.documentsCount.C--;
             break;
 
-          case 'TD':
-            subject.documentsCount.TD--
+          case "TD":
+            subject.documentsCount.TD--;
             break;
 
-          case 'TP':
-            subject.documentsCount.TP--
+          case "TP":
+            subject.documentsCount.TP--;
             break;
 
           default:
             break;
         }
-
       }
 
-      await subject.save()
+      await subject.save();
     }
 
     return res.status(204).end();
-
   } catch (error) {
     console.log(error);
     if (error.name === "CastError")
@@ -592,42 +615,40 @@ export async function update(req, res) {
 
 export async function remove(req, res) {
   try {
-
-    const currentDocument = await Document.findOne({ _id: req.params.id })
+    const currentDocument = await Document.findOne({ _id: req.params.id });
 
     await Document.delete({ _id: req.params.id }, req.user._id);
 
-    let subject = await Subject.findOne({ _id: currentDocument.subject })
+    let subject = await Subject.findOne({ _id: currentDocument.subject });
 
     switch (currentDocument.type) {
-      case 'DS':
-        subject.documentsCount.DS--
+      case "DS":
+        subject.documentsCount.DS--;
         break;
 
-      case 'EX':
-        subject.documentsCount.EX--
+      case "EX":
+        subject.documentsCount.EX--;
         break;
 
-      case 'C':
-        subject.documentsCount.C--
+      case "C":
+        subject.documentsCount.C--;
         break;
 
-      case 'TD':
-        subject.documentsCount.TD--
+      case "TD":
+        subject.documentsCount.TD--;
         break;
 
-      case 'TP':
-        subject.documentsCount.TP--
+      case "TP":
+        subject.documentsCount.TP--;
         break;
 
       default:
         break;
     }
 
-    await subject.save()
+    await subject.save();
 
     return res.status(204).end();
-
   } catch (error) {
     console.log(error);
     if (error.name === "CastError")
@@ -636,4 +657,3 @@ export async function remove(req, res) {
     return res.status(500).end();
   }
 }
-
