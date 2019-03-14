@@ -1,9 +1,8 @@
 import _ from "lodash";
-import User from "../user/user";
-import jwt from "jsonwebtoken";
-import { SECRET } from "../../config/env";
-import Major from "../major/major";
-import mailer from "../../services/mailer";
+import crypto from 'crypto'
+import { User, Major } from '../../config/models'
+
+const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 
 /**
  * @api {post} /auth/signup Create User
@@ -11,92 +10,62 @@ import mailer from "../../services/mailer";
  * @apiGroup Auth
  * @apiParam {String} email User email
  * @apiParam {String} password User password
- * @apiParam {String} type User type [admin, student, prof]
  * @apiParam {String} firstName User first name
  * @apiParam {String} lastName User last name
- * @apiParam {String} major User major
+ * @apiParam {String} major User major (id)
  * @apiParamExample {json} Input
  *    {
  *      "email": "test@gmail",
- *      "password": "test123",
- *      "type": "admin",
- *      "firstName": "admin",
- *      "lastName": "admin",
- *      "major": "Prepa-A1"
+ *      "password": "test1234",
+ *      "firstName": "flen",
+ *      "lastName": "ben felten",
+ *      "major": "5c8269c447baab426f6cbcfc"
  *    }
- * @apiSuccessExample {json} Success
- *    HTTP/1.1 201 Created
- * @apiErrorExample {json} User already exists
- *    HTTP/1.1 208 Already Reported
- * @apiErrorExample {json} Major specified doesn't exist
- *    HTTP/1.1 406 Not Acceptable
- * @apiErrorExample {json} User info cannot be empty
+ * @apiErrorExample Bad Request
  *    HTTP/1.1 400 Bad Request
- * @apiErrorExample {json} Register error
+ * @apiErrorExample Internal Server Error
  *    HTTP/1.1 500 Internal Server Error
  */
-export async function create(req, res) {
+export async function signUp(req, res) {
   try {
-
-    if (
-      !req.body.email ||
-      !req.body.type ||
-      !req.body.firstName ||
-      !req.body.lastName ||
-      !req.body.password ||
-      !req.body.major
-    ) {
-      return res.status(400).end();
-    }
-
-    let user = _.pick(
+    const user = _.pick(
       req.body,
       "email",
-      "type",
       "firstName",
       "lastName",
-      "password"
+      "password",
+      "major"
     );
 
-    await Major.findOne(
-      {
-        name: req.body.major
-      },
-      (err, foundMajor) => {
-        if (err) {
-          return res.status(500).end();
-        } else if (!foundMajor) {
-          return res.status(406).end();
-        } else {
-          user.major = foundMajor._id;
-        }
-      })
+    if (!user.email || !user.password || !user.major || !user.firstName || !user.lastName)
+      return res.status(400).json({ error: 'missing body params' })
 
-    await User.findOne(
-      {
-        email: user.email
-      },
-      (err, user) => {
-        if (err) {
-          return res.status(500).end({
-            error: err
-          });
-        } else if (user) {
-          return res.status(208).end();
-        }
-      })
+    if (!emailRegex.test(user.email))
+      return res.status(400).json({ error: 'Wrong email form' })
 
-    const userCreated = await User.create(user);
+    const existingUser = await User.findOne({ email: user.email })
 
-    const token = jwt.sign(userCreated.toJSON(), SECRET, {
-      expiresIn: 604800
-    });
+    if (existingUser)
+      return res.status(400).json({ error: 'email already exist' })
 
-    return res.status(201).json({ token: token });
+    if (user.password.length < 8)
+      return res.status(400).json({ error: 'Password should contain eight characters or more' })
 
-  } catch (err) {
-    res.status(500).end();
-    console.log(err);
+    const major = await Major.findOne({ _id: user.major })
+
+    if (!major)
+      return res.status(400).json({ error: 'wrong major id' })
+
+    await User.create(user);
+
+    return res.status(201).end();
+
+  } catch (error) {
+    if (error.name == 'CastError')
+      return res.status(400).json({ error: error.message })
+    console.log(error)
+
+    return res.status(500).end()
   }
 }
 
@@ -109,71 +78,51 @@ export async function create(req, res) {
  * @apiParamExample {json} Input
  *    {
  *      "email": "test@gmail.com",
- *      "password": "test123"
+ *      "password": "test1234"
  *    }
- * @apiSuccess {String} token Signin token
- * @apiSuccess {Object} user User information
  * @apiSuccessExample {json} Success
  *    HTTP/1.1 200 OK
- *    {
- *      "user": {
- *          "firstName": "admin",
- *          "lastName": "admin",
- *          "email": "test@gmail.com",
- *          "type": "admin"
- *      },
- *      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaXJzdE5hbWUiOiJhZG1pbiIsImxhc3ROYW1lIjoiYWRtaW4iLCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwidHlwZSI6InN0dWRlbnQiLCJpYXQiOjE1NDgyNTA3OTUsImV4cCI6MTU0ODg1NTU5NX0.kHn_wwhlgNyR7-CI0S57GDElALmJ9YWxnkRUZ1pga0s"
- *    }
- * @apiErrorExample {json} Register error
- *    HTTP/1.1 500 Internal Server Error
- * @apiErrorExample {json} User specified doesn't exist
+      {
+          "firstName": "Wael",
+          "lastName": "Ben Taleb",
+          "major": "5c8265367e19d73dba8355a6",
+          "majorName": "FIA2-GL",
+          "token": "0fa1b8121408dd0266b61778650723338852a3b8de14f1005169b8637aef7707"
+      }
+ * @apiErrorExample Not Authorized
+ *    HTTP/1.1 401 Not Authorized
+ * @apiErrorExample Bad Request
  *    HTTP/1.1 400 Bad Request
+ * @apiErrorExample Internal Server Error
+ *    HTTP/1.1 500 Internal Server Error
  */
 
 export async function signIn(req, res) {
   try {
-    await User.findOne(
-      {
-        email: req.body.email
-      },
-      (err, user) => {
-        if (err) {
-          return res.status(500).end(err);
-        }
-        if (!user) {
-          return res.status(400).end();
-        }
 
-        user.comparePassword(req.body.password, (err, equal) => {
-          if (equal && !err) {
-            const userData = _.pick(
-              user,
-              "_id",
-              "firstName",
-              "lastName",
-              "email",
-              "type",
-              "major",
-              "avatar"
-            );
-            const token = jwt.sign(userData, SECRET, {
-              expiresIn: 604800
-            });
+    if (!(req.body.email && req.body.password))
+      return res.status(400).json({ error: 'missing body params' })
 
-            req.session.token = token;
-            req.session.userData = userData;
+    let user = await User.findOne({ email: req.body.email }).populate('major')
 
-            return res.json({
-              user: userData,
-              token: token
-            });
-          } else {
-            console.log(equal, err);
-            return res.status(401).end();
-          }
-        });
-      }
-    );
+    if (!user)
+      return res.status(400).json({ error: 'Wrong email address' })
+
+    if (!user.comparePassword(req.body.password))
+      return res.status(401).json({ error: 'Wrong password' })
+
+    user.token = crypto.createHash('sha256').update(crypto.randomBytes(48).toString('hex')).digest('hex')
+    await user.save()
+
+    req.session.token = user.token
+
+    user = user.toJSON()
+    user = _.pick(user, 'firstName', 'lastName', 'major', 'token')
+    user.majorName = user.major.name
+    user.major = user.major._id
+
+    return res.json(user)
+
   } catch (err) {
     return res.status(500).end();
   }
@@ -183,18 +132,27 @@ export async function signIn(req, res) {
  * @api {post} /auth/signout Sign Out
  * @apiName Signout
  * @apiGroup Auth
- * @apiSuccessExample {json} Success
- *    HTTP/1.1 200 OK
- * @apiErrorExample {json} Register error
+ * @apiHeader Authorization Bearer Token
+ * @apiErrorExample Not Authorized
+ *    HTTP/1.1 401 Not Authorized
+ * @apiErrorExample Internal Server Error
  *    HTTP/1.1 500 Internal Server Error
  */
 
 export async function signOut(req, res) {
   try {
-    req.session.destroy();
-    return res.status(200).end();
-  } catch (err) {
-    return res.status(500).end();
+
+    req.user.token = null
+    delete req.session.token
+
+    await req.user.save()
+
+    return res.status(204).end()
+
+  } catch (error) {
+
+    console.log(error)
+    return res.status(500).end()
   }
 }
 
