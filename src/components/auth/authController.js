@@ -86,6 +86,7 @@ export async function signUp(req, res) {
           "firstName": "Wael",
           "lastName": "Ben Taleb",
           "major": "5c8265367e19d73dba8355a6",
+          "majorName": "FIA2-GL",
           "token": "0fa1b8121408dd0266b61778650723338852a3b8de14f1005169b8637aef7707"
       }
  * @apiErrorExample Not Authorized

@@ -36,7 +36,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success",
-          "content": "HTTP/1.1 200 OK\n   {\n       \"firstName\": \"Wael\",\n       \"lastName\": \"Ben Taleb\",\n       \"major\": \"5c8265367e19d73dba8355a6\",\n       \"token\": \"0fa1b8121408dd0266b61778650723338852a3b8de14f1005169b8637aef7707\"\n   }",
+          "content": "HTTP/1.1 200 OK\n   {\n       \"firstName\": \"Wael\",\n       \"lastName\": \"Ben Taleb\",\n       \"major\": \"5c8265367e19d73dba8355a6\",\n       \"majorName\": \"FIA2-GL\",\n       \"token\": \"0fa1b8121408dd0266b61778650723338852a3b8de14f1005169b8637aef7707\"\n   }",
           "type": "json"
         }
       ]
