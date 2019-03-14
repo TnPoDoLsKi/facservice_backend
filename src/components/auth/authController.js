@@ -61,9 +61,9 @@ export async function signUp(req, res) {
     return res.status(201).end();
 
   } catch (error) {
-    console.log(error)
     if (error.name == 'CastError')
       return res.status(400).json({ error: error.message })
+    console.log(error)
 
     return res.status(500).end()
   }

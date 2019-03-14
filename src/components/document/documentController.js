@@ -88,9 +88,9 @@ export async function getOne(req, res) {
     return res.json(document);
 
   } catch (error) {
-    console.log(error)
     if (error.name == 'CastError')
       return res.status(400).json({ error: error.message })
+    console.log(error)
 
     return res.status(500).end();
   }
@@ -178,9 +178,9 @@ export async function getDocBySubjectByType(req, res) {
     return res.json(documents);
 
   } catch (error) {
-    console.log(error)
     if (error.name == 'CastError')
       return res.status(400).json({ error: error.message })
+    console.log(error)
 
     return res.status(500).end();
   }
@@ -205,9 +205,9 @@ export async function getDocBySubject(req, res) {
     return res.json(documents);
 
   } catch (error) {
-    console.log(error)
     if (error.name == 'CastError')
       return res.status(400).json({ error: error.message })
+    console.log(error)
 
     return res.status(500).end();
   }
@@ -224,9 +224,9 @@ export async function getDocByUser(req, res) {
     return res.status(200).json(documents)
 
   } catch (error) {
-    console.log(error)
     if (error.name == 'CastError')
       return res.status(400).json({ error: error.message })
+    console.log(error)
 
     return res.status(500).end();
   }
@@ -452,9 +452,9 @@ export async function create(req, res) {
     return res.json(document);
 
   } catch (error) {
-    console.log(error)
     if (error.name == 'CastError')
       return res.status(400).json({ error: error.message })
+    console.log(error)
 
     return res.status(500).end();
   }

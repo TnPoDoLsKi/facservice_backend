@@ -63,9 +63,9 @@ export async function getOne(req, res) {
 
     return res.json(formation);
   } catch (error) {
-    console.log(error);
     if (error.name == 'CastError')
       return res.status(400).json({ error: error.message })
+    console.log(error);
 
     return res.status(500).end();
   }
@@ -93,9 +93,9 @@ export async function update(req, res) {
 
     return res.status(200).end();
   } catch (error) {
-    console.log(error);
     if (error.name == 'CastError')
       return res.status(400).json({ error: error.message })
+    console.log(error);
 
     return res.status(500).end();
   }

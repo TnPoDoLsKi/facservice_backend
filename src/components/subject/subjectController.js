@@ -33,9 +33,9 @@ export async function create(req, res) {
     return res.json(subject);
 
   } catch (error) {
-    console.log(error);
     if (error.name == 'CastError')
       return res.status(400).json({ error: error.message })
+    console.log(error);
 
     return res.status(500).end();
   }
@@ -59,9 +59,9 @@ export async function getOne(req, res) {
     return res.json(subject);
 
   } catch (error) {
-    console.log(error);
     if (error.name == 'CastError')
       return res.status(400).json({ error: error.message })
+    console.log(error);
 
     return res.status(500).end();
   }
@@ -127,9 +127,80 @@ export async function getByMajor(req, res) {
     return res.json(subjects);
 
   } catch (error) {
-    console.log(error);
     if (error.name == 'CastError')
       return res.status(400).json({ error: error.message })
+    console.log(error);
+
+    return res.status(500).end();
+  }
+}
+
+/**
+ * @api {put} /subjects/GetByMajors/ Get subjects by majors
+ * @apiGroup Subjects
+ * @apiParamExample {json} Input
+ *    {
+ *      "majors": ["5c41b2d82383c111b4ffad1a", "5c41b2d82383c111b4ffad1c"],
+ *    }
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 OK
+[
+    {
+        "documentsCount": {
+            "DS": 3,
+            "EX": 2,
+            "C": 0,
+            "TD": 2,
+            "TP": 0
+        },
+        "semestre": 2,
+        "deleted": false,
+        "_id": "5c8269c447baab426f6cbcfc",
+        "name": "physique",
+        "createdAt": "2019-03-08T13:10:28.761Z",
+        "updatedAt": "2019-03-12T22:56:21.620Z",
+        "__v": 1,
+        "description": "Subject description"
+    },
+    {
+        "documentsCount": {
+            "DS": 0,
+            "EX": 9,
+            "C": 0,
+            "TD": 2,
+            "TP": 2
+        },
+        "semestre": 1,
+        "deleted": false,
+        "_id": "5c826a05a3bddb42a13118e7",
+        "name": "physique",
+        "description": "Subject description",
+        "createdAt": "2019-03-08T13:11:33.708Z",
+        "updatedAt": "2019-03-08T13:11:33.708Z",
+        "__v": 0
+    }
+]
+ * @apiErrorExample Bad Request
+ *    HTTP/1.1 400 Bad Request
+ * @apiErrorExample Internal Server Error
+ *    HTTP/1.1 500 Internal Server Error
+ */
+
+export async function getByMajors(req, res) {
+  try {
+
+    let subjects = await Subject.find({
+      majors: {
+        $all: req.body.majors
+      }
+    }).select('-majors')
+
+    return res.json(subjects);
+
+  } catch (error) {
+    if (error.name == 'CastError')
+      return res.status(400).json({ error: error.message })
+    console.log(error);
 
     return res.status(500).end();
   }
@@ -177,9 +248,9 @@ export async function update(req, res) {
     return res.status(200).end();
 
   } catch (error) {
-    console.log(error);
     if (error.name == 'CastError')
       return res.status(400).json({ error: error.message })
+    console.log(error);
 
     return res.status(500).end();
   }
@@ -192,9 +263,9 @@ export async function remove(req, res) {
     return res.status(200).end();
 
   } catch (error) {
-    console.log(error);
     if (error.name == 'CastError')
       return res.status(400).json({ error: error.message })
+    console.log(error);
 
     return res.status(500).end();
   }

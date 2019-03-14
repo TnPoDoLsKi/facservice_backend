@@ -753,6 +753,48 @@ define({ "api": [
     "name": "GetSubjectsBymajorMajor"
   },
   {
+    "type": "put",
+    "url": "/subjects/GetByMajors/",
+    "title": "Get subjects by majors",
+    "group": "Subjects",
+    "parameter": {
+      "examples": [
+        {
+          "title": "Input",
+          "content": "{\n  \"majors\": [\"5c41b2d82383c111b4ffad1a\", \"5c41b2d82383c111b4ffad1c\"],\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "   HTTP/1.1 200 OK\n[\n    {\n        \"documentsCount\": {\n            \"DS\": 3,\n            \"EX\": 2,\n            \"C\": 0,\n            \"TD\": 2,\n            \"TP\": 0\n        },\n        \"semestre\": 2,\n        \"deleted\": false,\n        \"_id\": \"5c8269c447baab426f6cbcfc\",\n        \"name\": \"physique\",\n        \"createdAt\": \"2019-03-08T13:10:28.761Z\",\n        \"updatedAt\": \"2019-03-12T22:56:21.620Z\",\n        \"__v\": 1,\n        \"description\": \"Subject description\"\n    },\n    {\n        \"documentsCount\": {\n            \"DS\": 0,\n            \"EX\": 9,\n            \"C\": 0,\n            \"TD\": 2,\n            \"TP\": 2\n        },\n        \"semestre\": 1,\n        \"deleted\": false,\n        \"_id\": \"5c826a05a3bddb42a13118e7\",\n        \"name\": \"physique\",\n        \"description\": \"Subject description\",\n        \"createdAt\": \"2019-03-08T13:11:33.708Z\",\n        \"updatedAt\": \"2019-03-08T13:11:33.708Z\",\n        \"__v\": 0\n    }\n]",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Bad Request",
+          "content": "HTTP/1.1 400 Bad Request",
+          "type": "json"
+        },
+        {
+          "title": "Internal Server Error",
+          "content": "HTTP/1.1 500 Internal Server Error",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "src/components/subject/subjectController.js",
+    "groupTitle": "Subjects",
+    "name": "PutSubjectsGetbymajors"
+  },
+  {
     "type": "get",
     "url": "/user",
     "title": "Get current user",
