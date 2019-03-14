@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { User, Major } from "../../config/models";
+import { User } from "../../config/models";
 
 
 export async function getByType(req, res) {
@@ -140,7 +140,6 @@ export async function update(req, res) {
     await req.user.save()
 
     return res.status(200).end();
-
   } catch (error) {
     if (error.name == 'CastError')
       return res.status(400).json({ error: error.message })

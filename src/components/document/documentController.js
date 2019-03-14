@@ -93,6 +93,7 @@ export async function getOne(req, res) {
     console.log(error);
     if (error.name == "CastError")
       return res.status(400).json({ error: error.message });
+
     return res.status(500).end();
   }
 }
@@ -361,7 +362,8 @@ export async function search(req, res) {
       return result.item;
     });
 
-    return res.json(documentsResult
+    return res.json(documentsResult);
+
   } catch (err) {
     console.log(err);
     if (error.name == "CastError")

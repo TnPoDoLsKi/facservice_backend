@@ -155,3 +155,29 @@ export async function signOut(req, res) {
     return res.status(500).end()
   }
 }
+
+export function testMailer(req, res) {
+  const error = mailer("test", "hello friend");
+  if (error) {
+    res.status(400).end();
+  } else {
+    res.status(200).end();
+  }
+}
+
+export async function activeAccount(req, res) {
+  if (req.params.token) {
+    jwt.verify(req.params.token, SECRET, (err, user) => {
+      if (err) {
+        res.status(400).end();
+      } else {
+        User.update({ _id: user.id }, { $set: { activated: true } }, error => {
+          if (error) {
+            return res.status(500).end();
+          }
+          return res.status(200).end();
+        });
+      }
+    });
+  }
+}
