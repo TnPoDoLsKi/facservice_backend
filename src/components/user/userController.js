@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { User } from "../../config/models";
+import { User, Major } from "../../config/models";
 
 export async function getByType(req, res) {
   try {
