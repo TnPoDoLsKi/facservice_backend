@@ -9,13 +9,15 @@ const correctionSchema = new mongoose.Schema(
     filePath: {
       type: String
     },
-    filesStaging: [{
-      type: String
-    }],
+    filesStaging: [
+      {
+        type: String
+      }
+    ],
     status: {
       type: String,
-      enum: ['pending', 'approved', 'rejected'],
-      default: 'pending'
+      enum: ["pending", "approved", "rejected"],
+      default: "pending"
     },
     verifiedByProf: {
       type: Boolean,

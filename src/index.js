@@ -22,7 +22,7 @@ app.use(
     saveUninitialized: false,
     cookie: {
       secure: false
-    },
+    }
     // store: new mongoStore({ mongooseConnection: mongooseConnection })
   })
 );

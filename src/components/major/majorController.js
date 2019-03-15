@@ -1,7 +1,6 @@
 import _ from "lodash";
 import { Major, Level } from "../../config/models";
 
-
 export async function create(req, res) {
   try {
     if (!req.body.name)
@@ -24,11 +23,10 @@ export async function create(req, res) {
     const major = await Major.create(req.body);
 
     return res.json(major);
-
   } catch (error) {
+    if (error.name == "CastError")
+      return res.status(400).json({ error: error.message });
     console.log(error);
-    if (error.name == 'CastError')
-      return res.status(400).json({ error: error.message })
 
     return res.status(500).end();
   }
@@ -65,7 +63,7 @@ export async function create(req, res) {
 
 export async function getAll(req, res) {
   try {
-    const majors = await Major.find()
+    const majors = await Major.find();
 
     return res.json(majors);
   } catch (error) {
@@ -113,13 +111,13 @@ export async function getByLevel(req, res) {
         error: "wrong level id !"
       });
 
-    const majors = await Major.find({ level: req.params.level })
+    const majors = await Major.find({ level: req.params.level });
 
     return res.json(majors);
   } catch (error) {
+    if (error.name == "CastError")
+      return res.status(400).json({ error: error.message });
     console.log(error);
-    if (error.name == 'CastError')
-      return res.status(400).json({ error: error.message })
 
     return res.status(500).end();
   }
@@ -127,15 +125,13 @@ export async function getByLevel(req, res) {
 
 export async function getOne(req, res) {
   try {
-
-    const major = await Major.findById({ _id: req.params.id })
+    const major = await Major.findById({ _id: req.params.id });
 
     return res.json(major);
-
   } catch (error) {
+    if (error.name == "CastError")
+      return res.status(400).json({ error: error.message });
     console.log(error);
-    if (error.name == 'CastError')
-      return res.status(400).json({ error: error.message })
 
     return res.status(500).end();
   }
@@ -143,11 +139,9 @@ export async function getOne(req, res) {
 
 export async function getOneByName(req, res) {
   try {
-
-    const major = await Major.findOne({ name: req.params.name })
+    const major = await Major.findOne({ name: req.params.name });
 
     return res.json(major);
-
   } catch (error) {
     console.log(error);
     return res.status(500).end();
@@ -156,7 +150,6 @@ export async function getOneByName(req, res) {
 
 export async function update(req, res) {
   try {
-
     let major = await Major.findOne({ _id: req.params.id });
 
     if (!major)
@@ -164,11 +157,9 @@ export async function update(req, res) {
         error: "Major not found "
       });
 
-    if (req.body.name)
-      major.name = req.body.name;
+    if (req.body.name) major.name = req.body.name;
 
-    if (req.body.description)
-      major.description = req.body.description;
+    if (req.body.description) major.description = req.body.description;
 
     if (req.body.level) {
       const level = await Level.findOne({ _id: req.body.level });
@@ -183,11 +174,10 @@ export async function update(req, res) {
 
     await major.save();
     return res.status(200).end();
-
   } catch (error) {
+    if (error.name == "CastError")
+      return res.status(400).json({ error: error.message });
     console.log(error);
-    if (error.name == 'CastError')
-      return res.status(400).json({ error: error.message })
 
     return res.status(500).end();
   }
@@ -195,15 +185,13 @@ export async function update(req, res) {
 
 export async function remove(req, res) {
   try {
-
     await Major.delete({ _id: req.params.id }, req.user._id);
 
     return res.status(200).end();
-
   } catch (error) {
+    if (error.name == "CastError")
+      return res.status(400).json({ error: error.message });
     console.log(error);
-    if (error.name == 'CastError')
-      return res.status(400).json({ error: error.message })
 
     return res.status(500).end();
   }

@@ -44,15 +44,15 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-userSchema.virtual("password").set(function (password) {
+userSchema.virtual("password").set(function(password) {
   this.hashedPassword = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
 });
 
 userSchema.methods = {
   comparePassword(candidatePassword) {
-    return bcrypt.compareSync(candidatePassword, this.hashedPassword)
+    return bcrypt.compareSync(candidatePassword, this.hashedPassword);
   }
-}
+};
 
 userSchema.plugin(mongooseDelete, {
   overrideMethods: "all",
