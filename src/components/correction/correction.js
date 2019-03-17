@@ -34,6 +34,9 @@ const correctionSchema = new mongoose.Schema(
     score: {
       type: Number,
       default: 0
+    },
+    description: {
+      type: String
     }
   },
   {
