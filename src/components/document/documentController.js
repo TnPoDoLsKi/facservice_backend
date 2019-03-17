@@ -30,7 +30,7 @@ export async function getAllByStatus(req, res) {
     }).populate({
       path: "user",
       select: "firstName lastName avatar -_id"
-    }).select("-filesStaging")
+    })
 
     return res.json(documents);
 
@@ -512,6 +512,10 @@ export async function update(req, res) {
         return res.status(400).json({ error: 'wrong subject id' })
 
       currentDocument.subject = req.body.subject
+    }
+
+    if(req.body.filePath) {
+      currentDocument.filePath = req.body.filePath
     }
 
     await currentDocument.save()
