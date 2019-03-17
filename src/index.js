@@ -22,7 +22,8 @@ let sess = {
   saveUninitialized: true,
   cookie: {},
   store: new mongoStore({
-    mongooseConnection: mongoose.connection
+    mongooseConnection: mongoose.connection,
+    interval: 1200000
   })
 };
 
