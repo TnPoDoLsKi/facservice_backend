@@ -63,9 +63,9 @@ export async function getOne(req, res) {
 
     return res.json(formation);
   } catch (error) {
+    if (error.name == "CastError")
+      return res.status(400).json({ error: error.message });
     console.log(error);
-    if (error.name == 'CastError')
-      return res.status(400).json({ error: error.message })
 
     return res.status(500).end();
   }
@@ -73,7 +73,6 @@ export async function getOne(req, res) {
 
 export async function update(req, res) {
   try {
-
     let formation = await Formation.findOne({
       _id: req.params.id
     });
@@ -83,19 +82,17 @@ export async function update(req, res) {
         error: "formation not found !"
       });
 
-    if (req.body.description)
-      formation.description = req.body.description;
+    if (req.body.description) formation.description = req.body.description;
 
-    if (req.body.name)
-      formation.name = req.body.name;
+    if (req.body.name) formation.name = req.body.name;
 
     await formation.save();
 
     return res.status(200).end();
   } catch (error) {
+    if (error.name == "CastError")
+      return res.status(400).json({ error: error.message });
     console.log(error);
-    if (error.name == 'CastError')
-      return res.status(400).json({ error: error.message })
 
     return res.status(500).end();
   }
@@ -106,7 +103,6 @@ export async function remove(req, res) {
     await Formation.delete({ _id: req.params.id }, req.user._id);
 
     return res.status(200).end();
-    
   } catch (error) {
     console.log(error);
     return res.status(500).end();

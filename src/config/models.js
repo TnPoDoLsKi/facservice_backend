@@ -6,12 +6,4 @@ import Major from "../components/major/major";
 import Formation from "../components/formation/formation";
 import Level from "../components/level/level";
 
-export {
-  User,
-  Document,
-  Correction,
-  Subject,
-  Major,
-  Formation,
-  Level
-};
+export { User, Document, Correction, Subject, Major, Formation, Level };

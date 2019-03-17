@@ -14,10 +14,12 @@ const subjectSchema = new mongoose.Schema(
       enum: [1, 2],
       default: 1
     },
-    majors: [{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Major"
-    }],
+    majors: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Major"
+      }
+    ],
     documentsCount: {
       DS: { type: Number, default: 0 },
       EX: { type: Number, default: 0 },

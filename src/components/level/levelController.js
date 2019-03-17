@@ -1,7 +1,6 @@
 import _ from "lodash";
 import { Level, Formation } from "../../config/models";
 
-
 export async function create(req, res) {
   try {
     if (!req.body.name)
@@ -24,11 +23,10 @@ export async function create(req, res) {
     const level = await Level.create(req.body);
 
     return res.json(level);
-
   } catch (error) {
+    if (error.name == "CastError")
+      return res.status(400).json({ error: error.message });
     console.log(error);
-    if (error.name == 'CastError')
-      return res.status(400).json({ error: error.message })
 
     return res.status(500).end();
   }
@@ -79,11 +77,10 @@ export async function getAll(req, res) {
 
 export async function getByFormation(req, res) {
   try {
-
     const formation = await Formation.findOne({ _id: req.params.formation });
 
     if (!formation)
-      return res.status(400).json({ error: "wrong formation id " })
+      return res.status(400).json({ error: "wrong formation id " });
 
     const levels = await Level.find({ formation: req.params.formation });
 
@@ -96,36 +93,30 @@ export async function getByFormation(req, res) {
 
 export async function getOne(req, res) {
   try {
-
     const level = await Level.findById({
       _id: req.params.id
     });
 
     return res.json(level);
-
   } catch (error) {
-
+    if (error.name == "CastError")
+      return res.status(400).json({ error: error.message });
     console.log(error);
-    if (error.name == 'CastError')
-      return res.status(400).json({ error: error.message })
     return res.status(500).end();
   }
 }
 
 export async function update(req, res) {
   try {
-
     let level = await Level.findOne({ _id: req.params.id });
     if (!level)
       return res.status(401).json({
         error: "level not found !"
       });
 
-    if (req.body.name)
-      level.name = req.body.name;
+    if (req.body.name) level.name = req.body.name;
 
-    if (req.body.description)
-      level.description = req.body.description;
+    if (req.body.description) level.description = req.body.description;
 
     if (req.body.formation) {
       const formation = await Formation.findOne({ _id: req.body.formation });
@@ -142,10 +133,9 @@ export async function update(req, res) {
 
     return res.status(200).end();
   } catch (error) {
-
+    if (error.name == "CastError")
+      return res.status(400).json({ error: error.message });
     console.log(error);
-    if (error.name == 'CastError')
-      return res.status(400).json({ error: error.message })
 
     return res.status(500).end();
   }
@@ -153,15 +143,13 @@ export async function update(req, res) {
 
 export async function remove(req, res) {
   try {
-
     await Level.delete({ _id: req.params.id }, req.user._id);
 
     return res.status(200).end();
-
   } catch (error) {
+    if (error.name == "CastError")
+      return res.status(400).json({ error: error.message });
     console.log(error);
-    if (error.name == 'CastError')
-      return res.status(400).json({ error: error.message })
 
     return res.status(500).end();
   }
