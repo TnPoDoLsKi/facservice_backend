@@ -3,18 +3,10 @@ import fs from 'fs'
 
 export async function convert(req, res) {
     try {
-        var fonts = {
-            Roboto: {
-                normal: 'public/fonts/Roboto-Regular.ttf',
-                bold: 'public/fonts/Roboto-Medium.ttf',
-                italics: 'public/fonts/Roboto-Italic.ttf',
-                bolditalics: 'public/fonts/Roboto-MediumItalic.ttf'
-            }
-        };
         var imagesPaths = req.body.filesStaging;
         var content = [];
 
-        var printer = new PdfPrinter(fonts);
+        var printer = new PdfPrinter();
 
         imagesPaths.forEach(function (imagePath, index) {
             content[index] = {
