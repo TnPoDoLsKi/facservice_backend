@@ -529,8 +529,8 @@ export async function update(req, res) {
       currentDocument.subject = req.body.subject;
     }
 
-    if(req.body.filePath) {
-      currentDocument.filePath = req.body.filePath
+    if(req.body.status == "approved" && req.body.filePath) {
+      currentDocument.filePath = req.body.filePath;
     }
 
     await currentDocument.save()

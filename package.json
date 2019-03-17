@@ -11,7 +11,7 @@
     "lint": "eslint --fix **/*.js",
     "docs": "apidoc -i src/ -o public/apidoc/",
     "build": "node ./node_modules/babel-cli/bin/babel.js src --out-dir build --copy-files",
-    "update": "git pull origin master; npm run build; pm2 restart archive; pm2 logs"
+    "update": "git pull origin master; npm install ;npm run build; pm2 restart archive; pm2 logs"
   },
   "apidoc": {
     "title": "Custom apiDoc browser title",
