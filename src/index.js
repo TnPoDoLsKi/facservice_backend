@@ -27,7 +27,7 @@ let sess = {
   })
 };
 
-if (NODE_ENV == "production") sess.cookie.secure = true;
+// if (NODE_ENV == "production") sess.cookie.secure = true;
 
 app.use(session(sess));
 
