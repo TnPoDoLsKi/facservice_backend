@@ -148,7 +148,7 @@ export async function create(req, res) {
     let document = await Document.findOne({ _id: correction.document });
     if (!document) return res.status(400).json({ error: "wrong document id" });
 
-    correction.title = "corrigé de " + document.title;
+    correction.title = "Corrigé de " + document.title;
     correction.status = "pending";
     correction.user = req.user._id;
 
