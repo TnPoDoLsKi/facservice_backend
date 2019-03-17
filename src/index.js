@@ -1,31 +1,34 @@
 import express from "express";
 import http from "http";
 import morgan from "morgan";
+import mongoose from "mongoose";
 import bodyParser from "body-parser";
 import routes from "./config/routes";
 import session from "express-session";
-// import connectMongo from 'connect-mongo'
-// import mongooseConnection from './config/database'
+import connectMongo from "connect-mongo";
+// import mongooseConnection from "./config/database";
+import "./config/database";
 import cors from "cors";
 import path from "path";
-import "./config/database";
 import { SECRET, PORT, NODE_ENV } from "./config/env";
 
 const app = express();
-// const mongoStore = connectMongo(session)
 const server = http.createServer(app);
 
-app.use(
-  session({
-    secret: SECRET,
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      secure: false
-    }
-    // store: new mongoStore({ mongooseConnection: mongooseConnection })
+const mongoStore = connectMongo(session);
+let sess = {
+  secret: SECRET,
+  resave: false,
+  saveUninitialized: true,
+  cookie: {},
+  store: new mongoStore({
+    mongooseConnection: mongoose.connection
   })
-);
+};
+
+if (NODE_ENV == "production") sess.cookie.secure = true;
+
+app.use(session(sess));
 
 app.use(
   bodyParser.json({
