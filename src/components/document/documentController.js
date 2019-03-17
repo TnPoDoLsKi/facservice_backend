@@ -31,7 +31,6 @@ export async function getAllByStatus(req, res) {
       path: "user",
       select: "firstName lastName avatar -_id"
     })
-
     return res.json(documents);
 
   } catch (error) {
