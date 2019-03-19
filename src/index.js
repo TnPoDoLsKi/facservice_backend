@@ -20,7 +20,7 @@ let sess = {
   secret: SECRET,
   resave: false,
   saveUninitialized: false,
-  cookie: {},
+  cookie: { domain: 'igc.tn' },
   store: new mongoStore({
     mongooseConnection: mongoose.connection
   })
