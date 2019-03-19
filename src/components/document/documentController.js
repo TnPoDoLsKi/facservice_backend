@@ -28,13 +28,10 @@ export async function getAllByStatus(req, res) {
 
     const documents = await Document.find({
       status: req.params.status
+    }).populate({
+      path: "user",
+      select: "firstName lastName avatar -_id"
     })
-      .populate({
-        path: "user",
-        select: "firstName lastName avatar -_id"
-      })
-      .select(req.params.status == "pending" ? "" : "-filesStaging");
-
     return res.json(documents);
   } catch (error) {
     console.log(error);
@@ -532,7 +529,11 @@ export async function update(req, res) {
       currentDocument.subject = req.body.subject;
     }
 
-    await currentDocument.save();
+    if(req.body.status == "approved" && req.body.filePath) {
+      currentDocument.filePath = req.body.filePath;
+    }
+
+    await currentDocument.save()
 
     if (docStatusChanged) {
       let subject = await Subject.findOne({ _id: currentDocument.subject });

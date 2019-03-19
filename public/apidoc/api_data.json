@@ -239,7 +239,7 @@
       "examples": [
         {
           "title": "Input",
-          "content": "{\n  \"filesStaging\": [\"https://igc.tn/img/portfolio/HC1-Prev.jpg\", \"https://igc.tn/img/portfolio/A2-Prev.jpg\"],\n  \"document\": \"5c41b2d82383c111b4ffad1a\"\n}",
+          "content": "{\n  \"filesStaging\": [\"https://igc.tn/img/portfolio/HC1-Prev.jpg\", \"https://igc.tn/img/portfolio/A2-Prev.jpg\"],\n  \"document\": \"5c41b2d82383c111b4ffad1a\",\n  \"description\": \"Correction Correction Correction Correction\"\n}",
           "type": "json"
         }
       ]
@@ -466,7 +466,7 @@
       "examples": [
         {
           "title": "Success",
-          "content": "   HTTP/1.1 200 OK\n{\n    \"type\": \"DS\",  \n    \"status\": \"pending\",\n    \"NBDowloads\": 0,\n    \"session\": \"Rattrapage\",    \n    \"hasCorrection\": false,\n    \"_id\": \"5c88f050737cb969e1f1cbda\",\n    \"deleted\": false,\n    \"subject\": \"5c41b2d82383c111b4ffad1a\",\n    \"year\": 2017,\n    \"user\": \"5c8783b34a35cd28fa5bea3b\",\n    \"title\": \"DS physique 2015\",\n    \"description\": \"Good\",\n    \"createdAt\": \"2019-03-13T11:58:08.713Z\",\n    \"updatedAt\": \"2019-03-13T11:58:08.713Z\",\n    \"__v\": 0\n}",
+          "content": "   HTTP/1.1 200 OK\n{\n    \"type\": \"DS\",  \n    \"status\": \"pending\",\n    \"NBDowloads\": 0,\n    \"session\": \"Rattrapage\",\n    \"hasCorrection\": false,\n    \"_id\": \"5c88f050737cb969e1f1cbda\",\n    \"deleted\": false,\n    \"subject\": \"5c41b2d82383c111b4ffad1a\",\n    \"year\": 2017,\n    \"user\": \"5c8783b34a35cd28fa5bea3b\",\n    \"title\": \"DS physique 2015\",\n    \"description\": \"Good\",\n    \"createdAt\": \"2019-03-13T11:58:08.713Z\",\n    \"updatedAt\": \"2019-03-13T11:58:08.713Z\",\n    \"__v\": 0\n}",
           "type": "json"
         }
       ]

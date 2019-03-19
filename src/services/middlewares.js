@@ -4,6 +4,8 @@ export async function isLoggedIn(req, res, next) {
   try {
     let token = null;
 
+    console.log(req.session)
+
     if ("authorization" in req.headers) {
       const bearer = req.headers["authorization"];
       token = bearer.split(" ")[1];

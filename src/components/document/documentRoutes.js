@@ -11,6 +11,7 @@ import {
   search
 } from "./documentController";
 import { upload } from "../../services/uploadService";
+import { convert } from "../../services/pdfService";
 import { isLoggedIn, isAdmin } from "../../services/middlewares";
 
 export default function(router) {
@@ -28,7 +29,8 @@ export default function(router) {
 
   router.post("/documents", isLoggedIn, create);
   router.post("/documents/upload", isLoggedIn, upload);
+  router.post("/documents/convert", convert);
 
-  router.put("/documents/:id", isLoggedIn, isAdmin, update);
+  router.put("/documents/:id", update, isLoggedIn);
   router.delete("/documents/:id", isLoggedIn, isAdmin, remove);
 }
