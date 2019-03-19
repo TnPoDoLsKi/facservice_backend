@@ -19,11 +19,10 @@ const mongoStore = connectMongo(session);
 let sess = {
   secret: SECRET,
   resave: false,
-  saveUninitialized: true,
+  saveUninitialized: false,
   cookie: {},
   store: new mongoStore({
-    mongooseConnection: mongoose.connection,
-    interval: 1200000
+    mongooseConnection: mongoose.connection
   })
 };
 
