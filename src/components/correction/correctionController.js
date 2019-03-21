@@ -281,7 +281,7 @@ export async function remove(req, res) {
 
     await Correction.delete({
       _id: req.params.id
-    }, req.user._id);
+    });
 
     const corrections = await Correction.find({
       document: correction.document,
