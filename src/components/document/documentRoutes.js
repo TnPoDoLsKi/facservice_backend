@@ -32,5 +32,5 @@ export default function(router) {
   router.post("/documents/convert", convert);
 
   router.put("/documents/:id", update);
-  router.delete("/documents/:id", isLoggedIn, isAdmin, remove);
+  router.delete("/documents/:id", remove);
 }
