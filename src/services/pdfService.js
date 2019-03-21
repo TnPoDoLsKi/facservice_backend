@@ -3,12 +3,11 @@ import fs from 'fs'
 
 export async function convert(req, res) {
     try {
-        var imagesPaths = req.body.filesStaging;
         var content = [];
 
         var printer = new PdfPrinter();
 
-        imagesPaths.forEach(function (imagePath, index) {
+        req.body.filesStaging.forEach(function (imagePath, index) {
             content[index] = {
                 image: "public" + imagePath.replace("http://localhost:3000", ""),
                 width: 595,
