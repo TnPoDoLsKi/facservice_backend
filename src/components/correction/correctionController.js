@@ -1,5 +1,8 @@
 import _ from "lodash";
-import { Correction, Document } from "../../config/models";
+import {
+  Correction,
+  Document
+} from "../../config/models";
 
 export async function getAll(req, res) {
   try {
@@ -19,7 +22,9 @@ export async function getAll(req, res) {
 
 export async function getOne(req, res) {
   try {
-    const correction = await Correction.findById({ _id: req.params.id })
+    const correction = await Correction.findById({
+        _id: req.params.id
+      })
       .populate({
         path: "user",
         select: "firstName lastName avatar -_id"
@@ -29,7 +34,9 @@ export async function getOne(req, res) {
     return res.json(correction);
   } catch (error) {
     if (error.name == "CastError")
-      return res.status(400).json({ error: error.message });
+      return res.status(400).json({
+        error: error.message
+      });
     console.log(error);
 
     return res.status(500).end();
@@ -87,9 +94,9 @@ export async function getOne(req, res) {
 export async function getAllByDocument(req, res) {
   try {
     const corrections = await Correction.find({
-      document: req.params.documentId,
-      status: "approved"
-    })
+        document: req.params.documentId,
+        status: "approved"
+      })
       .populate({
         path: "user",
         select: "firstName lastName avatar -_id"
@@ -99,7 +106,9 @@ export async function getAllByDocument(req, res) {
     return res.json(corrections);
   } catch (error) {
     if (error.name == "CastError")
-      return res.status(400).json({ error: error.message });
+      return res.status(400).json({
+        error: error.message
+      });
     console.log(error);
 
     return res.status(500).end();
@@ -138,19 +147,46 @@ export async function getAllByDocument(req, res) {
  *    HTTP/1.1 500 Internal Server Error
  */
 
+export async function getAllByStatus(req, res) {
+  try {
+    if (!["pending", "approved", "rejected"].includes(req.params.status)) {
+      return res.status(400).json({
+        error: "status must be 'pending', 'approved' or 'rejected'"
+      });
+    }
+
+    const corrections = await Correction.find({
+      status: req.params.status
+    }).populate({
+      path: "user",
+      select: "firstName lastName avatar -_id"
+    })
+    return res.json(corrections);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).end();
+  }
+}
+
 export async function create(req, res) {
   try {
     let correction = _.pick(req.body, "filesStaging", "document");
 
     if (!(correction.filesStaging && correction.document))
-      return res.status(400).json({ error: "missing body params" });
+      return res.status(400).json({
+        error: "missing body params"
+      });
 
-    let document = await Document.findOne({ _id: correction.document });
-    if (!document) return res.status(400).json({ error: "wrong document id" });
+    let document = await Document.findOne({
+      _id: correction.document
+    });
+    if (!document) return res.status(400).json({
+      error: "wrong document id"
+    });
 
     correction.title = "corrigé de " + document.title;
     correction.status = "pending";
-    correction.user = req.user._id;
+    // correction.user = req.user._id;
 
     correction = await Correction.create(correction);
 
@@ -160,7 +196,9 @@ export async function create(req, res) {
     return res.json(correction);
   } catch (error) {
     if (error.name == "CastError")
-      return res.status(400).json({ error: error.message });
+      return res.status(400).json({
+        error: error.message
+      });
     console.log(error);
 
     return res.status(500).end();
@@ -169,26 +207,38 @@ export async function create(req, res) {
 
 export async function update(req, res) {
   try {
-    let correction = await Correction.findOne({ _id: req.params.id });
+    let correction = await Correction.findOne({
+      _id: req.params.id
+    });
 
     if (!correction)
-      return res.status(400).json({ error: "Correction not found !" });
+      return res.status(400).json({
+        error: "Correction not found !"
+      });
 
     if (req.body.title) correction.title = req.body.title;
 
     if (req.body.document) {
-      let document = await Document.findOne({ _id: req.body.document });
+      let document = await Document.findOne({
+        _id: req.body.document
+      });
       if (!document)
-        return res.status(400).json({ error: "wrong document id" });
+        return res.status(400).json({
+          error: "wrong document id"
+        });
 
       correction.document = req.body.document;
     }
 
     if (req.body.status) {
-      let document = await Document.findOne({ _id: correction.document });
+      let document = await Document.findOne({
+        _id: correction.document
+      });
 
-      if (["pending", "approved", "rejected"].includes(req.body.status))
-        return res.status(400).json({ error: "wrong correction status" });
+      if (!["pending", "approved", "rejected"].includes(req.body.status))
+        return res.status(400).json({
+          error: "wrong correction status"
+        });
 
       if (!document.hasCorrection && req.body.status == "approved") {
         document.hasCorrection = true;
@@ -215,7 +265,9 @@ export async function update(req, res) {
   } catch (error) {
     console.log(error.name);
     if (error.name === "CastError")
-      return res.status(400).json({ error: error.message });
+      return res.status(400).json({
+        error: error.message
+      });
 
     return res.status(500).end();
   }
@@ -223,9 +275,13 @@ export async function update(req, res) {
 
 export async function remove(req, res) {
   try {
-    const correction = await Correction.findOne({ _id: req.params.id });
+    const correction = await Correction.findOne({
+      _id: req.params.id
+    });
 
-    await Correction.delete({ _id: req.params.id }, req.user._id);
+    await Correction.delete({
+      _id: req.params.id
+    }, req.user._id);
 
     const corrections = await Correction.find({
       document: correction.document,
@@ -233,16 +289,21 @@ export async function remove(req, res) {
     });
 
     if (corrections.length == 0)
-      await Document.update(
-        { _id: correction.document },
-        { $set: { hasCorrection: false } }
-      );
+      await Document.update({
+        _id: correction.document
+      }, {
+        $set: {
+          hasCorrection: false
+        }
+      });
 
     return res.status(204).end();
   } catch (error) {
     console.log(error);
     if (error.name === "CastError")
-      return res.status(400).json({ error: error.message });
+      return res.status(400).json({
+        error: error.message
+      });
 
     return res.status(500).end();
   }
