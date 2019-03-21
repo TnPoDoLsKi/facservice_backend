@@ -21,5 +21,5 @@ export default function(router) {
   router.post("/corrections/convert", convert);
 
   router.put("/corrections/:id", update);
-  router.delete("/corrections/:id", isLoggedIn, isAdmin, remove);
+  router.delete("/corrections/:id", remove);
 }
