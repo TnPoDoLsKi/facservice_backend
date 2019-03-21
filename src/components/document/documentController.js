@@ -609,7 +609,7 @@ export async function remove(req, res) {
   try {
     const currentDocument = await Document.findOne({ _id: req.params.id });
 
-    await Document.delete({ _id: req.params.id }, req.user._id);
+    await Document.delete({ _id: req.params.id });
 
     let subject = await Subject.findOne({ _id: currentDocument.subject });
 
