@@ -8,7 +8,7 @@ import {
 import { isLoggedIn, isAdmin } from "../../services/middlewares";
 
 export default function(router) {
-  router.get("/user", isLoggedIn, getCurrent);
+  router.get("/user", getCurrent);
   router.get("/users", isLoggedIn, isAdmin, getAll);
   router.get("/users/:type", isLoggedIn, isAdmin, getByType);
 
