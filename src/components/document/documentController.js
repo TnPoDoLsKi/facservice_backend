@@ -451,7 +451,7 @@ export async function create(req, res) {
       });
 
     document.status = "pending";
-    document.user = req.user._id;
+    // document.user = req.user._id;
     document.title =
       document.type + " " + subjectObject.name + " " + document.year;
 
