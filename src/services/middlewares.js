@@ -4,12 +4,16 @@ export async function isLoggedIn(req, res, next) {
   try {
     let token = null;
 
+    // console.log(req.session)
+
     if ("authorization" in req.headers) {
       const bearer = req.headers["authorization"];
       token = bearer.split(" ")[1];
     } else if (req.session && req.session.token) {
       token = req.session.token;
-    } else {
+    }
+
+    if (!token) {
       return res.status(401).json({
         error: "Authorization token required !"
       });

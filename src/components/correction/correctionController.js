@@ -122,7 +122,8 @@ export async function getAllByDocument(req, res) {
  * @apiParamExample {json} Input
  *    {
  *      "filesStaging": ["https://igc.tn/img/portfolio/HC1-Prev.jpg", "https://igc.tn/img/portfolio/A2-Prev.jpg"],
- *      "document": "5c41b2d82383c111b4ffad1a"
+ *      "document": "5c41b2d82383c111b4ffad1a",
+ *      "description": "Correction Correction Correction Correction"
  *    }
  * @apiSuccessExample {json} Success
  *    HTTP/1.1 200 OK
@@ -184,7 +185,7 @@ export async function create(req, res) {
       error: "wrong document id"
     });
 
-    correction.title = "corrigé de " + document.title;
+    correction.title = "Corrigé de " + document.title;
     correction.status = "pending";
     // correction.user = req.user._id;
 
