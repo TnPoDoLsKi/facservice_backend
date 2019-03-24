@@ -37,6 +37,10 @@ const userSchema = new mongoose.Schema(
     suspended: {
       type: Boolean,
       default: false
+    },
+    activated: {
+      type: Boolean,
+      default: false
     }
   },
   {
