@@ -53,7 +53,11 @@ export async function upload(req, res) {
   const _fileHandler = (name, file) => {
     const host = req.protocol + "://" + req.headers.host;
     let url = "";
-    url = host + "/uploads/" + file.path.split("/").pop();
+    if (req.headers.host === "igc.tn:3005") {
+      url = host + "/uploads/" + file.path.split("/").pop();
+    } else {
+      url = host + "/uploads/" + file.path.split("\\").pop();
+    }
     fileUrls.push(url);
     return fileUrls;
   };

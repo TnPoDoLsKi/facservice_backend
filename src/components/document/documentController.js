@@ -416,7 +416,8 @@ export async function create(req, res) {
       "year",
       "session",
       "description",
-      "filesStaging"
+      "filesStaging",
+      "profName"
     );
 
     if (
@@ -451,9 +452,8 @@ export async function create(req, res) {
       });
 
     document.status = "pending";
-    // document.user = req.user._id;
-    document.title =
-      document.type + " " + subjectObject.name + " " + document.year;
+    document.user = req.user._id;
+    document.title = document.type + " " + subjectObject.name + " " + document.year;
 
     document = await Document.create(document);
 

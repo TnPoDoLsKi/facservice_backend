@@ -127,7 +127,7 @@ export async function signIn(req, res) {
     console.log(req.session.token)
 
     user = user.toJSON();
-    user = _.pick(user, "firstName", "lastName", "major", "token");
+    user = _.pick(user, "firstName", "lastName", "major", "token", "email");
     user.majorName = user.major.name;
     user.major = user.major._id;
 

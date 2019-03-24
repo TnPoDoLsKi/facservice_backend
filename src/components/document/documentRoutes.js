@@ -27,10 +27,10 @@ export default function(router) {
   router.get("/documents", getAll);
   router.get("/documents/:id", getOne);
 
-  router.post("/documents", create);
-  router.post("/documents/upload", upload);
+  router.post("/documents", isLoggedIn, create);
+  router.post("/documents/upload", isLoggedIn, upload);
   router.post("/documents/convert", convert);
 
-  router.put("/documents/:id", update);
-  router.delete("/documents/:id", remove);
+  router.put("/documents/:id", update, isLoggedIn);
+  router.delete("/documents/:id", isLoggedIn, isAdmin, remove);
 }
