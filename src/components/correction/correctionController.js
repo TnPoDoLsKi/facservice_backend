@@ -144,6 +144,7 @@ export async function getAllByDocument(req, res) {
  *    HTTP/1.1 401 Not Authorized
  * @apiErrorExample Bad Request
  *    HTTP/1.1 400 Bad Request
+ *    status must be 'pending', 'approved' or 'rejected'
  * @apiErrorExample Internal Server Error
  *    HTTP/1.1 500 Internal Server Error
  */

@@ -71,6 +71,9 @@ export async function getAll(req, res) {
         "__v": 0
     }
   ]
+ * @apiErrorExample Bad Request
+ *    HTTP/1.1 400 Bad Request
+ *    wrong formation id
  * @apiErrorExample Internal Server Error
  *    HTTP/1.1 500 Internal Server Error
  */
@@ -80,7 +83,7 @@ export async function getByFormation(req, res) {
     const formation = await Formation.findOne({ _id: req.params.formation });
 
     if (!formation)
-      return res.status(400).json({ error: "wrong formation id " });
+      return res.status(400).json({ error: "wrong formation id" });
 
     const levels = await Level.find({ formation: req.params.formation });
 

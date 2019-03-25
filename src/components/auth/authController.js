@@ -5,7 +5,7 @@ import { User, Major } from "../../config/models";
 const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 /**
- * @api {post} /auth/signup Create User
+ * @api {post} /auth/signup Signup
  * @apiName Signup
  * @apiGroup Auth
  * @apiParam {String} email User email
@@ -23,9 +23,12 @@ const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+")
  *    }
  * @apiErrorExample Bad Request
  *    HTTP/1.1 400 Bad Request
+ *    email already exist
+ *    wrong major id
  * @apiErrorExample Internal Server Error
  *    HTTP/1.1 500 Internal Server Error
  */
+
 export async function signUp(req, res) {
   try {
     const user = _.pick(
@@ -97,8 +100,10 @@ export async function signUp(req, res) {
       }
  * @apiErrorExample Not Authorized
  *    HTTP/1.1 401 Not Authorized
+ *    Wrong password
  * @apiErrorExample Bad Request
  *    HTTP/1.1 400 Bad Request
+ *    Wrong email address
  * @apiErrorExample Internal Server Error
  *    HTTP/1.1 500 Internal Server Error
  */

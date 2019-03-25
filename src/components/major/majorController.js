@@ -98,6 +98,7 @@ export async function getAll(req, res) {
 ]
  * @apiErrorExample {json} Name param cannot be empty
  *    HTTP/1.1 400 Bad Request
+ *    wrong level id
  * @apiErrorExample Internal Server Error
  *    HTTP/1.1 500 Internal Server Error
  */
@@ -108,7 +109,7 @@ export async function getByLevel(req, res) {
 
     if (!level)
       return res.status(400).json({
-        error: "wrong level id !"
+        error: "wrong level id"
       });
 
     const majors = await Major.find({ level: req.params.level });

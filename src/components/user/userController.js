@@ -83,6 +83,9 @@ export async function getCurrent(req, res) {
  *    HTTP/1.1 401 Not Authorized
  * @apiErrorExample Bad Request
  *    HTTP/1.1 400 Bad Request
+ *    email already exist
+ *    old password is required
+ *    Wrong old password
  * @apiErrorExample Internal Server Error
  *    HTTP/1.1 500 Internal Server Error
  */
