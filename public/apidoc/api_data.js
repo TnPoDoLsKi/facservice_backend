@@ -893,5 +893,79 @@ define({ "api": [
     "filename": "src/components/user/userController.js",
     "groupTitle": "Users",
     "name": "PutUsers"
+  },
+  {
+    "type": "get",
+    "url": "/version/:clientVersion",
+    "title": "Get version update",
+    "group": "Versions",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "id",
+            "optional": false,
+            "field": "clientVersion",
+            "description": "<p>Client Version</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "   HTTP/1.1 200 OK\n {\n    \"newUpdate\": true,\n    \"version\": {\n        \"forceUpdate\": true,\n        \"description\": \"fix security issues \\noptimize perfermance \\n\",\n        \"version\": \"0.1.2\",\n        \"title\": \"beta 2\"\n    }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Name param cannot be empty",
+          "content": "HTTP/1.1 400 Bad Request\nwrong client version",
+          "type": "json"
+        },
+        {
+          "title": "Internal Server Error",
+          "content": "HTTP/1.1 500 Internal Server Error",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "src/components/version/versionController.js",
+    "groupTitle": "Versions",
+    "name": "GetVersionClientversion"
+  },
+  {
+    "type": "get",
+    "url": "/versions",
+    "title": "Get all versions",
+    "group": "Versions",
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": " [\n    {\n        \"forceUpdate\": false,\n        \"deleted\": false,\n        \"_id\": \"5c9968198e2b6e302844a578\",\n        \"version\": \"0.1.2\",\n        \"title\": \"beta 2\",\n        \"description\": \"optimize perfermance \"\n    },\n    {\n        \"forceUpdate\": true,\n        \"deleted\": false,\n        \"_id\": \"5c9968058e2b6e302844a577\",\n        \"version\": \"0.1.1\",\n        \"title\": \"beta\",\n        \"description\": \"fix security issues \"\n    },\n    {\n        \"forceUpdate\": false,\n        \"deleted\": false,\n        \"_id\": \"5c9967c68e2b6e302844a576\",\n        \"version\": \"0.1\",\n        \"title\": \"alpha\",\n        \"description\": \"init version\"\n    }\n]",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Internal Server Error",
+          "content": "HTTP/1.1 500 Internal Server Error",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "src/components/version/versionController.js",
+    "groupTitle": "Versions",
+    "name": "GetVersions"
   }
 ] });
