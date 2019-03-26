@@ -45,12 +45,12 @@ define({ "api": [
       "examples": [
         {
           "title": "Not Authorized",
-          "content": "HTTP/1.1 401 Not Authorized",
+          "content": "HTTP/1.1 401 Not Authorized\nWrong password",
           "type": "json"
         },
         {
           "title": "Bad Request",
-          "content": "HTTP/1.1 400 Bad Request",
+          "content": "HTTP/1.1 400 Bad Request\nWrong email address",
           "type": "json"
         },
         {
@@ -103,7 +103,7 @@ define({ "api": [
   {
     "type": "post",
     "url": "/auth/signup",
-    "title": "Create User",
+    "title": "Signup",
     "name": "Signup",
     "group": "Auth",
     "parameter": {
@@ -158,7 +158,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Bad Request",
-          "content": "HTTP/1.1 400 Bad Request",
+          "content": "HTTP/1.1 400 Bad Request\nemail already exist\nwrong major id",
           "type": "json"
         },
         {
@@ -262,7 +262,7 @@ define({ "api": [
         },
         {
           "title": "Bad Request",
-          "content": "HTTP/1.1 400 Bad Request",
+          "content": "HTTP/1.1 400 Bad Request\nstatus must be 'pending', 'approved' or 'rejected'",
           "type": "json"
         },
         {
@@ -315,7 +315,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Bad Request",
-          "content": "HTTP/1.1 400 Bad Request",
+          "content": "HTTP/1.1 400 Bad Request\ndocument type must be in 'DS', 'EX', 'C', 'TD', 'TP'\nwrong subject id",
           "type": "json"
         },
         {
@@ -480,7 +480,7 @@ define({ "api": [
         },
         {
           "title": "Bad Request",
-          "content": "HTTP/1.1 400 Bad Request",
+          "content": "HTTP/1.1 400 Bad Request\ndocument type must be in 'DS', 'EX', 'C', 'TD', 'TP'\nwrong subject id\ndocument session must be in 'Principale', 'Rattrapage'",
           "type": "json"
         },
         {
@@ -616,6 +616,11 @@ define({ "api": [
     "error": {
       "examples": [
         {
+          "title": "Bad Request",
+          "content": "HTTP/1.1 400 Bad Request\nwrong formation id",
+          "type": "json"
+        },
+        {
           "title": "Internal Server Error",
           "content": "HTTP/1.1 500 Internal Server Error",
           "type": "json"
@@ -691,7 +696,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Name param cannot be empty",
-          "content": "HTTP/1.1 400 Bad Request",
+          "content": "HTTP/1.1 400 Bad Request\nwrong level id",
           "type": "json"
         },
         {
@@ -874,7 +879,7 @@ define({ "api": [
         },
         {
           "title": "Bad Request",
-          "content": "HTTP/1.1 400 Bad Request",
+          "content": "HTTP/1.1 400 Bad Request\nemail already exist\nold password is required\nWrong old password",
           "type": "json"
         },
         {
@@ -888,5 +893,79 @@ define({ "api": [
     "filename": "src/components/user/userController.js",
     "groupTitle": "Users",
     "name": "PutUsers"
+  },
+  {
+    "type": "get",
+    "url": "/version/:clientVersion",
+    "title": "Get version update",
+    "group": "Versions",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "id",
+            "optional": false,
+            "field": "clientVersion",
+            "description": "<p>Client Version</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "   HTTP/1.1 200 OK\n {\n    \"newUpdate\": true,\n    \"version\": {\n        \"forceUpdate\": true,\n        \"description\": \"fix security issues \\noptimize perfermance \\n\",\n        \"version\": \"0.1.2\",\n        \"title\": \"beta 2\"\n    }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Name param cannot be empty",
+          "content": "HTTP/1.1 400 Bad Request\nwrong client version",
+          "type": "json"
+        },
+        {
+          "title": "Internal Server Error",
+          "content": "HTTP/1.1 500 Internal Server Error",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "src/components/version/versionController.js",
+    "groupTitle": "Versions",
+    "name": "GetVersionClientversion"
+  },
+  {
+    "type": "get",
+    "url": "/versions",
+    "title": "Get all versions",
+    "group": "Versions",
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": " [\n    {\n        \"forceUpdate\": false,\n        \"deleted\": false,\n        \"_id\": \"5c9968198e2b6e302844a578\",\n        \"version\": \"0.1.2\",\n        \"title\": \"beta 2\",\n        \"description\": \"optimize perfermance \"\n    },\n    {\n        \"forceUpdate\": true,\n        \"deleted\": false,\n        \"_id\": \"5c9968058e2b6e302844a577\",\n        \"version\": \"0.1.1\",\n        \"title\": \"beta\",\n        \"description\": \"fix security issues \"\n    },\n    {\n        \"forceUpdate\": false,\n        \"deleted\": false,\n        \"_id\": \"5c9967c68e2b6e302844a576\",\n        \"version\": \"0.1\",\n        \"title\": \"alpha\",\n        \"description\": \"init version\"\n    }\n]",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Internal Server Error",
+          "content": "HTTP/1.1 500 Internal Server Error",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "src/components/version/versionController.js",
+    "groupTitle": "Versions",
+    "name": "GetVersions"
   }
 ] });

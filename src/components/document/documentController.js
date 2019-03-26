@@ -28,10 +28,15 @@ export async function getAllByStatus(req, res) {
 
     const documents = await Document.find({
       status: req.params.status
-    }).populate({
-      path: "user",
-      select: "firstName lastName avatar -_id"
     })
+      .populate({
+        path: "user",
+        select: "firstName lastName avatar -_id"
+      })
+      .populate({
+        path: "subject",
+        populate: { path: "majors", select: "_id name" }
+      });
     return res.json(documents);
   } catch (error) {
     console.log(error);
@@ -150,6 +155,8 @@ export async function getOne(req, res) {
 ]
  * @apiErrorExample Bad Request
  *    HTTP/1.1 400 Bad Request
+ *    document type must be in 'DS', 'EX', 'C', 'TD', 'TP'
+ *    wrong subject id
  * @apiErrorExample Internal Server Error
  *    HTTP/1.1 500 Internal Server Error
  */
@@ -403,6 +410,9 @@ export async function search(req, res) {
  *    HTTP/1.1 401 Not Authorized
  * @apiErrorExample Bad Request
  *    HTTP/1.1 400 Bad Request
+ *    document type must be in 'DS', 'EX', 'C', 'TD', 'TP'
+ *    wrong subject id
+ *    document session must be in 'Principale', 'Rattrapage'
  * @apiErrorExample Internal Server Error
  *    HTTP/1.1 500 Internal Server Error
  */
@@ -416,7 +426,8 @@ export async function create(req, res) {
       "year",
       "session",
       "description",
-      "filesStaging"
+      "filesStaging",
+      "profName"
     );
 
     if (
@@ -451,7 +462,7 @@ export async function create(req, res) {
       });
 
     document.status = "pending";
-    // document.user = req.user._id;
+    document.user = req.user._id;
     document.title =
       document.type + " " + subjectObject.name + " " + document.year;
 
@@ -529,11 +540,11 @@ export async function update(req, res) {
       currentDocument.subject = req.body.subject;
     }
 
-    if(req.body.status == "approved" && req.body.filePath) {
+    if (req.body.status == "approved" && req.body.filePath) {
       currentDocument.filePath = req.body.filePath;
     }
 
-    await currentDocument.save()
+    await currentDocument.save();
 
     if (docStatusChanged) {
       let subject = await Subject.findOne({ _id: currentDocument.subject });
@@ -609,7 +620,7 @@ export async function remove(req, res) {
   try {
     const currentDocument = await Document.findOne({ _id: req.params.id });
 
-    await Document.delete({ _id: req.params.id });
+    await Document.delete({ _id: req.params.id }, req.user._id);
 
     let subject = await Subject.findOne({ _id: currentDocument.subject });
 

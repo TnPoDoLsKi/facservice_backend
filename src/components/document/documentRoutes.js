@@ -15,7 +15,7 @@ import { convert } from "../../services/pdfService";
 import { isLoggedIn, isAdmin } from "../../services/middlewares";
 
 export default function(router) {
-  router.get("/documents/byStatus/:status", getAllByStatus);
+  router.get("/documents/byStatus/:status", isLoggedIn, isAdmin, getAllByStatus);
   router.get("/documents/bySubject/:subjectId", getDocBySubject);
   router.get(
     "/documents/bySubject/:subjectId/byType/:type",
@@ -27,10 +27,10 @@ export default function(router) {
   router.get("/documents", getAll);
   router.get("/documents/:id", getOne);
 
-  router.post("/documents", create);
-  router.post("/documents/upload", upload);
+  router.post("/documents", isLoggedIn, create);
+  router.post("/documents/upload", isLoggedIn, upload);
   router.post("/documents/convert", convert);
 
-  router.put("/documents/:id", update);
-  router.delete("/documents/:id", remove);
+  router.put("/documents/:id", isLoggedIn, update);
+  router.delete("/documents/:id", isLoggedIn, isAdmin, remove);
 }

@@ -49,6 +49,7 @@ app.use(
   "/uploads/",
   express.static(path.join(__dirname, "/../public/uploads/"))
 );
+app.use("/pdfs/", express.static(path.join(__dirname, "/../public/pdfs/")));
 app.use("/apidoc/", express.static(path.join(__dirname, "/../public/apidoc/")));
 
 server.listen(PORT, () =>
