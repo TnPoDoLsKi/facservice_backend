@@ -162,8 +162,12 @@ export async function getAllByStatus(req, res) {
         select: "firstName lastName avatar -_id"
       })
       .populate({
-        path: "subject",
-        populate: { path: "majors", select: "_id name" }
+        path: "document",
+        populate: {
+          path: "subject",
+          select: "name",
+          populate: { path: "majors", select: "_id name" }
+        }
       });
     return res.json(corrections);
   } catch (error) {
