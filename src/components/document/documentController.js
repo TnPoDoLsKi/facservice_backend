@@ -28,10 +28,15 @@ export async function getAllByStatus(req, res) {
 
     const documents = await Document.find({
       status: req.params.status
-    }).populate({
-      path: "user",
-      select: "firstName lastName avatar -_id"
     })
+      .populate({
+        path: "user",
+        select: "firstName lastName avatar -_id"
+      })
+      .populate({
+        path: "subject",
+        populate: { path: "majors", select: "_id name" }
+      });
     return res.json(documents);
   } catch (error) {
     console.log(error);
@@ -458,7 +463,8 @@ export async function create(req, res) {
 
     document.status = "pending";
     document.user = req.user._id;
-    document.title = document.type + " " + subjectObject.name + " " + document.year;
+    document.title =
+      document.type + " " + subjectObject.name + " " + document.year;
 
     document = await Document.create(document);
 
@@ -534,11 +540,11 @@ export async function update(req, res) {
       currentDocument.subject = req.body.subject;
     }
 
-    if(req.body.status == "approved" && req.body.filePath) {
+    if (req.body.status == "approved" && req.body.filePath) {
       currentDocument.filePath = req.body.filePath;
     }
 
-    await currentDocument.save()
+    await currentDocument.save();
 
     if (docStatusChanged) {
       let subject = await Subject.findOne({ _id: currentDocument.subject });

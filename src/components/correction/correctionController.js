@@ -1,8 +1,5 @@
 import _ from "lodash";
-import {
-  Correction,
-  Document
-} from "../../config/models";
+import { Correction, Document } from "../../config/models";
 
 export async function getAll(req, res) {
   try {
@@ -23,8 +20,8 @@ export async function getAll(req, res) {
 export async function getOne(req, res) {
   try {
     const correction = await Correction.findById({
-        _id: req.params.id
-      })
+      _id: req.params.id
+    })
       .populate({
         path: "user",
         select: "firstName lastName avatar -_id"
@@ -94,9 +91,9 @@ export async function getOne(req, res) {
 export async function getAllByDocument(req, res) {
   try {
     const corrections = await Correction.find({
-        document: req.params.documentId,
-        status: "approved"
-      })
+      document: req.params.documentId,
+      status: "approved"
+    })
       .populate({
         path: "user",
         select: "firstName lastName avatar -_id"
@@ -159,10 +156,19 @@ export async function getAllByStatus(req, res) {
 
     const corrections = await Correction.find({
       status: req.params.status
-    }).populate({
-      path: "user",
-      select: "firstName lastName avatar -_id"
     })
+      .populate({
+        path: "user",
+        select: "firstName lastName avatar -_id"
+      })
+      .populate({
+        path: "document",
+        populate: {
+          path: "subject",
+          select: "name",
+          populate: { path: "majors", select: "_id name" }
+        }
+      });
     return res.json(corrections);
   } catch (error) {
     console.log(error);
@@ -182,9 +188,10 @@ export async function create(req, res) {
     let document = await Document.findOne({
       _id: correction.document
     });
-    if (!document) return res.status(400).json({
-      error: "wrong document id"
-    });
+    if (!document)
+      return res.status(400).json({
+        error: "wrong document id"
+      });
 
     correction.title = "Corrigé de " + document.title;
     correction.status = "pending";
@@ -291,13 +298,16 @@ export async function remove(req, res) {
     });
 
     if (corrections.length == 0)
-      await Document.update({
-        _id: correction.document
-      }, {
-        $set: {
-          hasCorrection: false
+      await Document.update(
+        {
+          _id: correction.document
+        },
+        {
+          $set: {
+            hasCorrection: false
+          }
         }
-      });
+      );
 
     return res.status(204).end();
   } catch (error) {
