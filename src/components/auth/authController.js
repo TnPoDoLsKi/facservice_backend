@@ -1,6 +1,9 @@
 import _ from "lodash";
 import crypto from "crypto";
 import { User, Major } from "../../config/models";
+import { SECRET } from "../../config/env";
+import jwt from "jsonwebtoken";
+import mailer from "../../services/mailer";
 
 const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
@@ -66,9 +69,18 @@ export async function signUp(req, res) {
 
     if (!major) return res.status(400).json({ error: "wrong major id" });
 
-    await User.create(user);
+    const userCreated = await User.create(user);
 
-    return res.status(201).end();
+    const token = jwt.sign({ email: userCreated.email }, SECRET, {
+      expiresIn: 604800
+    });
+
+    const link = `http://localhost:3000/api/activate/${token}`;
+    if (mailer(userCreated, link)) {
+      return res.status(400).json({ error: "error while sending email" });
+    } else {
+      return res.status(201).end();
+    }
   } catch (error) {
     if (error.name == "CastError")
       return res.status(400).json({ error: error.message });
@@ -117,6 +129,9 @@ export async function signIn(req, res) {
 
     if (!user) return res.status(400).json({ error: "Wrong email address" });
 
+    if (!user.activated)
+      return res.status(403).json({ error: "email not activated" });
+
     if (!user.comparePassword(req.body.password))
       return res.status(401).json({ error: "Wrong password" });
 
@@ -128,8 +143,8 @@ export async function signIn(req, res) {
 
     req.session.token = user.token;
 
-    console.log(req.session)
-    console.log(req.session.token)
+    console.log(req.session);
+    console.log(req.session.token);
 
     user = user.toJSON();
     user = _.pick(user, "firstName", "lastName", "major", "token", "email");
@@ -167,27 +182,22 @@ export async function signOut(req, res) {
   }
 }
 
-export function testMailer(req, res) {
-  const error = mailer("test", "hello friend");
-  if (error) {
-    res.status(400).end();
-  } else {
-    res.status(200).end();
-  }
-}
-
 export async function activeAccount(req, res) {
   if (req.params.token) {
     jwt.verify(req.params.token, SECRET, (err, user) => {
       if (err) {
         res.status(400).end();
       } else {
-        User.update({ _id: user.id }, { $set: { activated: true } }, error => {
-          if (error) {
-            return res.status(500).end();
+        User.update(
+          { email: user.email },
+          { $set: { activated: true } },
+          error => {
+            if (error) {
+              return res.status(500).end();
+            }
+            res.redirect("http://localhost:4200/login");
           }
-          return res.status(200).end();
-        });
+        );
       }
     });
   }
