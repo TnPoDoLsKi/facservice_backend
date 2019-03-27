@@ -11,7 +11,7 @@ export default function mailer(receiver, link) {
     }
   });
   let mailOptions = {
-    from: '"Archive Issatso" <farchive@igc.tn>',
+    from: '"Archive Issatso" <archive@igc.tn>',
     to: receiver.email,
     subject: "Archive Issatso - Activation de compte",
     html: `<!doctype html>
