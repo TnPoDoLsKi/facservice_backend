@@ -49,9 +49,9 @@ export async function getAll(req, res) {
 
 export async function getLast(req, res) {
   try {
-    const version = await Version.find().sort({ createdAt: -1 }).limit(1)
+    const version = await Version.findOne({}, {}, { sort: { 'createdAt': -1 } })
 
-    return res.json(version[0]);
+    return res.json(version);
   } catch (err) {
     console.log(err)
     return res.status(500).end();
