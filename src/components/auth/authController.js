@@ -195,7 +195,11 @@ export async function activeAccount(req, res) {
             if (error) {
               return res.status(500).end();
             }
-            res.redirect("http://localhost:4200/login");
+            if (req.device.type === "desktop") {
+              res.redirect("http://localhost:4200/login");
+            } else {
+              res.redirect("http://localhost:4200/activated");
+            }
           }
         );
       }
