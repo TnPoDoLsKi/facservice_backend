@@ -11,7 +11,7 @@ export default function mailer(receiver, link) {
     }
   });
   let mailOptions = {
-    from:'"Archive Issatso" <farchive@igc.tn>',
+    from: '"Archive Issatso" <farchive@igc.tn>',
     to: receiver.email,
     subject: "Archive Issatso - Activation de compte",
     html: `<!doctype html>
@@ -162,7 +162,8 @@ export default function mailer(receiver, link) {
   };
 
   transporter.sendMail(mailOptions, error => {
-    console.log(error)
+    if (error)
+      console.log(error)
     return error;
   });
 }
