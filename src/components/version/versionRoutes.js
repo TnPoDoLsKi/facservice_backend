@@ -2,7 +2,7 @@ import { getAll, getLast, getFromVersion, create, update, remove } from "./versi
 import { isLoggedIn, isAdmin } from "../../services/middlewares";
 
 export default function (router) {
-  router.get("/versions", isLoggedIn, isAdmin, getAll);
+  router.get("/versions", getAll);
   router.get("/version/last", getLast);
   router.get("/version/:clientVersion", getFromVersion);
 
