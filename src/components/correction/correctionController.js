@@ -195,7 +195,7 @@ export async function create(req, res) {
 
     correction.title = "Corrigé de " + document.title;
     correction.status = "pending";
-    // correction.user = req.user._id;
+    correction.user = req.user._id;
 
     correction = await Correction.create(correction);
 
