@@ -13,7 +13,7 @@ export default function mailer(receiver, link) {
   let mailOptions = {
     from: "Archive Issatso",
     to: receiver.email,
-    subject: "Activation de compte",
+    subject: "Archive Issatso - Activation de compte",
     html: `<!doctype html>
 <html>
   <head>
