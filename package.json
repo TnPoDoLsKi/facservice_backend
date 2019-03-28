@@ -1,7 +1,7 @@
 {
-  "name": "project-archive",
+  "name": "facservice",
   "version": "1.0.0",
-  "description": "Archive Web Apps for ISSATSo students",
+  "description": "FacService Web Apps for ISSATSo students",
   "repository": "https://gitlab.com/igcforces/project-one-web-backend.git",
   "main": "index.js",
   "scripts": {
@@ -11,7 +11,7 @@
     "lint": "eslint --fix **/*.js",
     "docs": "apidoc -i src/ -o public/apidoc/",
     "build": "node ./node_modules/babel-cli/bin/babel.js src --out-dir build --copy-files",
-    "update": "git pull origin master;npm run build; pm2 restart archive; pm2 logs"
+    "update": "git pull origin master;npm run build; pm2 restart facservice; pm2 logs"
   },
   "apidoc": {
     "title": "Custom apiDoc browser title",
