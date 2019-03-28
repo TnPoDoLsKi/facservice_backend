@@ -2,7 +2,7 @@ import nodemailer from "nodemailer";
 
 export default function mailer(receiver, link) {
   const transporter = nodemailer.createTransport({
-    host: "banshee.mxlogin.com", //smtp.gmail.com
+    host: "banshee.mxlogin.com", // smtp.gmail.com
     port: 465,
     secure: true, // true for 465, false for other ports
     auth: {
@@ -11,9 +11,9 @@ export default function mailer(receiver, link) {
     }
   });
   let mailOptions = {
-    from: '"Archive Issatso" <archive@igc.tn>',
+    from: '"Fac Service Issatso" <archive@igc.tn>',
     to: receiver.email,
-    subject: "Archive Issatso - Activation de compte",
+    subject: "Facservice Issatso - Activation de compte",
     html: `<!doctype html>
             <html>
               <head>
@@ -118,9 +118,11 @@ export default function mailer(receiver, link) {
                               <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;">
                                 <tr>
                                   <td style="font-family: sans-serif; font-size: 14px; vertical-align: top;">
-                                    <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">Bonjour ${receiver.firstName},</p>
-                                    <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">Merci pour votre inscription à ARCHIVE, nous sommes heureux de vous avoir parmi nous.</p>
-                                    <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">ARCHIVE est la première application multi-platformes spécifique de ISSATSO qui sert à vous donner l'accès pour ajouter ou télécharger tous les types de documents dont vous avez besoin pour réviser .</p>
+                                    <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">Bonjour ${
+                                      receiver.firstName
+                                    },</p>
+                                    <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">Merci pour votre inscription à Facservice, nous sommes heureux de vous avoir parmi nous.</p>
+                                    <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">FACSERVICE est la première application multi-platformes spécifique de ISSATSO qui sert à vous donner l'accès pour ajouter ou télécharger tous les types de documents dont vous avez besoin pour réviser .</p>
                                     <table border="0" cellpadding="0" cellspacing="0" class="btn btn-primary" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; box-sizing: border-box;">
                                       <tbody>
                                         <tr>
@@ -162,8 +164,6 @@ export default function mailer(receiver, link) {
   };
 
   transporter.sendMail(mailOptions, error => {
-    if (error)
-      console.log(error)
     return error;
   });
 }
