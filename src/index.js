@@ -5,6 +5,7 @@ import mongoose from "mongoose";
 import bodyParser from "body-parser";
 import routes from "./config/routes";
 import session from "express-session";
+import device from "express-device";
 import connectMongo from "connect-mongo";
 // import mongooseConnection from "./config/database";
 import "./config/database";
@@ -44,6 +45,7 @@ app.use(
 
 app.use(morgan("dev"));
 app.use(cors());
+app.use(device.capture());
 app.use("/api", routes);
 app.use(
   "/uploads/",
