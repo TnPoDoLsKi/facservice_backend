@@ -44,8 +44,7 @@ const documentSchema = new mongoose.Schema(
     },
     session: {
       type: String,
-      enum: ["Principale", "Rattrapage"],
-      default: "Principale"
+      enum: ["Principale", "Rattrapage"]
     },
     profName: {
       type: String
