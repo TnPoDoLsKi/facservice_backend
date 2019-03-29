@@ -320,3 +320,22 @@ export async function remove(req, res) {
     return res.status(500).end();
   }
 }
+
+export async function getByUser(req, res) {
+  try {
+    if (!req.params.userId){
+      return res.status(400).json({ error: "Empty user ID" });
+    }
+    const corrections = await Correction.find({
+      user: req.params.userId
+    });
+
+    return res.status(200).json(corrections);
+  } catch (error) {
+    console.log(error);
+    if (error.name === "CastError")
+      return res.status(400).json({ error: error.message });
+
+    return res.status(500).end();
+  }
+}
