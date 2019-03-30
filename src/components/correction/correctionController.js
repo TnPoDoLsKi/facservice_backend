@@ -178,7 +178,7 @@ export async function getAllByStatus(req, res) {
 
 export async function create(req, res) {
   try {
-    let correction = _.pick(req.body, "filesStaging", "document");
+    let correction = _.pick(req.body, "filesStaging", "document", "description");
 
     if (!(correction.filesStaging && correction.document))
       return res.status(400).json({
@@ -323,7 +323,7 @@ export async function remove(req, res) {
 
 export async function getByUser(req, res) {
   try {
-    if (!req.params.userId){
+    if (!req.params.userId) {
       return res.status(400).json({ error: "Empty user ID" });
     }
     const corrections = await Correction.find({
