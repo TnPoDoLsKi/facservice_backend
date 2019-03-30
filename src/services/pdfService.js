@@ -36,14 +36,13 @@ export async function convert(req, res) {
     pdfDoc.end();
 
     var filePath =
-      req.headers.host === "igc.tn:3005"
-        ? "http://igc.tn:3005/pdfs/"
-        : "http://localhost:3000/pdfs/" +
-          req.body.documentTitle.replace(/ /g, "_") +
-          ".pdf";
+      "http://facservice.tn/pdfs/" +
+      req.body.documentTitle.replace(/ /g, "_") +
+      ".pdf";
     res.json(filePath);
   } catch (error) {
     console.log(error);
     return res.status(500).end();
   }
 }
+// req.headers.host === "igc.tn:3005" ? "http://igc.tn:3005/pdfs/" :

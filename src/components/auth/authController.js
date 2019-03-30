@@ -193,9 +193,9 @@ export async function activeAccount(req, res) {
               return res.status(500).end();
             }
             if (req.device.type === "desktop") {
-              res.redirect("http://localhost:4200/login");
+              res.redirect("http://facservice.tn/login");
             } else {
-              res.redirect("http://localhost:4200/activated");
+              res.redirect("http://facservice.tn/activated");
             }
           }
         );
