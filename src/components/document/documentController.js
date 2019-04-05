@@ -1,6 +1,6 @@
 import _ from "lodash";
 import Fuse from "fuse.js";
-import { Document, Subject } from "../../config/models";
+import { Document, Major, Subject } from "../../config/models";
 
 export async function getAll(req, res) {
   try {
@@ -101,7 +101,7 @@ export async function getOne(req, res) {
 }
 
 /**
- * @api {get} /documents/bySubject/:subjectId/byType/:type Get documents by subject and type 
+ * @api {get} /documents/bySubject/:subjectId/byType/:type Get documents by subject and type
  * @apiGroup Documents
  * @apiParam {id} subjectId Subject id
  * @apiParam {String} type Document type (DS, EX, C, TP, TD)
@@ -211,6 +211,7 @@ export async function getDocBySubject(req, res) {
       })
       .select("-filesStaging");
 
+    console.log(documents);
     return res.json(documents);
   } catch (error) {
     console.log(error);
@@ -390,7 +391,7 @@ export async function search(req, res) {
  * @apiSuccessExample {json} Success
  *    HTTP/1.1 200 OK
  * {
-    "type": "DS",  
+    "type": "DS",
     "status": "pending",
     "NBDowloads": 0,
     "session": "Rattrapage",
@@ -655,6 +656,28 @@ export async function remove(req, res) {
   } catch (error) {
     console.log(error);
     if (error.name === "CastError")
+      return res.status(400).json({ error: error.message });
+
+    return res.status(500).end();
+  }
+}
+
+export async function getDocByMajor(req, res) {
+  try {
+    const majorObject = await Major.findOne({ _id: req.params.majorID });
+
+    if (!majorObject) return res.status(400).json({ error: "wrong major id" });
+
+    let subjects = await Subject.find({ majors: req.params.majorID }).select(
+      "_id"
+    );
+
+    const documents = await Document.find({ subject: { $in: subjects } });
+
+    return res.json(documents);
+  } catch (error) {
+    console.log(error);
+    if (error.name == "CastError")
       return res.status(400).json({ error: error.message });
 
     return res.status(500).end();
