@@ -2,7 +2,7 @@ import { User } from "../config/models";
 
 export async function isLoggedIn(req, res, next) {
   try {
-    let token = 'c47ca20ca6badc8538254f972064db558706cb798bdc98241b4ae2be8bd62dbb';
+    let token = null;
 
     if ("authorization" in req.headers) {
       const bearer = req.headers["authorization"];
