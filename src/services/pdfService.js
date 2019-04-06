@@ -23,7 +23,7 @@ export async function convert(req, res) {
       },
       pageMargins: [0, 0, 0, 0]
     };
-
+    
     var pdfDoc = printer.createPdfKitDocument(docDefinition);
     pdfDoc.pipe(
       fs.createWriteStream(

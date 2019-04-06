@@ -15,7 +15,7 @@ import { convert } from "../../services/pdfService";
 import { isLoggedIn, isAdmin } from "../../services/middlewares";
 
 export default function(router) {
-  router.get("/documents/byStatus/:status", isLoggedIn, isAdmin, getAllByStatus);
+  router.get("/documents/byStatus/:status", getAllByStatus);
   router.get("/documents/bySubject/:subjectId", getDocBySubject);
   router.get(
     "/documents/bySubject/:subjectId/byType/:type",
