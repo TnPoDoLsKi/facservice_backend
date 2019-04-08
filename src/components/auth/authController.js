@@ -75,7 +75,7 @@ export async function signUp(req, res) {
       expiresIn: 604800
     });
 
-    const link = `http://igc.tn:3005/api/activate/${token}`;
+    const link = `http://facservice.tn/api/activate/${token}`;
     if (mailer(userCreated, link)) {
       return res.status(400).json({ error: "error while sending email" });
     } else {
@@ -193,9 +193,9 @@ export async function activeAccount(req, res) {
               return res.status(500).end();
             }
             if (req.device.type === "desktop") {
-              res.redirect("http://facservice.tn/login");
+              res.redirect("http://facservice.tn/#/login");
             } else {
-              res.redirect("http://facservice.tn/activated");
+              res.redirect("http://facservice.tn/#/activated");
             }
           }
         );
