@@ -56,6 +56,7 @@ app.use(
 );
 app.use("/pdfs/", express.static(path.join(__dirname, "/../public/pdfs/")));
 app.use("/apidoc/", express.static(path.join(__dirname, "/../public/apidoc/")));
+app.use("/privacy/", express.static(path.join(__dirname, "/../public/privacy/")));
 
 server.listen(PORT, () =>
   console.log(`start in ${NODE_ENV} environment on port ${PORT}`)
