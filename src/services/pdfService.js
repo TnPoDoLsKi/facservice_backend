@@ -9,7 +9,7 @@ export async function convert(req, res) {
 
     await req.body.filesStaging.forEach(async function(imagePath, index) {
       content[index] = {
-        image: "public" + imagePath.replace("http://igc.tn:3005", ""),
+        image: "public" + imagePath.replace("https://facservice.tn", ""),
         width: 595,
         height: 842
       };
@@ -36,7 +36,7 @@ export async function convert(req, res) {
     pdfDoc.end();
 
     var filePath =
-      "http://facservice.tn/pdfs/" +
+      "https://facservice.tn/pdfs/" +
       req.body.documentTitle.replace(/ /g, "_") +
       ".pdf";
     res.json(filePath);

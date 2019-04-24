@@ -31,29 +31,18 @@ let sess = {
 
 app.use(session(sess));
 
-app.use(
-  bodyParser.json({
-    limit: "100mb"
-  })
-);
+app.use(bodyParser.json({ limit: "100mb" }));
 
-app.use(
-  bodyParser.urlencoded({
-    extended: false
-  })
-);
+app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(morgan("dev"));
 app.use(cors());
 app.use(device.capture());
 
 app.use("/api", routes);
-app.use("/", express.static(path.join(__dirname, "/../public/front/")));
+app.use("/", express.static( path.join(__dirname, "/../public/front/")));
 app.use("/dashboard", express.static(path.join(__dirname, "/../public/dashboard/")));
-app.use(
-  "/uploads/",
-  express.static(path.join(__dirname, "/../public/uploads/"))
-);
+app.use("/uploads/", express.static(path.join(__dirname, "/../public/uploads/")));
 app.use("/pdfs/", express.static(path.join(__dirname, "/../public/pdfs/")));
 app.use("/apidoc/", express.static(path.join(__dirname, "/../public/apidoc/")));
 app.use("/privacy/", express.static(path.join(__dirname, "/../public/privacy/")));
