@@ -9,7 +9,7 @@ export async function getAll(req, res) {
         path: "user",
         select: "firstName lastName avatar -_id"
       })
-      .select("-filesStaging");
+      // .select("-filesStaging");
 
     return res.json(documents);
   } catch (error) {
