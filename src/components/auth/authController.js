@@ -203,3 +203,24 @@ export async function activeAccount(req, res) {
     });
   }
 }
+
+
+/**
+ * @api {get} /verifyAccess Verify Access
+ * @apiName Verify Access
+ * @apiGroup Auth
+ * @apiHeader Authorization Bearer Token
+ * @apiErrorExample Not Authorized
+ *    HTTP/1.1 401 Not Authorized
+ * @apiErrorExample Internal Server Error
+ *    HTTP/1.1 500 Internal Server Error
+ */
+
+export async function verifyAccess(req, res) {
+  try {
+    return res.status(200).end();
+  } catch (error) {
+    console.log(error);
+    return res.status(500).end();
+  }
+}

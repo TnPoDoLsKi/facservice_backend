@@ -174,6 +174,42 @@ define({ "api": [
   },
   {
     "type": "get",
+    "url": "/verifyAccess",
+    "title": "Verify Access",
+    "name": "Verify_Access",
+    "group": "Auth",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer Token</p>"
+          }
+        ]
+      }
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Not Authorized",
+          "content": "HTTP/1.1 401 Not Authorized",
+          "type": "json"
+        },
+        {
+          "title": "Internal Server Error",
+          "content": "HTTP/1.1 500 Internal Server Error",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "src/components/auth/authController.js",
+    "groupTitle": "Auth"
+  },
+  {
+    "type": "get",
     "url": "/corrections/byDocument/:id",
     "title": "Get document's corrections",
     "group": "Corrections",
