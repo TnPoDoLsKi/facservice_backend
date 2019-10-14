@@ -1,18 +1,18 @@
 {
   "title": "Custom apiDoc browser title",
-  "url": "http://igc.tn:3005/api",
+  "url": "https://facservice.tn/api",
   "template": {
     "forceLanguage": "en"
   },
-  "name": "project-archive",
+  "name": "facservice",
   "version": "1.0.0",
-  "description": "Archive Web Apps for ISSATSo students",
+  "description": "FacService Web Apps for ISSATSo students",
   "sampleUrl": false,
   "defaultVersion": "0.0.0",
   "apidoc": "0.3.0",
   "generator": {
     "name": "apidoc",
-    "time": "2019-03-26T00:12:06.407Z",
+    "time": "2019-10-14T09:10:42.822Z",
     "url": "http://apidocjs.com",
     "version": "0.17.7"
   }

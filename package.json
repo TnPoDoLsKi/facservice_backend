@@ -15,7 +15,7 @@
   },
   "apidoc": {
     "title": "Custom apiDoc browser title",
-    "url": "http://igc.tn:3005/api",
+    "url": "https://facservice.tn/api",
     "template": {
       "forceLanguage": "en"
     }
