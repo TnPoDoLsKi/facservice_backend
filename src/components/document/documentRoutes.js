@@ -24,7 +24,7 @@ export default function(router) {
   );
   router.get("/documents/bySubject/:subjectId", getDocBySubject);
   router.get(
-    "/documents/bySubject/:subjectId/byType/:type",
+    "/documents/bySubject/:subjectId/byType/:type?",
     getDocBySubjectByType
   );
   router.get("/documents/byMajor/:majorID", getDocByMajor);

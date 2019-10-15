@@ -9,7 +9,7 @@ export async function getAll(req, res) {
         path: "user",
         select: "firstName lastName avatar -_id"
       })
-      // .select("-filesStaging");
+    // .select("-filesStaging");
 
     return res.json(documents);
   } catch (error) {
@@ -163,21 +163,27 @@ export async function getOne(req, res) {
 
 export async function getDocBySubjectByType(req, res) {
   try {
-    if (!["DS", "EX", "C", "TD", "TP"].includes(req.params.type))
-      return res.status(400).json({
-        error: "document type must be in 'DS', 'EX', 'C', 'TD', 'TP'"
-      });
+
+    let options = {
+      subject: req.params.subjectId,
+      status: "approved"
+    }
+
+    if (req.params.type) {
+      if (!["DS", "EX", "C", "TD", "TP"].includes(req.params.type))
+        return res.status(400).json({
+          error: "document type must be in 'DS', 'EX', 'C', 'TD', 'TP'"
+        });
+
+      options.type = req.params.type
+    }
 
     const subjectObject = await Subject.findOne({ _id: req.params.subjectId });
 
     if (!subjectObject)
       return res.status(400).json({ error: "wrong subject id" });
 
-    const documents = await Document.find({
-      subject: req.params.subjectId,
-      type: req.params.type,
-      status: "approved"
-    })
+    const documents = await Document.find(options)
       .populate({
         path: "user",
         select: "firstName lastName avatar -_id"
@@ -185,6 +191,7 @@ export async function getDocBySubjectByType(req, res) {
       .select("-filesStaging");
 
     return res.json(documents);
+    
   } catch (error) {
     console.log(error);
     if (error.name == "CastError")
