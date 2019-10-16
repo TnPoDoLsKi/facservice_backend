@@ -1,6 +1,34 @@
 import _ from "lodash";
 import { Formation } from "../../config/models";
 
+/**
+ * @api {post} /formations Create a formation
+ * @apiGroup Formations
+ * @apiHeader Authorization Bearer Token
+ * @apiParamExample {json} Input
+ *    {
+ *      "name": "Prepa",
+ *      "description": "bla bla bla"
+ *    }
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 OK
+ * {
+        "deleted": false,
+        "_id": "5c825dee263bbd33636897f4",
+        "name": "master",
+        "createdAt": "2019-03-08T12:19:58.723Z",
+        "updatedAt": "2019-03-08T12:29:24.168Z",
+        "__v": 0
+    }
+ * @apiErrorExample Not Authorized
+ *    HTTP/1.1 401 Not Authorized
+ * @apiErrorExample Bad Request
+ *    HTTP/1.1 400 Bad Request
+ *    name is required !
+ * @apiErrorExample Internal Server Error
+ *    HTTP/1.1 500 Internal Server Error
+ */
+
 export async function create(req, res) {
   try {
     if (!req.body.name)
@@ -71,6 +99,27 @@ export async function getOne(req, res) {
   }
 }
 
+/**
+ * @api {put} /formations/:id Update a formation
+ * @apiGroup Formations
+ * @apiHeader Authorization Bearer Token
+ * @apiParamExample {json} Input
+ *    {
+ *      "name": "Prepa",
+ *      "description": "bla bla bla"
+ *    }
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 OK
+ * @apiErrorExample Not Authorized
+ *    HTTP/1.1 401 Not Authorized
+ * @apiErrorExample Bad Request
+ *    HTTP/1.1 400 Bad Request
+ *    formation not found !
+ *    CastError
+ * @apiErrorExample Internal Server Error
+ *    HTTP/1.1 500 Internal Server Error
+ */
+
 export async function update(req, res) {
   try {
     let formation = await Formation.findOne({
@@ -78,7 +127,7 @@ export async function update(req, res) {
     });
 
     if (!formation)
-      return res.status(404).json({
+      return res.status(400).json({
         error: "formation not found !"
       });
 
@@ -97,6 +146,22 @@ export async function update(req, res) {
     return res.status(500).end();
   }
 }
+
+/**
+ * @api {delete} /formations/:id Delete a formation
+ * @apiGroup Formations
+ * @apiHeader Authorization Bearer Token
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 OK
+ * @apiErrorExample Not Authorized
+ *    HTTP/1.1 401 Not Authorized
+ * @apiErrorExample Bad Request
+ *    HTTP/1.1 400 Bad Request
+ *    formation not found !
+ *    CastError
+ * @apiErrorExample Internal Server Error
+ *    HTTP/1.1 500 Internal Server Error
+ */
 
 export async function remove(req, res) {
   try {

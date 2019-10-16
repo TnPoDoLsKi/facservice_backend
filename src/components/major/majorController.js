@@ -1,6 +1,38 @@
 import _ from "lodash";
 import { Major, Level, Subject, Document } from "../../config/models";
 
+/**
+ * @api {post} /majors Create a major
+ * @apiGroup Majors
+ * @apiHeader Authorization Bearer Token
+ * @apiParamExample {json} Input
+ *    {
+ *      "name": "LFSI 1",
+ *      "description": "major description",
+ *      "level" : "5c825dee263bbd33636897f4"
+ *    }
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 OK
+ * {
+        "deleted": false,
+        "_id": "5c82650d1227833d35ac2a29",
+        "description": "major description",
+        "name": "LFSI 1",
+        "level": "5c825dee263bbd33636897f4",
+        "__v": 0
+    }
+ * @apiErrorExample Not Authorized
+ *    HTTP/1.1 401 Not Authorized
+ * @apiErrorExample Bad Request
+ *    HTTP/1.1 400 Bad Request
+ *    name is required !
+ *    level is required !
+ *    wrong level id !
+ *    CastError
+ * @apiErrorExample Internal Server Error
+ *    HTTP/1.1 500 Internal Server Error
+ */
+
 export async function create(req, res) {
   try {
     if (!req.body.name)
@@ -245,12 +277,35 @@ export async function getOneByName(req, res) {
   }
 }
 
+/**
+ * @api {put} /majors/:id Update a major
+ * @apiGroup Majors
+ * @apiHeader Authorization Bearer Token
+ * @apiParamExample {json} Input
+ *    {
+ *      "name": "LFSI 1",
+ *      "description": "major description",
+ *      "level" : "5c825dee263bbd33636897f4"
+ *    }
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 OK
+ * @apiErrorExample Not Authorized
+ *    HTTP/1.1 401 Not Authorized
+ * @apiErrorExample Bad Request
+ *    HTTP/1.1 400 Bad Request
+ *    Major not found
+ *    wrong level id !
+ *    CastError
+ * @apiErrorExample Internal Server Error
+ *    HTTP/1.1 500 Internal Server Error
+ */
+
 export async function update(req, res) {
   try {
     let major = await Major.findOne({ _id: req.params.id });
 
     if (!major)
-      return res.status(401).json({
+      return res.status(400).json({
         error: "Major not found "
       });
 
@@ -279,6 +334,22 @@ export async function update(req, res) {
     return res.status(500).end();
   }
 }
+
+/**
+ * @api {delete} /majors/:id Delete a major
+ * @apiGroup Majors
+ * @apiHeader Authorization Bearer Token
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 OK
+ * @apiErrorExample Not Authorized
+ *    HTTP/1.1 401 Not Authorized
+ * @apiErrorExample Bad Request
+ *    HTTP/1.1 400 Bad Request
+ *    Major not found
+ *    CastError
+ * @apiErrorExample Internal Server Error
+ *    HTTP/1.1 500 Internal Server Error
+ */
 
 export async function remove(req, res) {
   try {

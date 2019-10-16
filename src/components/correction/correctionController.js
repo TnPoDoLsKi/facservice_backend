@@ -402,15 +402,28 @@ export async function getAllApprovedBySubject(req, res) {
         path: "document",
         populate: {
           path: "subject",
-          select: "name",
-          populate: { path: "majors", select: "_id name" }
+          select: "_id name"
         }
       });
 
-      
+    let result = []
 
+    for(let correction of corrections) {
 
-    return res.json(corrections);
+      if(!correction.document)
+        continue;
+
+      console.log(correction.document.subject._id)
+      console.log(req.params.subjectId)
+
+      if (correction.document.subject._id == req.params.subjectId) {
+        correction = correction.toJSON();
+        delete correction.document
+        result.push(correction)
+      }
+    }
+
+    return res.json(result);
   } catch (error) {
     console.log(error);
     return res.status(500).end();

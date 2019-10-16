@@ -1,6 +1,41 @@
 import _ from "lodash";
 import { Level, Formation } from "../../config/models";
 
+
+/**
+ * @api {post} /levels Create a level
+ * @apiGroup Levels
+ * @apiHeader Authorization Bearer Token
+ * @apiParamExample {json} Input
+ *    {
+ *      "name": "1er",
+ *      "description": "level description",
+ *      "formation" : "5c825dee263bbd33636897f4"
+ *    }
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 OK
+ * {
+        "deleted": false,
+        "_id": "5c8267d27c8e2f4013c69a27",
+        "description": "level description",
+        "name": "1er",
+        "formation": "5c8263677c8e2f4013c6986f",
+        "createdAt": "2019-03-08T12:35:32.637Z",
+        "updatedAt": "2019-03-08T12:44:37.914Z",
+        "__v": 0
+    }
+ * @apiErrorExample Not Authorized
+ *    HTTP/1.1 401 Not Authorized
+ * @apiErrorExample Bad Request
+ *    HTTP/1.1 400 Bad Request
+ *    name is required !
+ *    formation is required !
+ *    wrong formation id !
+ *    CastError
+ * @apiErrorExample Internal Server Error
+ *    HTTP/1.1 500 Internal Server Error
+ */
+
 export async function create(req, res) {
   try {
     if (!req.body.name)
@@ -109,11 +144,34 @@ export async function getOne(req, res) {
   }
 }
 
+/**
+ * @api {put} /levels/id Update a level
+ * @apiGroup Levels
+ * @apiHeader Authorization Bearer Token
+ * @apiParamExample {json} Input
+ *    {
+ *      "name": "1er",
+ *      "description": "level description",
+ *      "formation" : "5c825dee263bbd33636897f4"
+ *    }
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 OK
+ * @apiErrorExample Not Authorized
+ *    HTTP/1.1 401 Not Authorized
+ * @apiErrorExample Bad Request
+ *    HTTP/1.1 400 Bad Request
+ *    level not found !
+ *    wrong formation id
+ *    CastError
+ * @apiErrorExample Internal Server Error
+ *    HTTP/1.1 500 Internal Server Error
+ */
+
 export async function update(req, res) {
   try {
     let level = await Level.findOne({ _id: req.params.id });
     if (!level)
-      return res.status(401).json({
+      return res.status(400).json({
         error: "level not found !"
       });
 
@@ -143,6 +201,22 @@ export async function update(req, res) {
     return res.status(500).end();
   }
 }
+
+/**
+ * @api {delete} /levels/id Delete a level
+ * @apiGroup Levels
+ * @apiHeader Authorization Bearer Token
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 OK
+ * @apiErrorExample Not Authorized
+ *    HTTP/1.1 401 Not Authorized
+ * @apiErrorExample Bad Request
+ *    HTTP/1.1 400 Bad Request
+ *    level not found !
+ *    CastError
+ * @apiErrorExample Internal Server Error
+ *    HTTP/1.1 500 Internal Server Error
+ */
 
 export async function remove(req, res) {
   try {

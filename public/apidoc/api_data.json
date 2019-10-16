@@ -796,6 +796,56 @@
     "groupTitle": "Documents"
   },
   {
+    "type": "delete",
+    "url": "/formations/:id",
+    "title": "Delete a formation",
+    "group": "Formations",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer Token</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 OK",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Not Authorized",
+          "content": "HTTP/1.1 401 Not Authorized",
+          "type": "json"
+        },
+        {
+          "title": "Bad Request",
+          "content": "HTTP/1.1 400 Bad Request\nformation not found !\nCastError",
+          "type": "json"
+        },
+        {
+          "title": "Internal Server Error",
+          "content": "HTTP/1.1 500 Internal Server Error",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "src/components/formation/formationController.js",
+    "groupTitle": "Formations",
+    "name": "DeleteFormationsId"
+  },
+  {
     "type": "get",
     "url": "/formations",
     "title": "Get all formations",
@@ -822,6 +872,174 @@
     "filename": "src/components/formation/formationController.js",
     "groupTitle": "Formations",
     "name": "GetFormations"
+  },
+  {
+    "type": "post",
+    "url": "/formations",
+    "title": "Create a formation",
+    "group": "Formations",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer Token</p>"
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "examples": [
+        {
+          "title": "Input",
+          "content": "{\n  \"name\": \"Prepa\",\n  \"description\": \"bla bla bla\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "   HTTP/1.1 200 OK\n{\n        \"deleted\": false,\n        \"_id\": \"5c825dee263bbd33636897f4\",\n        \"name\": \"master\",\n        \"createdAt\": \"2019-03-08T12:19:58.723Z\",\n        \"updatedAt\": \"2019-03-08T12:29:24.168Z\",\n        \"__v\": 0\n    }",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Not Authorized",
+          "content": "HTTP/1.1 401 Not Authorized",
+          "type": "json"
+        },
+        {
+          "title": "Bad Request",
+          "content": "HTTP/1.1 400 Bad Request\nname is required !",
+          "type": "json"
+        },
+        {
+          "title": "Internal Server Error",
+          "content": "HTTP/1.1 500 Internal Server Error",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "src/components/formation/formationController.js",
+    "groupTitle": "Formations",
+    "name": "PostFormations"
+  },
+  {
+    "type": "put",
+    "url": "/formations/:id",
+    "title": "Update a formation",
+    "group": "Formations",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer Token</p>"
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "examples": [
+        {
+          "title": "Input",
+          "content": "{\n  \"name\": \"Prepa\",\n  \"description\": \"bla bla bla\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 OK",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Not Authorized",
+          "content": "HTTP/1.1 401 Not Authorized",
+          "type": "json"
+        },
+        {
+          "title": "Bad Request",
+          "content": "HTTP/1.1 400 Bad Request\nformation not found !\nCastError",
+          "type": "json"
+        },
+        {
+          "title": "Internal Server Error",
+          "content": "HTTP/1.1 500 Internal Server Error",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "src/components/formation/formationController.js",
+    "groupTitle": "Formations",
+    "name": "PutFormationsId"
+  },
+  {
+    "type": "delete",
+    "url": "/levels/id",
+    "title": "Delete a level",
+    "group": "Levels",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer Token</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 OK",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Not Authorized",
+          "content": "HTTP/1.1 401 Not Authorized",
+          "type": "json"
+        },
+        {
+          "title": "Bad Request",
+          "content": "HTTP/1.1 400 Bad Request\nlevel not found !\nCastError",
+          "type": "json"
+        },
+        {
+          "title": "Internal Server Error",
+          "content": "HTTP/1.1 500 Internal Server Error",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "src/components/level/levelController.js",
+    "groupTitle": "Levels",
+    "name": "DeleteLevelsId"
   },
   {
     "type": "get",
@@ -868,6 +1086,174 @@
     "filename": "src/components/level/levelController.js",
     "groupTitle": "Levels",
     "name": "GetLevelsByformationFormation"
+  },
+  {
+    "type": "post",
+    "url": "/levels",
+    "title": "Create a level",
+    "group": "Levels",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer Token</p>"
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "examples": [
+        {
+          "title": "Input",
+          "content": "{\n  \"name\": \"1er\",\n  \"description\": \"level description\",\n  \"formation\" : \"5c825dee263bbd33636897f4\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "   HTTP/1.1 200 OK\n{\n        \"deleted\": false,\n        \"_id\": \"5c8267d27c8e2f4013c69a27\",\n        \"description\": \"level description\",\n        \"name\": \"1er\",\n        \"formation\": \"5c8263677c8e2f4013c6986f\",\n        \"createdAt\": \"2019-03-08T12:35:32.637Z\",\n        \"updatedAt\": \"2019-03-08T12:44:37.914Z\",\n        \"__v\": 0\n    }",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Not Authorized",
+          "content": "HTTP/1.1 401 Not Authorized",
+          "type": "json"
+        },
+        {
+          "title": "Bad Request",
+          "content": "HTTP/1.1 400 Bad Request\nname is required !\nformation is required !\nwrong formation id !\nCastError",
+          "type": "json"
+        },
+        {
+          "title": "Internal Server Error",
+          "content": "HTTP/1.1 500 Internal Server Error",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "src/components/level/levelController.js",
+    "groupTitle": "Levels",
+    "name": "PostLevels"
+  },
+  {
+    "type": "put",
+    "url": "/levels/id",
+    "title": "Update a level",
+    "group": "Levels",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer Token</p>"
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "examples": [
+        {
+          "title": "Input",
+          "content": "{\n  \"name\": \"1er\",\n  \"description\": \"level description\",\n  \"formation\" : \"5c825dee263bbd33636897f4\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 OK",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Not Authorized",
+          "content": "HTTP/1.1 401 Not Authorized",
+          "type": "json"
+        },
+        {
+          "title": "Bad Request",
+          "content": "HTTP/1.1 400 Bad Request\nlevel not found !\nwrong formation id\nCastError",
+          "type": "json"
+        },
+        {
+          "title": "Internal Server Error",
+          "content": "HTTP/1.1 500 Internal Server Error",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "src/components/level/levelController.js",
+    "groupTitle": "Levels",
+    "name": "PutLevelsId"
+  },
+  {
+    "type": "delete",
+    "url": "/majors/:id",
+    "title": "Delete a major",
+    "group": "Majors",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer Token</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 OK",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Not Authorized",
+          "content": "HTTP/1.1 401 Not Authorized",
+          "type": "json"
+        },
+        {
+          "title": "Bad Request",
+          "content": "HTTP/1.1 400 Bad Request\nMajor not found\nCastError",
+          "type": "json"
+        },
+        {
+          "title": "Internal Server Error",
+          "content": "HTTP/1.1 500 Internal Server Error",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "src/components/major/majorController.js",
+    "groupTitle": "Majors",
+    "name": "DeleteMajorsId"
   },
   {
     "type": "get",
@@ -982,6 +1368,174 @@
     "name": "GetMajorsWithinreviewinfos"
   },
   {
+    "type": "post",
+    "url": "/majors",
+    "title": "Create a major",
+    "group": "Majors",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer Token</p>"
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "examples": [
+        {
+          "title": "Input",
+          "content": "{\n  \"name\": \"LFSI 1\",\n  \"description\": \"major description\",\n  \"level\" : \"5c825dee263bbd33636897f4\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "   HTTP/1.1 200 OK\n{\n        \"deleted\": false,\n        \"_id\": \"5c82650d1227833d35ac2a29\",\n        \"description\": \"major description\",\n        \"name\": \"LFSI 1\",\n        \"level\": \"5c825dee263bbd33636897f4\",\n        \"__v\": 0\n    }",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Not Authorized",
+          "content": "HTTP/1.1 401 Not Authorized",
+          "type": "json"
+        },
+        {
+          "title": "Bad Request",
+          "content": "HTTP/1.1 400 Bad Request\nname is required !\nlevel is required !\nwrong level id !\nCastError",
+          "type": "json"
+        },
+        {
+          "title": "Internal Server Error",
+          "content": "HTTP/1.1 500 Internal Server Error",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "src/components/major/majorController.js",
+    "groupTitle": "Majors",
+    "name": "PostMajors"
+  },
+  {
+    "type": "put",
+    "url": "/majors/:id",
+    "title": "Update a major",
+    "group": "Majors",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer Token</p>"
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "examples": [
+        {
+          "title": "Input",
+          "content": "{\n  \"name\": \"LFSI 1\",\n  \"description\": \"major description\",\n  \"level\" : \"5c825dee263bbd33636897f4\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 OK",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Not Authorized",
+          "content": "HTTP/1.1 401 Not Authorized",
+          "type": "json"
+        },
+        {
+          "title": "Bad Request",
+          "content": "HTTP/1.1 400 Bad Request\nMajor not found\nwrong level id !\nCastError",
+          "type": "json"
+        },
+        {
+          "title": "Internal Server Error",
+          "content": "HTTP/1.1 500 Internal Server Error",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "src/components/major/majorController.js",
+    "groupTitle": "Majors",
+    "name": "PutMajorsId"
+  },
+  {
+    "type": "delete",
+    "url": "/subjects/:id",
+    "title": "Delete a subject",
+    "group": "Subjects",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer Token</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 OK",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Not Authorized",
+          "content": "HTTP/1.1 401 Not Authorized",
+          "type": "json"
+        },
+        {
+          "title": "Bad Request",
+          "content": "HTTP/1.1 400 Bad Request\nsubject not found !\nCastError",
+          "type": "json"
+        },
+        {
+          "title": "Internal Server Error",
+          "content": "HTTP/1.1 500 Internal Server Error",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "src/components/subject/subjectController.js",
+    "groupTitle": "Subjects",
+    "name": "DeleteSubjectsId"
+  },
+  {
     "type": "get",
     "url": "/subjects/byMajor/:major",
     "title": "Get subjects by major",
@@ -1028,6 +1582,65 @@
     "name": "GetSubjectsBymajorMajor"
   },
   {
+    "type": "post",
+    "url": "/subjects",
+    "title": "Create a subject",
+    "group": "Subjects",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer Token</p>"
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "examples": [
+        {
+          "title": "Input",
+          "content": "{\n  \"name\": \"physique\",\n  \"description\": \"subject description\",\n  \"majors\" : [\"5c825dee263bbd33636897f4\"],\n  \"semestre\" : 1\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "   HTTP/1.1 200 OK\n{\n      \"documentsCount\": {\n          \"DS\": 0,\n          \"EX\": 0,\n          \"C\": 0,\n          \"TD\": 0,\n          \"TP\": 0\n      },\n      \"semestre\": 2,\n      \"deleted\": false,\n      \"_id\": \"5c8269c447baab426f6cbcfc\",\n      \"name\": \"physique\",\n      \"createdAt\": \"2019-03-08T13:10:28.761Z\",\n      \"updatedAt\": \"2019-03-12T22:56:21.620Z\",\n      \"__v\": 1,\n      \"description\": \"Subject description\"\n    }",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Not Authorized",
+          "content": "HTTP/1.1 401 Not Authorized",
+          "type": "json"
+        },
+        {
+          "title": "Bad Request",
+          "content": "HTTP/1.1 400 Bad Request\nname is required !\nsemestre must be 1 or 2\nmajors is required as an array!\nwrong major id !\nCastError",
+          "type": "json"
+        },
+        {
+          "title": "Internal Server Error",
+          "content": "HTTP/1.1 500 Internal Server Error",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "src/components/subject/subjectController.js",
+    "groupTitle": "Subjects",
+    "name": "PostSubjects"
+  },
+  {
     "type": "put",
     "url": "/subjects/GetByMajors/",
     "title": "Get subjects by majors",
@@ -1068,6 +1681,65 @@
     "filename": "src/components/subject/subjectController.js",
     "groupTitle": "Subjects",
     "name": "PutSubjectsGetbymajors"
+  },
+  {
+    "type": "put",
+    "url": "/subjects/:id",
+    "title": "Update a subject",
+    "group": "Subjects",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer Token</p>"
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "examples": [
+        {
+          "title": "Input",
+          "content": "{\n  \"name\": \"physique\",\n  \"description\": \"subject description\",\n  \"majors\" : [\"5c825dee263bbd33636897f4\"],\n  \"semestre\" : 1\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 OK",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Not Authorized",
+          "content": "HTTP/1.1 401 Not Authorized",
+          "type": "json"
+        },
+        {
+          "title": "Bad Request",
+          "content": "HTTP/1.1 400 Bad Request\nsubject not found !\nsemestre must be 1 or 2\nmajors is required as an array!\nwrong major id !\nCastError",
+          "type": "json"
+        },
+        {
+          "title": "Internal Server Error",
+          "content": "HTTP/1.1 500 Internal Server Error",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "src/components/subject/subjectController.js",
+    "groupTitle": "Subjects",
+    "name": "PutSubjectsId"
   },
   {
     "type": "get",

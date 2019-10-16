@@ -1,6 +1,49 @@
 import _ from "lodash";
 import { Subject, Major } from "../../config/models";
 
+/**
+ * @api {post} /subjects Create a subject
+ * @apiGroup Subjects
+ * @apiHeader Authorization Bearer Token
+ * @apiParamExample {json} Input
+ *    {
+ *      "name": "physique",
+ *      "description": "subject description",
+ *      "majors" : ["5c825dee263bbd33636897f4"],
+ *      "semestre" : 1
+ *    }
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 OK
+ * {
+      "documentsCount": {
+          "DS": 0,
+          "EX": 0,
+          "C": 0,
+          "TD": 0,
+          "TP": 0
+      },
+      "semestre": 2,
+      "deleted": false,
+      "_id": "5c8269c447baab426f6cbcfc",
+      "name": "physique",
+      "createdAt": "2019-03-08T13:10:28.761Z",
+      "updatedAt": "2019-03-12T22:56:21.620Z",
+      "__v": 1,
+      "description": "Subject description"
+    }
+ * @apiErrorExample Not Authorized
+ *    HTTP/1.1 401 Not Authorized
+ * @apiErrorExample Bad Request
+ *    HTTP/1.1 400 Bad Request
+ *    name is required !
+ *    semestre must be 1 or 2
+ *    majors is required as an array!
+ *    wrong major id !
+ *    CastError
+ * @apiErrorExample Internal Server Error
+ *    HTTP/1.1 500 Internal Server Error
+ */
+
 export async function create(req, res) {
   try {
     if (!req.body.name)
@@ -199,6 +242,32 @@ export async function getByMajors(req, res) {
   }
 }
 
+/**
+ * @api {put} /subjects/:id Update a subject
+ * @apiGroup Subjects
+ * @apiHeader Authorization Bearer Token
+ * @apiParamExample {json} Input
+ *    {
+ *      "name": "physique",
+ *      "description": "subject description",
+ *      "majors" : ["5c825dee263bbd33636897f4"],
+ *      "semestre" : 1
+ *    }
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 OK
+ * @apiErrorExample Not Authorized
+ *    HTTP/1.1 401 Not Authorized
+ * @apiErrorExample Bad Request
+ *    HTTP/1.1 400 Bad Request
+ *    subject not found !
+ *    semestre must be 1 or 2
+ *    majors is required as an array!
+ *    wrong major id !
+ *    CastError
+ * @apiErrorExample Internal Server Error
+ *    HTTP/1.1 500 Internal Server Error
+ */
+
 export async function update(req, res) {
   try {
     let subject = await Subject.findOne({ _id: req.params.id });
@@ -243,6 +312,22 @@ export async function update(req, res) {
     return res.status(500).end();
   }
 }
+
+/**
+ * @api {delete} /subjects/:id Delete a subject
+ * @apiGroup Subjects
+ * @apiHeader Authorization Bearer Token
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 OK
+ * @apiErrorExample Not Authorized
+ *    HTTP/1.1 401 Not Authorized
+ * @apiErrorExample Bad Request
+ *    HTTP/1.1 400 Bad Request
+ *    subject not found !
+ *    CastError
+ * @apiErrorExample Internal Server Error
+ *    HTTP/1.1 500 Internal Server Error
+ */
 
 export async function remove(req, res) {
   try {
