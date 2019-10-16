@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { Major, Level } from "../../config/models";
+import { Major, Level, Subject, Document } from "../../config/models";
 
 export async function create(req, res) {
   try {
@@ -66,6 +66,102 @@ export async function getAll(req, res) {
     const majors = await Major.find();
 
     return res.json(majors);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).end();
+  }
+}
+
+/**
+ * @api {get} /majors/withInReviewInfos Get all majors with in review infos
+ * @apiGroup Majors
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 OK
+ [
+{
+    "totalInReview": 55,
+    "majors": [
+        {
+          "_id": "5c8922106b5a61762e227a9a",
+          "name": "FIA2-II (24)",
+          "subjects": [
+              {
+                  "_id": "5c892b526ffe7e798d20b3d8",
+                  "name": "Théorie des files d'attente (5)"
+              },
+              {
+                  "_id": "5c892b776ffe7e798d20b3d9",
+                  "name": "Francais 4 (14)"
+              },
+              {
+                  "_id": "5c892b7d6ffe7e798d20b3da",
+                  "name": "Anglais 4 (5)"
+              },
+              {
+                  "_id": "5cc222635f4457320f0fe02a",
+                  "name": "Securitè Logicielle (0)"
+              }
+          ]
+        },
+        {
+          "_id": "5c89222c6b5a61762e227a9b",
+          "name": "FIA3-GL (0)",
+          "subjects": [
+              {
+                  "_id": "5cc222635f4457320f0fe02a",
+                  "name": "Securitè Logicielle (0)"
+              }
+          ]
+        }
+    ]
+}
+]
+ * @apiErrorExample {json} Name param cannot be empty
+ *    HTTP/1.1 400 Bad Request
+ * @apiErrorExample Internal Server Error
+ *    HTTP/1.1 500 Internal Server Error
+ */
+
+export async function getAllWithInReviewInfos(req, res) {
+  try {
+
+    let result = { totalInReview: 0, majors: [] }
+    let majors = await Major.find()
+
+    for (let major of majors) {
+
+      major = major.toJSON()
+
+      let subjects = await Subject.find({
+        majors: {
+          $in: major._id
+        }
+      })
+
+      let count = 0
+      major.subjects = []
+
+      for (let subject of subjects) {
+
+        subject = subject.toJSON();
+
+        let docments = await Document.find({
+          status: 'pending',
+          subject: subject._id
+        })
+
+        subject.name += ' (' + docments.length + ')'
+        count += docments.length
+        major.subjects.push(_.pick(subject, '_id', 'name'))
+      }
+
+      major.name += ' (' + count + ')'
+      result.totalInReview += count
+
+      result.majors.push(_.pick(major, '_id', 'name', 'subjects'))
+    }
+
+    return res.json(result);
   } catch (error) {
     console.log(error);
     return res.status(500).end();

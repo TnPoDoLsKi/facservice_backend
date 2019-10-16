@@ -9,13 +9,14 @@ import {
   getDocByUser,
   getAllByStatus,
   getDocByMajor,
-  search
+  search,
+  getPendingDocBySubject
 } from "./documentController";
 import { upload } from "../../services/uploadService";
 import { convert } from "../../services/pdfService";
 import { isLoggedIn, isAdmin } from "../../services/middlewares";
 
-export default function(router) {
+export default function (router) {
   router.get(
     "/documents/byStatus/:status",
     isLoggedIn,
@@ -23,6 +24,7 @@ export default function(router) {
     getAllByStatus
   );
   router.get("/documents/bySubject/:subjectId", getDocBySubject);
+  router.get("/documents/pending/bySubject/:subjectId", getPendingDocBySubject);
   router.get(
     "/documents/bySubject/:subjectId/byType/:type?",
     getDocBySubjectByType

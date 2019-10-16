@@ -210,6 +210,52 @@
   },
   {
     "type": "get",
+    "url": "/corrections/approved/bySubject/:subjectId",
+    "title": "Get approved corrections by subject id",
+    "group": "Corrections",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "id",
+            "optional": false,
+            "field": "id",
+            "description": "<p>Subejct id</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "   HTTP/1.1 200 OK\n [\n    {\n        \"status\": \"approved\",\n        \"verifiedByProf\": false,\n        \"score\": 0,\n        \"deleted\": false,\n        \"_id\": \"5c8826a5f9a4c66ce1eb1d5d\",\n        \"document\": \"5c87918f905e0b33f609b360\",\n        \"title\": \"corrigé de DS Physique 2014\",\n        \"user\": {\n            \"avatar\": \"https://igc.tn/img/portfolio/HC1-Prev.jpg\",\n            \"firstName\": \"Wael\",\n            \"lastName\": \"Ben Taleb\"\n        },\n        \"createdAt\": \"2019-03-12T21:37:41.572Z\",\n        \"updatedAt\": \"2019-03-12T22:40:30.601Z\",\n        \"__v\": 0\n    },\n    {\n        \"status\": \"approved\",\n        \"verifiedByProf\": false,\n        \"score\": 0,\n        \"deleted\": false,\n        \"_id\": \"5c88270ef9a4c66ce1eb1d5e\",\n        \"document\": \"5c87918f905e0b33f609b360\",\n        \"title\": \"corrigé de EX Analyse 2014 \",\n        \"user\": {\n            \"avatar\": \"https://igc.tn/img/portfolio/HC1-Prev.jpg\",\n            \"firstName\": \"Wael\",\n            \"lastName\": \"Ben Taleb\"\n        },\n        \"createdAt\": \"2019-03-12T21:39:26.070Z\",\n        \"updatedAt\": \"2019-03-12T22:26:16.867Z\",\n        \"__v\": 0\n    }\n]",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Bad Request",
+          "content": "HTTP/1.1 400 Bad Request",
+          "type": "json"
+        },
+        {
+          "title": "Internal Server Error",
+          "content": "HTTP/1.1 500 Internal Server Error",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "src/components/correction/correctionController.js",
+    "groupTitle": "Corrections",
+    "name": "GetCorrectionsApprovedBysubjectSubjectid"
+  },
+  {
+    "type": "get",
     "url": "/corrections/byDocument/:id",
     "title": "Get document's corrections",
     "group": "Corrections",
@@ -314,6 +360,56 @@
     "name": "PostCorrections"
   },
   {
+    "type": "delete",
+    "url": "/documents/:id",
+    "title": "Delete a document",
+    "group": "Documents",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer Token</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 204 No Content",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Not Authorized",
+          "content": "HTTP/1.1 401 Not Authorized",
+          "type": "json"
+        },
+        {
+          "title": "Bad Request",
+          "content": "HTTP/1.1 400 Bad Request\nCastError",
+          "type": "json"
+        },
+        {
+          "title": "Internal Server Error",
+          "content": "HTTP/1.1 500 Internal Server Error",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "src/components/document/documentController.js",
+    "groupTitle": "Documents",
+    "name": "DeleteDocumentsId"
+  },
+  {
     "type": "get",
     "url": "/documents/bySubject/:subjectId/byType/:type",
     "title": "Get documents by subject and type",
@@ -411,6 +507,52 @@
     "filename": "src/components/document/documentController.js",
     "groupTitle": "Documents",
     "name": "GetDocumentsId"
+  },
+  {
+    "type": "get",
+    "url": "/documents/pending/bySubject/:subjectId",
+    "title": "Get pending documents by subject",
+    "group": "Documents",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "id",
+            "optional": false,
+            "field": "subjectId",
+            "description": "<p>Subject id</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "   HTTP/1.1 200 OK\n[\n    {\n      \"type\": \"DS\",\n      \"status\": \"approved\",\n      \"NBDowloads\": 215,\n      \"session\": \"Rattrapage\",\n      \"hasCorrection\": true,\n      \"deleted\": false,\n      \"_id\": \"5c87918f905e0b33f609b360\",\n      \"filePath\": \"https://igc.tn/documents/file.pdf\",\n      \"subject\": \"5c8269c447baab426f6cbcfc\",\n      \"year\": 2014,\n      \"user\": {\n          \"avatar\": \"https://igc.tn/img/portfolio/HC1-Prev.jpg\",\n          \"firstName\": \"Wael\",\n          \"lastName\": \"Ben Taleb\"\n      },\n      \"title\": \"DS Francais 2014\",\n      \"createdAt\": \"2019-03-12T11:01:35.921Z\",\n      \"updatedAt\": \"2019-03-12T22:56:21.614Z\",\n      \"__v\": 0,\n      \"description\": \"DS Francais 2014 description\",\n      \"filesStaging\" : [\"https://igc.tn/img/portfolio/HC1-Prev.jpg\" , \"https://igc.tn/img/portfolio/HC1-Prev.jpg\"]\n    },\n    {\n      \"type\": \"DS\",\n      \"status\": \"approved\",\n      \"NBDowloads\": 215,\n      \"session\": \"Rattrapage\",\n      \"hasCorrection\": true,\n      \"deleted\": false,\n      \"_id\": \"5c87918f905e0b33f609b361\",\n      \"filePath\": \"https://igc.tn/documents/file.pdf\",\n      \"subject\": \"5c8269c447baab426f6cbcfc\",\n      \"year\": 2014,\n      \"user\": {\n          \"avatar\": \"https://igc.tn/img/portfolio/HC1-Prev.jpg\",\n          \"firstName\": \"Wael\",\n          \"lastName\": \"Ben Taleb\"\n      },\n      \"title\": \"DS Anglais 2014\",\n      \"createdAt\": \"2019-03-12T11:01:35.921Z\",\n      \"updatedAt\": \"2019-03-12T22:56:21.614Z\",\n      \"__v\": 0,\n      \"description\": \"DS Anglais 2014 description\",\n      \"filesStaging\" : [\"https://igc.tn/img/portfolio/HC1-Prev.jpg\" , \"https://igc.tn/img/portfolio/HC1-Prev.jpg\"]\n    }\n]",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Bad Request",
+          "content": "HTTP/1.1 400 Bad Request\nwrong subject id",
+          "type": "json"
+        },
+        {
+          "title": "Internal Server Error",
+          "content": "HTTP/1.1 500 Internal Server Error",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "src/components/document/documentController.js",
+    "groupTitle": "Documents",
+    "name": "GetDocumentsPendingBysubjectSubjectid"
   },
   {
     "type": "get",
@@ -530,6 +672,65 @@
     "filename": "src/components/document/documentController.js",
     "groupTitle": "Documents",
     "name": "PostDocuments"
+  },
+  {
+    "type": "put",
+    "url": "/documents/:id",
+    "title": "Update a document",
+    "group": "Documents",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer Token</p>"
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "examples": [
+        {
+          "title": "Input",
+          "content": "{\n  \"type\": \"DS\", // document type must be in 'DS', 'EX', 'C', 'TD', 'TP'\n  \"session\": \"Rattrapage\" // document session must be in 'Principale', 'Rattrapage',\n  \"subject\": \"5c41b2d82383c111b4ffad1a\",\n  \"year\": \"2017\",\n  \"filesStaging\": [\"https://igc.tn/img/portfolio/HC1-Prev.jpg\", \"https://igc.tn/img/portfolio/A2-Prev.jpg\"],\n  \"description\": \"Good\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 204 No Content",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Not Authorized",
+          "content": "HTTP/1.1 401 Not Authorized",
+          "type": "json"
+        },
+        {
+          "title": "Bad Request",
+          "content": "HTTP/1.1 400 Bad Request\nCastError\nyear must be a number\ndocument type must be in 'DS', 'EX', 'C', 'TD', 'TP'\nwrong subject id\ndocument session must be in 'Principale', 'Rattrapage'\nwrong document status",
+          "type": "json"
+        },
+        {
+          "title": "Internal Server Error",
+          "content": "HTTP/1.1 500 Internal Server Error",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "src/components/document/documentController.js",
+    "groupTitle": "Documents",
+    "name": "PutDocumentsId"
   },
   {
     "type": "post",
@@ -746,6 +947,39 @@
     "filename": "src/components/major/majorController.js",
     "groupTitle": "Majors",
     "name": "GetMajorsBylevelLevel"
+  },
+  {
+    "type": "get",
+    "url": "/majors/withInReviewInfos",
+    "title": "Get all majors with in review infos",
+    "group": "Majors",
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "   HTTP/1.1 200 OK\n [\n{\n    \"totalInReview\": 55,\n    \"majors\": [\n        {\n          \"_id\": \"5c8922106b5a61762e227a9a\",\n          \"name\": \"FIA2-II (24)\",\n          \"subjects\": [\n              {\n                  \"_id\": \"5c892b526ffe7e798d20b3d8\",\n                  \"name\": \"Théorie des files d'attente (5)\"\n              },\n              {\n                  \"_id\": \"5c892b776ffe7e798d20b3d9\",\n                  \"name\": \"Francais 4 (14)\"\n              },\n              {\n                  \"_id\": \"5c892b7d6ffe7e798d20b3da\",\n                  \"name\": \"Anglais 4 (5)\"\n              },\n              {\n                  \"_id\": \"5cc222635f4457320f0fe02a\",\n                  \"name\": \"Securitè Logicielle (0)\"\n              }\n          ]\n        },\n        {\n          \"_id\": \"5c89222c6b5a61762e227a9b\",\n          \"name\": \"FIA3-GL (0)\",\n          \"subjects\": [\n              {\n                  \"_id\": \"5cc222635f4457320f0fe02a\",\n                  \"name\": \"Securitè Logicielle (0)\"\n              }\n          ]\n        }\n    ]\n}\n]",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Name param cannot be empty",
+          "content": "HTTP/1.1 400 Bad Request",
+          "type": "json"
+        },
+        {
+          "title": "Internal Server Error",
+          "content": "HTTP/1.1 500 Internal Server Error",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "src/components/major/majorController.js",
+    "groupTitle": "Majors",
+    "name": "GetMajorsWithinreviewinfos"
   },
   {
     "type": "get",

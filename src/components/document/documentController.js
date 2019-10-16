@@ -191,7 +191,7 @@ export async function getDocBySubjectByType(req, res) {
       .select("-filesStaging");
 
     return res.json(documents);
-    
+
   } catch (error) {
     console.log(error);
     if (error.name == "CastError")
@@ -218,7 +218,6 @@ export async function getDocBySubject(req, res) {
       })
       .select("-filesStaging");
 
-    console.log(documents);
     return res.json(documents);
   } catch (error) {
     console.log(error);
@@ -489,6 +488,36 @@ export async function create(req, res) {
   }
 }
 
+/**
+ * @api {put} /documents/:id Update a document
+ * @apiGroup Documents
+ * @apiHeader Authorization Bearer Token
+ * @apiParamExample {json} Input
+ *    {
+ *      "type": "DS", // document type must be in 'DS', 'EX', 'C', 'TD', 'TP'
+ *      "session": "Rattrapage" // document session must be in 'Principale', 'Rattrapage',
+ *      "subject": "5c41b2d82383c111b4ffad1a",
+ *      "year": "2017",
+ *      "filesStaging": ["https://igc.tn/img/portfolio/HC1-Prev.jpg", "https://igc.tn/img/portfolio/A2-Prev.jpg"],
+ *      "description": "Good"
+ *    }
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 204 No Content
+ * 
+ * @apiErrorExample Not Authorized
+ *    HTTP/1.1 401 Not Authorized
+ * @apiErrorExample Bad Request
+ *    HTTP/1.1 400 Bad Request
+ *    CastError
+ *    year must be a number
+ *    document type must be in 'DS', 'EX', 'C', 'TD', 'TP'
+ *    wrong subject id
+ *    document session must be in 'Principale', 'Rattrapage'
+ *    wrong document status
+ * @apiErrorExample Internal Server Error
+ *    HTTP/1.1 500 Internal Server Error
+ */
+
 export async function update(req, res) {
   try {
     let docStatusChanged = false;
@@ -624,6 +653,22 @@ export async function update(req, res) {
   }
 }
 
+/**
+ * @api {delete} /documents/:id Delete a document
+ * @apiGroup Documents
+ * @apiHeader Authorization Bearer Token
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 204 No Content
+ * 
+ * @apiErrorExample Not Authorized
+ *    HTTP/1.1 401 Not Authorized
+ * @apiErrorExample Bad Request
+ *    HTTP/1.1 400 Bad Request
+ *    CastError
+ * @apiErrorExample Internal Server Error
+ *    HTTP/1.1 500 Internal Server Error
+ */
+
 export async function remove(req, res) {
   try {
     const currentDocument = await Document.findOne({ _id: req.params.id });
@@ -680,6 +725,93 @@ export async function getDocByMajor(req, res) {
     );
 
     const documents = await Document.find({ subject: { $in: subjects } });
+
+    return res.json(documents);
+  } catch (error) {
+    console.log(error);
+    if (error.name == "CastError")
+      return res.status(400).json({ error: error.message });
+
+    return res.status(500).end();
+  }
+}
+
+/**
+ * @api {get} /documents/pending/bySubject/:subjectId Get pending documents by subject
+ * @apiGroup Documents
+ * @apiParam {id} subjectId Subject id
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 OK
+ * [
+    {
+      "type": "DS",
+      "status": "approved",
+      "NBDowloads": 215,
+      "session": "Rattrapage",
+      "hasCorrection": true,
+      "deleted": false,
+      "_id": "5c87918f905e0b33f609b360",
+      "filePath": "https://igc.tn/documents/file.pdf",
+      "subject": "5c8269c447baab426f6cbcfc",
+      "year": 2014,
+      "user": {
+          "avatar": "https://igc.tn/img/portfolio/HC1-Prev.jpg",
+          "firstName": "Wael",
+          "lastName": "Ben Taleb"
+      },
+      "title": "DS Francais 2014",
+      "createdAt": "2019-03-12T11:01:35.921Z",
+      "updatedAt": "2019-03-12T22:56:21.614Z",
+      "__v": 0,
+      "description": "DS Francais 2014 description",
+      "filesStaging" : ["https://igc.tn/img/portfolio/HC1-Prev.jpg" , "https://igc.tn/img/portfolio/HC1-Prev.jpg"]
+    },
+    {
+      "type": "DS",
+      "status": "approved",
+      "NBDowloads": 215,
+      "session": "Rattrapage",
+      "hasCorrection": true,
+      "deleted": false,
+      "_id": "5c87918f905e0b33f609b361",
+      "filePath": "https://igc.tn/documents/file.pdf",
+      "subject": "5c8269c447baab426f6cbcfc",
+      "year": 2014,
+      "user": {
+          "avatar": "https://igc.tn/img/portfolio/HC1-Prev.jpg",
+          "firstName": "Wael",
+          "lastName": "Ben Taleb"
+      },
+      "title": "DS Anglais 2014",
+      "createdAt": "2019-03-12T11:01:35.921Z",
+      "updatedAt": "2019-03-12T22:56:21.614Z",
+      "__v": 0,
+      "description": "DS Anglais 2014 description",
+      "filesStaging" : ["https://igc.tn/img/portfolio/HC1-Prev.jpg" , "https://igc.tn/img/portfolio/HC1-Prev.jpg"]
+    }
+]
+ * @apiErrorExample Bad Request
+ *    HTTP/1.1 400 Bad Request
+ *    wrong subject id
+ * @apiErrorExample Internal Server Error
+ *    HTTP/1.1 500 Internal Server Error
+ */
+
+export async function getPendingDocBySubject(req, res) {
+  try {
+    const subjectObject = await Subject.findOne({ _id: req.params.subjectId });
+
+    if (!subjectObject)
+      return res.status(400).json({ error: "wrong subject id" });
+
+    const documents = await Document.find({
+      subject: req.params.subjectId,
+      status: "pending"
+    })
+      .populate({
+        path: "user",
+        select: "firstName lastName avatar -_id"
+      })
 
     return res.json(documents);
   } catch (error) {

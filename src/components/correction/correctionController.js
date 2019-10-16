@@ -112,6 +112,36 @@ export async function getAllByDocument(req, res) {
   }
 }
 
+export async function getAllByStatus(req, res) {
+  try {
+    if (!["pending", "approved", "rejected"].includes(req.params.status)) {
+      return res.status(400).json({
+        error: "status must be 'pending', 'approved' or 'rejected'"
+      });
+    }
+
+    const corrections = await Correction.find({
+      status: req.params.status
+    })
+      .populate({
+        path: "user",
+        select: "firstName lastName avatar -_id"
+      })
+      .populate({
+        path: "document",
+        populate: {
+          path: "subject",
+          select: "name",
+          populate: { path: "majors", select: "_id name" }
+        }
+      });
+    return res.json(corrections);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).end();
+  }
+}
+
 /**
  * @api {post} /corrections Create a correction
  * @apiGroup Corrections
@@ -145,36 +175,6 @@ export async function getAllByDocument(req, res) {
  * @apiErrorExample Internal Server Error
  *    HTTP/1.1 500 Internal Server Error
  */
-
-export async function getAllByStatus(req, res) {
-  try {
-    if (!["pending", "approved", "rejected"].includes(req.params.status)) {
-      return res.status(400).json({
-        error: "status must be 'pending', 'approved' or 'rejected'"
-      });
-    }
-
-    const corrections = await Correction.find({
-      status: req.params.status
-    })
-      .populate({
-        path: "user",
-        select: "firstName lastName avatar -_id"
-      })
-      .populate({
-        path: "document",
-        populate: {
-          path: "subject",
-          select: "name",
-          populate: { path: "majors", select: "_id name" }
-        }
-      });
-    return res.json(corrections);
-  } catch (error) {
-    console.log(error);
-    return res.status(500).end();
-  }
-}
 
 export async function create(req, res) {
   try {
@@ -336,6 +336,83 @@ export async function getByUser(req, res) {
     if (error.name === "CastError")
       return res.status(400).json({ error: error.message });
 
+    return res.status(500).end();
+  }
+}
+
+/**
+ * @api {get} /corrections/approved/bySubject/:subjectId Get approved corrections by subject id
+ * @apiGroup Corrections
+ * @apiParam {id} id Subejct id
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 OK
+ [
+    {
+        "status": "approved",
+        "verifiedByProf": false,
+        "score": 0,
+        "deleted": false,
+        "_id": "5c8826a5f9a4c66ce1eb1d5d",
+        "document": "5c87918f905e0b33f609b360",
+        "title": "corrigé de DS Physique 2014",
+        "user": {
+            "avatar": "https://igc.tn/img/portfolio/HC1-Prev.jpg",
+            "firstName": "Wael",
+            "lastName": "Ben Taleb"
+        },
+        "createdAt": "2019-03-12T21:37:41.572Z",
+        "updatedAt": "2019-03-12T22:40:30.601Z",
+        "__v": 0
+    },
+    {
+        "status": "approved",
+        "verifiedByProf": false,
+        "score": 0,
+        "deleted": false,
+        "_id": "5c88270ef9a4c66ce1eb1d5e",
+        "document": "5c87918f905e0b33f609b360",
+        "title": "corrigé de EX Analyse 2014 ",
+        "user": {
+            "avatar": "https://igc.tn/img/portfolio/HC1-Prev.jpg",
+            "firstName": "Wael",
+            "lastName": "Ben Taleb"
+        },
+        "createdAt": "2019-03-12T21:39:26.070Z",
+        "updatedAt": "2019-03-12T22:26:16.867Z",
+        "__v": 0
+    }
+]
+ * @apiErrorExample Bad Request
+ *    HTTP/1.1 400 Bad Request
+ * @apiErrorExample Internal Server Error
+ *    HTTP/1.1 500 Internal Server Error
+ */
+
+export async function getAllApprovedBySubject(req, res) {
+  try {
+
+    const corrections = await Correction.find({
+      status: "approved"
+    })
+      .populate({
+        path: "user",
+        select: "firstName lastName avatar -_id"
+      })
+      .populate({
+        path: "document",
+        populate: {
+          path: "subject",
+          select: "name",
+          populate: { path: "majors", select: "_id name" }
+        }
+      });
+
+      
+
+
+    return res.json(corrections);
+  } catch (error) {
+    console.log(error);
     return res.status(500).end();
   }
 }
