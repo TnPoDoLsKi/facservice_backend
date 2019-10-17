@@ -509,6 +509,7 @@ export async function create(req, res) {
  * @apiErrorExample Bad Request
  *    HTTP/1.1 400 Bad Request
  *    CastError
+ *    document not found
  *    year must be a number
  *    document type must be in 'DS', 'EX', 'C', 'TD', 'TP'
  *    wrong subject id
@@ -522,6 +523,9 @@ export async function update(req, res) {
   try {
     let docStatusChanged = false;
     let currentDocument = await Document.findOne({ _id: req.params.id });
+
+    if (!currentDocument)
+      return res.status(400).json({ error: "document not found" });
 
     if (req.body.title) currentDocument.title = req.body.title;
 
@@ -642,7 +646,7 @@ export async function update(req, res) {
     }
 
     return res.json(currentDocument);
-    
+
   } catch (error) {
     console.log(error);
     if (error.name === "CastError")

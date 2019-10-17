@@ -214,6 +214,43 @@ export async function create(req, res) {
   }
 }
 
+
+/**
+ * @api {put} /corrections/:id Update a correction
+ * @apiGroup Corrections
+ * @apiHeader Authorization Bearer Token
+ * @apiParamExample {json} Input
+ *    {
+ *      "filesStaging": ["https://igc.tn/img/portfolio/HC1-Prev.jpg", "https://igc.tn/img/portfolio/A2-Prev.jpg"],
+ *      "document": "5c41b2d82383c111b4ffad1a",
+ *      "description": "Correction Correction Correction Correction"
+ *    }
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 OK
+      {
+        "status": "pending",
+        "verifiedByProf": false,
+        "score": 0,
+        "_id": "5c88f1c4719c206b4524de83",
+        "deleted": false,
+        "document": "5c41b2d82383c111b4ffad1a",
+        "title": "corrigé de EX physique 2015",
+        "user": "5c8783b34a35cd28fa5bea3b",
+        "createdAt": "2019-03-13T12:04:20.911Z",
+        "updatedAt": "2019-03-13T12:04:20.911Z",
+        "__v": 0
+      }
+ * @apiErrorExample Not Authorized
+ *    HTTP/1.1 401 Not Authorized
+ * @apiErrorExample Bad Request
+ *    HTTP/1.1 400 Bad Request
+ *    wrong document id
+ *    wrong correction status
+ *    CastError
+ * @apiErrorExample Internal Server Error
+ *    HTTP/1.1 500 Internal Server Error
+ */
+
 export async function update(req, res) {
   try {
     let correction = await Correction.findOne({
@@ -281,6 +318,21 @@ export async function update(req, res) {
     return res.status(500).end();
   }
 }
+
+/**
+ * @api {delete} /corrections/:id Delete a correction
+ * @apiGroup Corrections
+ * @apiHeader Authorization Bearer Token
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 OK
+ * @apiErrorExample Not Authorized
+ *    HTTP/1.1 401 Not Authorized
+ * @apiErrorExample Bad Request
+ *    HTTP/1.1 400 Bad Request
+ *    CastError
+ * @apiErrorExample Internal Server Error
+ *    HTTP/1.1 500 Internal Server Error
+ */
 
 export async function remove(req, res) {
   try {
