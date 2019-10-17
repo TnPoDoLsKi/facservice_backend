@@ -209,6 +209,56 @@ define({ "api": [
     "groupTitle": "Auth"
   },
   {
+    "type": "delete",
+    "url": "/corrections/:id",
+    "title": "Delete a correction",
+    "group": "Corrections",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer Token</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 OK",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Not Authorized",
+          "content": "HTTP/1.1 401 Not Authorized",
+          "type": "json"
+        },
+        {
+          "title": "Bad Request",
+          "content": "HTTP/1.1 400 Bad Request\nCastError",
+          "type": "json"
+        },
+        {
+          "title": "Internal Server Error",
+          "content": "HTTP/1.1 500 Internal Server Error",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "src/components/correction/correctionController.js",
+    "groupTitle": "Corrections",
+    "name": "DeleteCorrectionsId"
+  },
+  {
     "type": "get",
     "url": "/corrections/approved/bySubject/:subjectId",
     "title": "Get approved corrections by subject id",
@@ -358,6 +408,65 @@ define({ "api": [
     "filename": "src/components/correction/correctionController.js",
     "groupTitle": "Corrections",
     "name": "PostCorrections"
+  },
+  {
+    "type": "put",
+    "url": "/corrections/:id",
+    "title": "Update a correction",
+    "group": "Corrections",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Bearer Token</p>"
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "examples": [
+        {
+          "title": "Input",
+          "content": "{\n  \"filesStaging\": [\"https://igc.tn/img/portfolio/HC1-Prev.jpg\", \"https://igc.tn/img/portfolio/A2-Prev.jpg\"],\n  \"document\": \"5c41b2d82383c111b4ffad1a\",\n  \"description\": \"Correction Correction Correction Correction\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 OK\n   {\n     \"status\": \"pending\",\n     \"verifiedByProf\": false,\n     \"score\": 0,\n     \"_id\": \"5c88f1c4719c206b4524de83\",\n     \"deleted\": false,\n     \"document\": \"5c41b2d82383c111b4ffad1a\",\n     \"title\": \"corrigé de EX physique 2015\",\n     \"user\": \"5c8783b34a35cd28fa5bea3b\",\n     \"createdAt\": \"2019-03-13T12:04:20.911Z\",\n     \"updatedAt\": \"2019-03-13T12:04:20.911Z\",\n     \"__v\": 0\n   }",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Not Authorized",
+          "content": "HTTP/1.1 401 Not Authorized",
+          "type": "json"
+        },
+        {
+          "title": "Bad Request",
+          "content": "HTTP/1.1 400 Bad Request\nwrong document id\nwrong correction status\nCastError",
+          "type": "json"
+        },
+        {
+          "title": "Internal Server Error",
+          "content": "HTTP/1.1 500 Internal Server Error",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "src/components/correction/correctionController.js",
+    "groupTitle": "Corrections",
+    "name": "PutCorrectionsId"
   },
   {
     "type": "delete",
@@ -717,7 +826,7 @@ define({ "api": [
         },
         {
           "title": "Bad Request",
-          "content": "HTTP/1.1 400 Bad Request\nCastError\nyear must be a number\ndocument type must be in 'DS', 'EX', 'C', 'TD', 'TP'\nwrong subject id\ndocument session must be in 'Principale', 'Rattrapage'\nwrong document status",
+          "content": "HTTP/1.1 400 Bad Request\nCastError\ndocument not found\nyear must be a number\ndocument type must be in 'DS', 'EX', 'C', 'TD', 'TP'\nwrong subject id\ndocument session must be in 'Principale', 'Rattrapage'\nwrong document status",
           "type": "json"
         },
         {
