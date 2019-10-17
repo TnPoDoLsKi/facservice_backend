@@ -641,7 +641,8 @@ export async function update(req, res) {
       await subject.save();
     }
 
-    return res.status(204).end();
+    return res.json(currentDocument);
+    
   } catch (error) {
     console.log(error);
     if (error.name === "CastError")
