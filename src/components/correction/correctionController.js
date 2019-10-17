@@ -270,7 +270,7 @@ export async function update(req, res) {
 
     await correction.save();
 
-    return res.status(200).end();
+    return res.json(correction)
   } catch (error) {
     console.log(error.name);
     if (error.name === "CastError")

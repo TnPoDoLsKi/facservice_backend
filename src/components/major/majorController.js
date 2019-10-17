@@ -325,7 +325,7 @@ export async function update(req, res) {
     }
 
     await major.save();
-    return res.status(200).end();
+    return res.json(major)
   } catch (error) {
     if (error.name == "CastError")
       return res.status(400).json({ error: error.message });

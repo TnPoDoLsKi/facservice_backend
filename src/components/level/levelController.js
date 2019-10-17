@@ -192,7 +192,7 @@ export async function update(req, res) {
 
     await level.save();
 
-    return res.status(200).end();
+    return res.json(level);
   } catch (error) {
     if (error.name == "CastError")
       return res.status(400).json({ error: error.message });

@@ -303,7 +303,7 @@ export async function update(req, res) {
 
     await subject.save();
 
-    return res.status(200).end();
+    return res.json(subject)
   } catch (error) {
     if (error.name == "CastError")
       return res.status(400).json({ error: error.message });
