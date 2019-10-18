@@ -19,7 +19,9 @@ export async function isLoggedIn(req, res, next) {
 
     const user = await User.findOne({ token: token });
 
-    if (!user) return res.status(401).end();
+    if (!user) return res.status(401).json({
+      error: "Unauthorized"
+    });
 
     req.user = user;
     return next();
