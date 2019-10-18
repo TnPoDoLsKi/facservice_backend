@@ -43,7 +43,7 @@ app.use("/api", routes);
 app.use("/", express.static( path.join(__dirname, "/../public/front/")));
 app.use("/dashboard", express.static(path.join(__dirname, "/../public/dashboard/")));
 app.use("/uploads/", express.static(path.join(__dirname, "/../public/uploads/")));
-app.use("/pdfs/", express.static(path.join(__dirname, "/../public/pdfs/")));
+app.use("/documents/", express.static(path.join(__dirname, "/../public/documents/")));
 app.use("/apidoc/", express.static(path.join(__dirname, "/../public/apidoc/")));
 app.use("/privacy/", express.static(path.join(__dirname, "/../public/privacy/")));
 

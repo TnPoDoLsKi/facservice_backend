@@ -1,5 +1,7 @@
+import fs from "fs";
 import _ from "lodash";
 import Fuse from "fuse.js";
+import PdfPrinter from "pdfmake";
 import { Document, Major, Subject } from "../../config/models";
 
 export async function getAll(req, res) {
@@ -570,6 +572,10 @@ export async function update(req, res) {
       )
         docStatusChanged = true;
 
+      if (currentDocument.status != "approved" && req.body.status == "approved") {
+        currentDocument.filePath = createPDF(currentDocument.filesStaging, currentDocument.title);
+      }
+
       currentDocument.status = req.body.status;
     }
 
@@ -579,10 +585,6 @@ export async function update(req, res) {
       if (!subject) return res.status(400).json({ error: "wrong subject id" });
 
       currentDocument.subject = req.body.subject;
-    }
-
-    if (req.body.status == "approved" && req.body.filePath) {
-      currentDocument.filePath = req.body.filePath;
     }
 
     await currentDocument.save();
@@ -826,4 +828,54 @@ export async function getPendingDocBySubject(req, res) {
 
     return res.status(500).end();
   }
+}
+
+function createPDF(files, title) {
+
+  let existingPDF
+
+  for (let file of files) {
+    let parts = file.split('.')
+    if (parts[parts.length - 1] == 'pdf')
+      existingPDF = file
+  }
+
+  if (existingPDF)
+    return existingPDF
+
+  let content = files.map(item => {
+    return {
+      image: "public" + item.replace("https://facservice.tn", ""),
+      width: 595,
+      height: 842
+    }
+  })
+
+  let printer = new PdfPrinter();
+
+  let docDefinition = {
+    content: content,
+    info: {
+      title,
+      author: "Issat Sousse Google Club"
+    },
+    pageMargins: [0, 0, 0, 0]
+  };
+
+  let pdfDoc = printer.createPdfKitDocument(docDefinition);
+  
+  pdfDoc.pipe(
+    fs.createWriteStream(
+      "public/documents/" + title + ".pdf"
+    ),
+    {
+      encoding: "utf16"
+    }
+  );
+
+  pdfDoc.end();
+
+  let filePath = "https://facservice.tn/documents/" + title + ".pdf"
+
+  return filePath
 }
