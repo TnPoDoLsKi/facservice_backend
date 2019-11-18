@@ -15,7 +15,7 @@ class MajorsSeeder extends Seeder {
       name: { $in: ['FI', 'LaII', 'LaGm', 'LaEng', 'LaEm', 'LFSI'] } }
     ).exec()
     this.levels = await Level.find().exec()
-    this.sections = await Section.find({ name: { $in: ['GL', 'II', 'GL-AL'] } }).exec()
+    // this.sections = await Section.find({ name: { $in: ['GL', 'II', 'GL-AL'] } }).exec()
     this.subjects = await Subject.find().exec()
     this.majors = this._generateMajors()
   }
