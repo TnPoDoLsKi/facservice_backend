@@ -41,7 +41,7 @@ class UsersSeeder extends Seeder {
       firstName: 'Mohamed',
       lastName: 'Rouis',
       hashedPassword: 'rouis123',
-      type: 'prof',
+      type: 'admin',
       avatar: '/uploads/avatar.jpg',
       major: this.major[0]._id
     }]
