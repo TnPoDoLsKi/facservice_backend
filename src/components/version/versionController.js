@@ -82,6 +82,8 @@ export async function getLast(req, res) {
 
 export async function getFromVersion(req, res) {
   try {
+    return res.json({ newUpdate: false });
+    
     const clientVersion = await Version.findOne({ version: req.params.clientVersion })
 
     if (!clientVersion)
