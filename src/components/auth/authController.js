@@ -145,11 +145,14 @@ export async function signIn(req, res) {
 
     user = user.toJSON();
     user = _.pick(user, "firstName", "lastName", "major", "token", "email");
-    user.majorName = user.major.name;
-    user.major = user.major._id;
+    if (user.major) {
+      user.majorName = user.major.name;
+      user.major = user.major._id;
+    }
 
     return res.json(user);
   } catch (err) {
+    console.log(err);
     return res.status(500).end();
   }
 }
