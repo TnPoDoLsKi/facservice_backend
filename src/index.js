@@ -39,8 +39,8 @@ app.use(morgan("dev"));
 app.use(cors());
 app.use(device.capture());
 
-app.use("/api", routes);
-app.use("/", express.static( path.join(__dirname, "/../public/front/")));
+app.use("/", routes);
+app.use("/", express.static(path.join(__dirname, "/../public/front/")));
 app.use("/dashboard", express.static(path.join(__dirname, "/../public/dashboard/")));
 app.use("/uploads/", express.static(path.join(__dirname, "/../public/uploads/")));
 app.use("/documents/", express.static(path.join(__dirname, "/../public/documents/")));

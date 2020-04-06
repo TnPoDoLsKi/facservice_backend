@@ -15,7 +15,7 @@
   },
   "apidoc": {
     "title": "Custom apiDoc browser title",
-    "url": "https://facservice.tn/api",
+    "url": "https://api.facservice.tn",
     "template": {
       "forceLanguage": "en"
     }
