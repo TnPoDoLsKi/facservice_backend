@@ -15,7 +15,7 @@ mongooseLib.Promise = global.Promise
 export const mongoose = mongooseLib
 
 // Export the mongodb url
-export const mongoURL = DB
+export const mongoURL = "mongodb://facservice:uZp7cO$1$@localhost:27017/facservice"
 
 /*
   Seeders List

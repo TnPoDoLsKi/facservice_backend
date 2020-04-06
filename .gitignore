@@ -4,7 +4,7 @@ build
 package-lock.json
 
 ecosystem.config.js
-public
+/public
 
 # compiled output
 /dist
