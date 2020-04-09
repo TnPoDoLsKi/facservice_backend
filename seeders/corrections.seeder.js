@@ -1,38 +1,88 @@
-import {
-  Seeder
-} from 'mongoose-data-seed'
-import { Document, User, Correction } from '../src/config/models'
+import { Seeder } from 'mongoose-data-seed'
+import { User, Document, Correction } from '../src/config/models'
 
 class CorrectionsSeeder extends Seeder {
-  async beforeRun () {
-    this.user = await User.findOne({
-      email: 'chady@gmail.com' }
-    ).exec()
+
+  async beforeRun() {
+    this.users = await User.find().exec()
     this.documents = await Document.find().exec()
-    this.corrections = this._generateCorrections()
+
+    this.corrections = this._generate()
   }
-  async shouldRun () {
+
+  async shouldRun() {
     return Correction.countDocuments().exec().then(count => count === 0)
   }
 
-  async run () {
+  async run() {
     return Correction.create(this.corrections)
   }
 
-  _generateCorrections () {
-    return [{
-      title: 'correction ds algo 2015',
-      filePath: '/uploads/jdhgfhd.jpg',
-      user: this.user._id,
-      approved: true,
-      document: this.documents[0]._id
-    }, {
-      title: 'correction ds analyse 2018',
-      filePath: '/uploads/jdhgfhd.jpg',
-      user: this.user._id,
-      approved: true,
-      document: this.documents[1]._id
-    }]
+  _generate() {
+    return [
+
+      // for document 1 ds math discrètes
+      {
+        title: 'Correction DS math discrètes 2018',
+        description: 'Correction DS math discrètes 2018',
+        filePath: '/uploads/jdhgfhd.jpg',
+        filesStaging: [],
+        status: 'approved',
+        verifiedByProf: false,
+        score: 0,
+        user: this.users[0]._id,
+        document: this.documents[0]._id
+      },
+
+      // for document 2 ex math discrètes
+      {
+        title: 'Correction EX math discrètes 2018',
+        description: 'Correction EX math discrètes 2018',
+        filePath: '/uploads/jdhgfhd.jpg',
+        filesStaging: [],
+        status: 'approved',
+        verifiedByProf: true,
+        score: 0,
+        user: this.users[0]._id,
+        document: this.documents[1]._id
+      },
+
+      // for document 3 ds Probabilité et Statistiques
+      {
+        title: 'Correction DS Probabilité 2018',
+        description: 'Correction DS Probabilité 2018',
+        filePath: '/uploads/jdhgfhd.jpg',
+        filesStaging: [],
+        status: 'approved',
+        verifiedByProf: true,
+        score: 0,
+        user: this.users[1]._id,
+        document: this.documents[3]._id
+      },
+      {
+        title: 'Correction DS Proba 2018',
+        description: 'Correction DS Proba 2018',
+        filePath: '/uploads/jdhgfhd.jpg',
+        filesStaging: [],
+        status: 'approved',
+        verifiedByProf: true,
+        score: 0,
+        user: this.users[1]._id,
+        document: this.documents[3]._id
+      },
+      {
+        title: 'Correction DS Pes 2018',
+        description: 'Correction DS Pes 2018',
+        filePath: '/uploads/jdhgfhd.jpg',
+        filesStaging: [],
+        status: 'approved',
+        verifiedByProf: true,
+        score: 0,
+        user: this.users[1]._id,
+        document: this.documents[3]._id
+      }
+
+    ]
   }
 }
 

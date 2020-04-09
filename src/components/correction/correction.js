@@ -6,6 +6,9 @@ const correctionSchema = new mongoose.Schema(
     title: {
       type: String
     },
+    description: {
+      type: String
+    },
     filePath: {
       type: String
     },
@@ -23,6 +26,10 @@ const correctionSchema = new mongoose.Schema(
       type: Boolean,
       default: false
     },
+    score: {
+      type: Number,
+      default: 0
+    },
     document: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "document"
@@ -30,13 +37,6 @@ const correctionSchema = new mongoose.Schema(
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User"
-    },
-    score: {
-      type: Number,
-      default: 0
-    },
-    description: {
-      type: String
     }
   },
   {

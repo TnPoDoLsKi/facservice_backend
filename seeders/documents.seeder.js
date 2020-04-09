@@ -1,77 +1,203 @@
-import {
-  Seeder
-} from 'mongoose-data-seed'
-import {
-  Document,
-  User,
-  Major,
-  Subject,
-  Correction
-} from '../src/config/models'
+import { Seeder } from 'mongoose-data-seed'
+import { User, Subject, Document } from '../src/config/models'
 
 class DocumentsSeeder extends Seeder {
-  async beforeRun () {
-    this.user = await User.findOne({
-      email: 'mouna@gmail.com'
-    }).exec()
-    this.major = await Major.findOne({
-      name: 'FIA1'
-    }).exec()
-    this.subject = await Subject.find().exec()
-    this.corrections = await Correction.find().exec()
-    this.documents = this._generateDocuments()
+
+  async beforeRun() {
+    this.users = await User.find().exec()
+    this.subjects = await Subject.find().exec()
+
+    this.documents = this._generate()
   }
-  async shouldRun () {
+
+  async shouldRun() {
     return Document.countDocuments().exec().then(count => count === 0)
   }
 
-  async run () {
+  async run() {
     return Document.create(this.documents)
   }
 
-  _generateDocuments () {
-    return [{
-      title: 'ds analyse 2018',
-      type: 'DS',
-      approved: true,
-      filePath: 'http://igc.tn:3005/uploads/upload_ab8e33735866a91c21e582e8fbefe6a6.pdf',
-      user: this.user._id,
-      major: this.major._id,
-      subject: this.subject[0]._id,
-      year: '2018',
-      semestre: '1',
-      profName: 'Maher Milli',
-      session: 'Principale',
-      description: 'ds analyse 2018 par Maher Mili'
-      // corrections: [this.corrections[0]]
-    }, {
-      title: 'EX Algo 2017',
-      type: 'EX',
-      approved: true,
-      filePath: 'http://igc.tn:3005/uploads/upload_c16292398cd0d05b1fec792724cf2f17.png',
-      user: this.user._id,
-      major: this.major._id,
-      subject: this.subject[1]._id,
-      year: '2017',
-      semestre: '1',
-      profName: 'Hanen Beji',
-      session: 'Principale',
-      description: 'EX Algo 2017 par Hanen Beji'
-    }, {
-      title: 'DS Archi 2015',
-      type: 'DS',
-      approved: true,
-      filePath: 'http://igc.tn:3005/uploads/upload_ab8e33735866a91c21e582e8fbefe6a6.pdf',
-      user: this.user._id,
-      major: this.major._id,
-      subject: this.subject[2]._id,
-      year: '2015',
-      semestre: '2',
-      profName: 'Heni Mouredi',
-      session: 'Principale',
-      description: 'DS Archi 2015 par Heni Mouredi'
-      // corrections: [this.corrections[1]]
-    }]
+  _generate() {
+    return [
+
+      // for Mathématiques discrètes [0..2]
+      {
+        title: 'DS math discrètes 2018',
+        description: 'DS math discrètes 2018 par Maher Milli',
+        type: 'DS',
+        status: "approved",
+        year: '2018',
+        profName: 'Maher Milli',
+        session: 'Principale',
+        filePath: 'http://igc.tn:3005/uploads/upload_ab8e33735866a91c21e582e8fbefe6a6.pdf',
+        filesStaging: [],
+        user: this.users[0]._id,
+        subject: this.subjects[0]._id,
+        hasCorrection: true
+      },
+      {
+        title: 'Ex math discrètes 2017',
+        description: 'Ex math discrètes par Hanen Beji',
+        type: 'EX',
+        status: "approved",
+        year: '2017',
+        profName: 'Hanen Beji',
+        session: 'Principale',
+        filePath: 'http://igc.tn:3005/uploads/upload_ab8e33735866a91c21e582e8fbefe6a6.pdf',
+        filesStaging: [],
+        user: this.users[1]._id,
+        subject: this.subjects[0]._id,
+        hasCorrection: true
+      },
+      {
+        title: 'Cour math discrètes 2019',
+        description: 'Cour math discrètes par Maher Milli',
+        type: 'C',
+        status: "approved",
+        year: '2019',
+        profName: 'Maher Milli',
+        session: 'Principale',
+        filePath: 'http://igc.tn:3005/uploads/upload_ab8e33735866a91c21e582e8fbefe6a6.pdf',
+        filesStaging: [],
+        user: this.users[1]._id,
+        subject: this.subjects[0]._id,
+        hasCorrection: false
+      },
+
+      // for Probabilité et Statistiques [3..5]
+      {
+        title: 'DS Probabilité et Statistiques 2018',
+        description: 'DS Probabilité et Statistiques 2018 par Maher Milli',
+        type: 'DS',
+        status: "approved",
+        year: '2018',
+        profName: 'Maher Milli',
+        session: 'Principale',
+        filePath: 'http://igc.tn:3005/uploads/upload_ab8e33735866a91c21e582e8fbefe6a6.pdf',
+        filesStaging: [],
+        user: this.users[2]._id,
+        subject: this.subjects[1]._id,
+        hasCorrection: true
+      },
+      {
+        title: 'Ex Probabilité et Statistiques 2017',
+        description: 'Ex Probabilité et Statistiques par Hanen Beji',
+        type: 'EX',
+        status: "approved",
+        year: '2017',
+        profName: 'Hanen Beji',
+        session: 'Principale',
+        filePath: 'http://igc.tn:3005/uploads/upload_ab8e33735866a91c21e582e8fbefe6a6.pdf',
+        filesStaging: [],
+        user: this.users[2]._id,
+        subject: this.subjects[1]._id,
+        hasCorrection: false
+      },
+      {
+        title: 'Cour Probabilité et Statistiques 2019',
+        description: 'Cour Probabilité et Statistiques par Maher Milli',
+        type: 'C',
+        status: "approved",
+        year: '2019',
+        profName: 'Maher Milli',
+        session: 'Principale',
+        filePath: 'http://igc.tn:3005/uploads/upload_ab8e33735866a91c21e582e8fbefe6a6.pdf',
+        filesStaging: [],
+        user: this.users[2]._id,
+        subject: this.subjects[1]._id,
+        hasCorrection: false
+      },
+
+      // for Transmission de données [6..8]
+      {
+        title: 'DS Transmission de données 2018',
+        description: 'DS Transmission de données 2018 par Maher Milli',
+        type: 'DS',
+        status: "approved",
+        year: '2018',
+        profName: 'Maher Milli',
+        session: 'Principale',
+        filePath: 'http://igc.tn:3005/uploads/upload_ab8e33735866a91c21e582e8fbefe6a6.pdf',
+        filesStaging: [],
+        user: this.users[2]._id,
+        subject: this.subjects[2]._id,
+        hasCorrection: false
+      },
+      {
+        title: 'Ex Transmission de données 2017',
+        description: 'Ex Transmission de données par Hanen Beji',
+        type: 'EX',
+        status: "approved",
+        year: '2017',
+        profName: 'Hanen Beji',
+        session: 'Principale',
+        filePath: 'http://igc.tn:3005/uploads/upload_ab8e33735866a91c21e582e8fbefe6a6.pdf',
+        filesStaging: [],
+        user: this.users[2]._id,
+        subject: this.subjects[2]._id,
+        hasCorrection: false
+      },
+      {
+        title: 'Cour Transmission de données 2019',
+        description: 'Cour Transmission de données par Maher Milli',
+        type: 'C',
+        status: "approved",
+        year: '2019',
+        profName: 'Maher Milli',
+        session: 'Principale',
+        filePath: 'http://igc.tn:3005/uploads/upload_ab8e33735866a91c21e582e8fbefe6a6.pdf',
+        filesStaging: [],
+        user: this.users[2]._id,
+        subject: this.subjects[2]._id,
+        hasCorrection: false
+      },
+
+      // for Paradigmes de programmation [9..11]
+      {
+        title: 'DS Paradigmes de programmation 2018',
+        description: 'DS Paradigmes de programmation 2018 par Maher Milli',
+        type: 'DS',
+        status: "approved",
+        year: '2018',
+        profName: 'Maher Milli',
+        session: 'Principale',
+        filePath: 'http://igc.tn:3005/uploads/upload_ab8e33735866a91c21e582e8fbefe6a6.pdf',
+        filesStaging: [],
+        user: this.users[2]._id,
+        subject: this.subjects[3]._id,
+        hasCorrection: false
+      },
+      {
+        title: 'Ex Paradigmes de programmation 2017',
+        description: 'Ex Paradigmes de programmation par Hanen Beji',
+        type: 'EX',
+        status: "approved",
+        year: '2017',
+        profName: 'Hanen Beji',
+        session: 'Principale',
+        filePath: 'http://igc.tn:3005/uploads/upload_ab8e33735866a91c21e582e8fbefe6a6.pdf',
+        filesStaging: [],
+        user: this.users[2]._id,
+        subject: this.subjects[3]._id,
+        hasCorrection: false
+      },
+      {
+        title: 'Cour Paradigmes de programmation 2019',
+        description: 'Cour Paradigmes de programmation par Maher Milli',
+        type: 'C',
+        status: "approved",
+        year: '2019',
+        profName: 'Maher Milli',
+        session: 'Principale',
+        filePath: 'http://igc.tn:3005/uploads/upload_ab8e33735866a91c21e582e8fbefe6a6.pdf',
+        filesStaging: [],
+        user: this.users[2]._id,
+        subject: this.subjects[3]._id,
+        hasCorrection: false
+      }
+
+    ]
   }
 }
 

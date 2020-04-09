@@ -22,10 +22,6 @@ const documentSchema = new mongoose.Schema(
       enum: ["DS", "EX", "C", "TD", "TP"],
       default: "DS"
     },
-    subject: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Subject"
-    },
     year: {
       type: Number
     },
@@ -38,10 +34,6 @@ const documentSchema = new mongoose.Schema(
       type: Number,
       default: 0
     },
-    user: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User"
-    },
     session: {
       type: String,
       enum: ["Principale", "Rattrapage"]
@@ -52,6 +44,14 @@ const documentSchema = new mongoose.Schema(
     hasCorrection: {
       type: Boolean,
       default: false
+    },
+    subject: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Subject"
+    },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User"
     }
   },
   {

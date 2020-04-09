@@ -1,11 +1,11 @@
 import mongooseLib from 'mongoose'
 import { DB } from './src/config/env'
+
 import FormationsSeeder from './seeders/formations.seeder'
 import LevelsSeeder from './seeders/levels.seeder'
-// import SectionsSeeder from './seeders/sections.seeder'
-import SubjectsSeeder from './seeders/subjects.seeder'
 import MajorsSeeder from './seeders/majors.seeder'
 import UsersSeeder from './seeders/users.seeder'
+import SubjectsSeeder from './seeders/subjects.seeder'
 import DocumentsSeeder from './seeders/documents.seeder'
 import CorrectionsSeeder from './seeders/corrections.seeder'
 
@@ -23,12 +23,11 @@ export const mongoURL = DB
   order is important
 */
 export const seedersList = {
-  Levels: LevelsSeeder,
-  // Sections: SectionsSeeder,
-  Formations: FormationsSeeder,
-  Subjects: SubjectsSeeder,
-  Majors: MajorsSeeder,
-  Users: UsersSeeder,
+  FormationsSeeder,
+  LevelsSeeder,
+  MajorsSeeder,
+  UsersSeeder,
+  SubjectsSeeder,
   DocumentsSeeder,
   CorrectionsSeeder
 }
