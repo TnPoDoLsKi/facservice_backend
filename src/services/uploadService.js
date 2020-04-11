@@ -54,8 +54,6 @@ export async function upload(req, res) {
     */
   const _fileHandler = (name, file) => {
 
-    console.log(name);
-
     let url = HOST + "/uploads/" + file.path.split("/").pop()
 
     // for windows env

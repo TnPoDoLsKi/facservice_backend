@@ -1,5 +1,6 @@
 import mongooseLib from 'mongoose'
 import { DB } from './src/config/env'
+import { apps } from './ecosystem.config'
 
 import FormationsSeeder from './seeders/formations.seeder'
 import LevelsSeeder from './seeders/levels.seeder'
@@ -15,7 +16,7 @@ mongooseLib.Promise = global.Promise
 export const mongoose = mongooseLib
 
 // Export the mongodb url
-export const mongoURL = DB
+export const mongoURL = apps ? apps[0].env.MONGODB_URI : DB
 
 // Seeders List - order is important
 
