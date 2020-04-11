@@ -1,5 +1,6 @@
 import formidable from "formidable";
 import path from "path";
+import { HOST } from '../config/env'
 
 /**
  * @api {post} /documents/upload Upload a file
@@ -27,6 +28,7 @@ const config = {
   maxFieldsSize: 100 * 1024 * 1024,
   multiple: true
 };
+
 export async function upload(req, res) {
   const fileUrls = [];
   // abort handler
@@ -51,13 +53,14 @@ export async function upload(req, res) {
         file: file meta 
     */
   const _fileHandler = (name, file) => {
-    const host = req.protocol + "://" + req.headers.host;
-    let url = "";
-    if (req.headers.host === "igc.tn:3005") {
-      url = host + "/uploads/" + file.path.split("/").pop();
-    } else {
-      url = host + "/uploads/" + file.path.split("\\").pop();
-    }
+
+    console.log(name);
+
+    let url = HOST + "/uploads/" + file.path.split("/").pop()
+
+    // for windows env
+    // url = host + "/uploads/" + file.path.split("\\").pop();
+
     fileUrls.push(url);
     return fileUrls;
   };
@@ -68,6 +71,7 @@ export async function upload(req, res) {
     req.form = req.form || {};
     req.form[name] = value;
   };
+
   // midleware
   try {
     const form = new formidable.IncomingForm(config);

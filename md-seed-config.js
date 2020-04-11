@@ -17,11 +17,8 @@ export const mongoose = mongooseLib
 // Export the mongodb url
 export const mongoURL = DB
 
-/*
-  Seeders List
-  ------
-  order is important
-*/
+// Seeders List - order is important
+
 export const seedersList = {
   FormationsSeeder,
   LevelsSeeder,

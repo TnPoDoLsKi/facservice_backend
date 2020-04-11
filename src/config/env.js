@@ -4,3 +4,5 @@ export const DB =
   process.env.MONGODB_URI || "mongodb://localhost:27017/facservice";
 export const SECRET =
   process.env.SECRET || "thisisaverysecurestringtonotbeinghacked";
+export const HOST =
+  process.env.HOST || "http://localhost:3000";

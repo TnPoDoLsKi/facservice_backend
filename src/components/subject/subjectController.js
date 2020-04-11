@@ -161,7 +161,7 @@ export async function getByMajor(req, res) {
       majors: {
         $in: req.params.id
       }
-    }).select("-majors");
+    });
 
     return res.json(subjects);
   } catch (error) {
