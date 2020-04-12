@@ -9,6 +9,7 @@ import authRoute from "../components/auth/authRoutes";
 import documentRoute from "../components/document/documentRoutes";
 import correctionRoute from "../components/correction/correctionRoutes";
 import versionRoute from "../components/version/versionRoutes";
+import remoteRoute from "../components/remote/remoteRoutes";
 
 const router = express.Router();
 
@@ -21,5 +22,6 @@ authRoute(router);
 documentRoute(router);
 correctionRoute(router);
 versionRoute(router);
+remoteRoute(router);
 
 export default router;

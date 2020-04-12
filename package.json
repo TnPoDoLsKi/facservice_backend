@@ -11,7 +11,7 @@
     "lint": "eslint --fix **/*.js",
     "docs": "node ./node_modules/apidoc/bin/apidoc -i src/ -o public/apidoc/",
     "build": "node ./node_modules/babel-cli/bin/babel.js src --out-dir build --copy-files",
-    "update": "git pull origin master;npm run build; pm2 restart facservice; md-seed run; pm2 logs"
+    "update": "git pull origin master;npm run build; pm2 restart facservice; pm2 logs"
   },
   "apidoc": {
     "title": "Custom apiDoc browser title",
@@ -49,7 +49,8 @@
     "node-pre-gyp": "^0.12.0",
     "nodemailer": "^5.1.1",
     "nodemon": "^1.18.9",
-    "pdfmake": "^0.1.53"
+    "pdfmake": "^0.1.53",
+    "shelljs": "^0.8.3"
   },
   "devDependencies": {
     "apidoc": "^0.17.7",

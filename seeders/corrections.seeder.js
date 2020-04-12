@@ -25,7 +25,7 @@ class CorrectionsSeeder extends Seeder {
       {
         title: 'Correction DS math discrètes 2018',
         description: 'Correction DS math discrètes 2018',
-        filePath: '/uploads/jdhgfhd.jpg',
+        filePath: 'https://api.facservice.tn/uploads/upload_3679b901e027f7a11658750486b83534.pdf',
         filesStaging: [],
         status: 'approved',
         verifiedByProf: false,
@@ -38,7 +38,7 @@ class CorrectionsSeeder extends Seeder {
       {
         title: 'Correction EX math discrètes 2018',
         description: 'Correction EX math discrètes 2018',
-        filePath: '/uploads/jdhgfhd.jpg',
+        filePath: 'https://api.facservice.tn/uploads/upload_3679b901e027f7a11658750486b83534.pdf',
         filesStaging: [],
         status: 'approved',
         verifiedByProf: true,
@@ -51,7 +51,7 @@ class CorrectionsSeeder extends Seeder {
       {
         title: 'Correction DS Probabilité 2018',
         description: 'Correction DS Probabilité 2018',
-        filePath: '/uploads/jdhgfhd.jpg',
+        filePath: 'https://api.facservice.tn/uploads/upload_3679b901e027f7a11658750486b83534.pdf',
         filesStaging: [],
         status: 'approved',
         verifiedByProf: true,
@@ -62,10 +62,10 @@ class CorrectionsSeeder extends Seeder {
       {
         title: 'Correction DS Proba 2018',
         description: 'Correction DS Proba 2018',
-        filePath: '/uploads/jdhgfhd.jpg',
+        filePath: 'https://api.facservice.tn/uploads/upload_3679b901e027f7a11658750486b83534.pdf',
         filesStaging: [],
         status: 'approved',
-        verifiedByProf: true,
+        verifiedByProf: false,
         score: 0,
         user: this.users[1]._id,
         document: this.documents[3]._id
@@ -73,10 +73,10 @@ class CorrectionsSeeder extends Seeder {
       {
         title: 'Correction DS Pes 2018',
         description: 'Correction DS Pes 2018',
-        filePath: '/uploads/jdhgfhd.jpg',
+        filePath: 'https://api.facservice.tn/uploads/upload_3679b901e027f7a11658750486b83534.pdf',
         filesStaging: [],
         status: 'approved',
-        verifiedByProf: true,
+        verifiedByProf: false,
         score: 0,
         user: this.users[1]._id,
         document: this.documents[3]._id
