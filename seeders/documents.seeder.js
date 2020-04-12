@@ -31,6 +31,7 @@ class DocumentsSeeder extends Seeder {
         profName: 'Maher Milli',
         session: 'Principale',
         filePath: 'https://api.facservice.tn/uploads/upload_1a2f5db8e53807dc185229166e499bb9.pdf',
+        stagingFilesType: 'images',
         filesStaging: [],
         user: this.users[0]._id,
         subject: this.subjects[0]._id,
@@ -45,6 +46,7 @@ class DocumentsSeeder extends Seeder {
         profName: 'Hanen Beji',
         session: 'Principale',
         filePath: 'https://api.facservice.tn/uploads/upload_1a2f5db8e53807dc185229166e499bb9.pdf',
+        stagingFilesType: 'images',
         filesStaging: [],
         user: this.users[1]._id,
         subject: this.subjects[0]._id,
@@ -59,6 +61,7 @@ class DocumentsSeeder extends Seeder {
         profName: 'Maher Milli',
         session: 'Principale',
         filePath: 'https://api.facservice.tn/uploads/upload_1a2f5db8e53807dc185229166e499bb9.pdf',
+        stagingFilesType: 'images',
         filesStaging: [],
         user: this.users[1]._id,
         subject: this.subjects[0]._id,
@@ -75,7 +78,7 @@ class DocumentsSeeder extends Seeder {
         profName: 'Maher Milli',
         session: 'Principale',
         filePath: 'https://api.facservice.tn/uploads/upload_96c3b1afe677b5c59b42ce9d2ad220b6.pdf',
-        filesStaging: [],
+        stagingFilesType: 'images', filesStaging: [],
         user: this.users[2]._id,
         subject: this.subjects[1]._id,
         hasCorrection: true
@@ -89,6 +92,7 @@ class DocumentsSeeder extends Seeder {
         profName: 'Hanen Beji',
         session: 'Principale',
         filePath: '',
+        stagingFilesType: 'images',
         filesStaging: [
           "https://api.facservice.tn/uploads/upload_4db4d53b9a65093b925e4e1789885b66.png",
           "https://api.facservice.tn/uploads/upload_1da68e6922185c545c3a4010bf5ba455.png",
@@ -108,6 +112,7 @@ class DocumentsSeeder extends Seeder {
         profName: 'Maher Milli',
         session: 'Principale',
         filePath: '',
+        stagingFilesType: 'images',
         filesStaging: [
           "https://api.facservice.tn/uploads/upload_4db4d53b9a65093b925e4e1789885b66.png",
           "https://api.facservice.tn/uploads/upload_1da68e6922185c545c3a4010bf5ba455.png",
@@ -129,6 +134,7 @@ class DocumentsSeeder extends Seeder {
         profName: 'Maher Milli',
         session: 'Principale',
         filePath: '',
+        stagingFilesType: 'pdfs',
         filesStaging: [
           'https://api.facservice.tn/uploads/upload_96c3b1afe677b5c59b42ce9d2ad220b6.pdf',
           'https://api.facservice.tn/uploads/upload_1a2f5db8e53807dc185229166e499bb9.pdf'
@@ -146,6 +152,7 @@ class DocumentsSeeder extends Seeder {
         profName: 'Hanen Beji',
         session: 'Principale',
         filePath: '',
+        stagingFilesType: 'pdfs',
         filesStaging: [
           'https://api.facservice.tn/uploads/upload_96c3b1afe677b5c59b42ce9d2ad220b6.pdf',
           'https://api.facservice.tn/uploads/upload_1a2f5db8e53807dc185229166e499bb9.pdf'
@@ -163,6 +170,7 @@ class DocumentsSeeder extends Seeder {
         profName: 'Maher Milli',
         session: 'Principale',
         filePath: '',
+        stagingFilesType: 'pdfs',
         filesStaging: [
           'https://api.facservice.tn/uploads/upload_96c3b1afe677b5c59b42ce9d2ad220b6.pdf',
           'https://api.facservice.tn/uploads/upload_1a2f5db8e53807dc185229166e499bb9.pdf',
@@ -183,6 +191,7 @@ class DocumentsSeeder extends Seeder {
         profName: 'Maher Milli',
         session: 'Principale',
         filePath: '',
+        stagingFilesType: 'images',
         filesStaging: [
           "https://api.facservice.tn/uploads/upload_4db4d53b9a65093b925e4e1789885b66.png",
           "https://api.facservice.tn/uploads/upload_1da68e6922185c545c3a4010bf5ba455.png",
@@ -202,6 +211,7 @@ class DocumentsSeeder extends Seeder {
         profName: 'Hanen Beji',
         session: 'Principale',
         filePath: '',
+        stagingFilesType: 'images',
         filesStaging: [
           "https://api.facservice.tn/uploads/upload_4db4d53b9a65093b925e4e1789885b66.png",
           "https://api.facservice.tn/uploads/upload_1da68e6922185c545c3a4010bf5ba455.png",
@@ -221,6 +231,7 @@ class DocumentsSeeder extends Seeder {
         profName: 'Maher Milli',
         session: 'Principale',
         filePath: 'https://api.facservice.tn/uploads/upload_96c3b1afe677b5c59b42ce9d2ad220b6.pdf',
+        stagingFilesType: 'images',
         filesStaging: [],
         user: this.users[2]._id,
         subject: this.subjects[3]._id,

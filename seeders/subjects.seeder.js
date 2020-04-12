@@ -19,8 +19,8 @@ class SubjectsSeeder extends Seeder {
   _generate() {
     return [
 
-      // major 3 => FIA 2 GL 
-      // major 4 => FIA 2 II 
+      // major 2 => FIA 2 GL 
+      // major 3 => FIA 2 II 
 
       {
         name: 'Mathématiques discrètes',         // ----------------> We will use this subject as main sub

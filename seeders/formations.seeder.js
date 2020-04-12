@@ -1,9 +1,5 @@
-import {
-  Seeder
-} from 'mongoose-data-seed'
-import {
-  Formation
-} from '../src/config/models'
+import { Seeder } from 'mongoose-data-seed'
+import { Formation } from '../src/config/models'
 
 const data = [
   {

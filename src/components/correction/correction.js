@@ -17,6 +17,11 @@ const correctionSchema = new mongoose.Schema(
         type: String
       }
     ],
+    stagingFilesType: {
+      type: String,
+      enum: ["images", "pdfs"],
+      default: "images"
+    },
     status: {
       type: String,
       enum: ["pending", "approved", "rejected"],

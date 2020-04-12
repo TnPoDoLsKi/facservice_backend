@@ -17,6 +17,11 @@ const documentSchema = new mongoose.Schema(
         type: String
       }
     ],
+    stagingFilesType: {
+      type: String,
+      enum: ["images", "pdfs"],
+      default: "images"
+    },
     type: {
       type: String,
       enum: ["DS", "EX", "C", "TD", "TP"],
