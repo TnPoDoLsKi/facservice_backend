@@ -314,7 +314,7 @@ export async function update(req, res) {
 
     return res.json(correction)
   } catch (error) {
-    console.log(error.name);
+    console.log(error);
     if (error.name === "CastError")
       return res.status(400).json({
         error: error.message
@@ -450,6 +450,96 @@ export async function getAllApprovedBySubject(req, res) {
 
     const corrections = await Correction.find({
       status: "approved"
+    })
+      .populate({
+        path: "user",
+        select: "firstName lastName avatar -_id"
+      })
+      .populate({
+        path: "document",
+        populate: {
+          path: "subject",
+          select: "_id name"
+        }
+      });
+
+    let result = []
+
+    for (let correction of corrections) {
+
+      if (!correction.document)
+        continue;
+
+      console.log(correction.document.subject._id)
+      console.log(req.params.subjectId)
+
+      if (correction.document.subject._id == req.params.subjectId) {
+        correction = correction.toJSON();
+        delete correction.document
+        result.push(correction)
+      }
+    }
+
+    return res.json(result);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).end();
+  }
+}
+
+/**
+ * @api {get} /corrections/pending/bySubject/:subjectId Get pending corrections by subject id
+ * @apiGroup Corrections
+ * @apiParam {id} id Subejct id
+ * @apiSuccessExample {json} Success
+ *    HTTP/1.1 200 OK
+ [
+    {
+        "status": "pending",
+        "verifiedByProf": false,
+        "score": 0,
+        "deleted": false,
+        "_id": "5c8826a5f9a4c66ce1eb1d5d",
+        "document": "5c87918f905e0b33f609b360",
+        "title": "corrigé de DS Physique 2014",
+        "user": {
+            "avatar": "https://igc.tn/img/portfolio/HC1-Prev.jpg",
+            "firstName": "Wael",
+            "lastName": "Ben Taleb"
+        },
+        "createdAt": "2019-03-12T21:37:41.572Z",
+        "updatedAt": "2019-03-12T22:40:30.601Z",
+        "__v": 0
+    },
+    {
+        "status": "pending",
+        "verifiedByProf": false,
+        "score": 0,
+        "deleted": false,
+        "_id": "5c88270ef9a4c66ce1eb1d5e",
+        "document": "5c87918f905e0b33f609b360",
+        "title": "corrigé de EX Analyse 2014 ",
+        "user": {
+            "avatar": "https://igc.tn/img/portfolio/HC1-Prev.jpg",
+            "firstName": "Wael",
+            "lastName": "Ben Taleb"
+        },
+        "createdAt": "2019-03-12T21:39:26.070Z",
+        "updatedAt": "2019-03-12T22:26:16.867Z",
+        "__v": 0
+    }
+]
+ * @apiErrorExample Bad Request
+ *    HTTP/1.1 400 Bad Request
+ * @apiErrorExample Internal Server Error
+ *    HTTP/1.1 500 Internal Server Error
+ */
+
+export async function getAllPendingBySubject(req, res) {
+  try {
+
+    const corrections = await Correction.find({
+      status: "pending"
     })
       .populate({
         path: "user",

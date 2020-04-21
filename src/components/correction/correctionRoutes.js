@@ -8,7 +8,8 @@ import {
   getAllByStatus,
   getByUser,
   getAllApprovedBySubject,
-  getAllPendingByDocument
+  getAllPendingByDocument,
+  getAllPendingBySubject
 } from "./correctionController";
 // import { convert } from "../../services/pdfService";
 
@@ -18,6 +19,7 @@ export default function (router) {
   router.get("/corrections", getAll);
   router.get("/corrections/byStatus/:status", isLoggedIn, isAdmin, getAllByStatus);
   router.get("/corrections/approved/bySubject/:subjectId", isLoggedIn, isAdmin, getAllApprovedBySubject);
+  router.get("/corrections/pending/bySubject/:subjectId", isLoggedIn, isAdmin, getAllPendingBySubject);
   router.get("/corrections/pending/byDocument/:documentId", isLoggedIn, isAdmin, getAllPendingByDocument);
   router.get("/corrections/:id", getOne);
   router.get("/corrections/byDocument/:documentId", getAllByDocument);
