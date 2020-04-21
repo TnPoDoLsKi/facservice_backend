@@ -26,7 +26,8 @@ class CorrectionsSeeder extends Seeder {
         title: 'Correction DS math discrètes 2018',
         description: 'Correction DS math discrètes 2018',
         filePath: 'https://api.facservice.tn/uploads/upload_3679b901e027f7a11658750486b83534.pdf',
-        stagingFilesType: 'images', filesStaging: [],
+        stagingFilesType: 'images',
+        filesStaging: [],
         status: 'approved',
         verifiedByProf: false,
         score: 0,
@@ -39,7 +40,8 @@ class CorrectionsSeeder extends Seeder {
         title: 'Correction EX math discrètes 2018',
         description: 'Correction EX math discrètes 2018',
         filePath: 'https://api.facservice.tn/uploads/upload_3679b901e027f7a11658750486b83534.pdf',
-        stagingFilesType: 'images', filesStaging: [],
+        stagingFilesType: 'images',
+        filesStaging: [],
         status: 'approved',
         verifiedByProf: true,
         score: 0,
@@ -52,7 +54,8 @@ class CorrectionsSeeder extends Seeder {
         title: 'Correction DS Probabilité 2018',
         description: 'Correction DS Probabilité 2018',
         filePath: 'https://api.facservice.tn/uploads/upload_3679b901e027f7a11658750486b83534.pdf',
-        stagingFilesType: 'images', filesStaging: [],
+        stagingFilesType: 'images',
+        filesStaging: [],
         status: 'approved',
         verifiedByProf: true,
         score: 0,
@@ -62,9 +65,15 @@ class CorrectionsSeeder extends Seeder {
       {
         title: 'Correction DS Proba 2018',
         description: 'Correction DS Proba 2018',
-        filePath: 'https://api.facservice.tn/uploads/upload_3679b901e027f7a11658750486b83534.pdf',
-        stagingFilesType: 'images', filesStaging: [],
-        status: 'approved',
+        filePath: '',
+        stagingFilesType: 'images',
+        filesStaging: [
+          "https://api.facservice.tn/uploads/upload_4db4d53b9a65093b925e4e1789885b66.png",
+          "https://api.facservice.tn/uploads/upload_1da68e6922185c545c3a4010bf5ba455.png",
+          "https://api.facservice.tn/uploads/upload_bae69eb95b5951e59d6633393f9e4357.png",
+          "https://api.facservice.tn/uploads/upload_14692d23d50fd859b6ba66dc7b6ddf41.jpg"
+        ],
+        status: 'pending',
         verifiedByProf: false,
         score: 0,
         user: this.users[1]._id,
@@ -73,15 +82,20 @@ class CorrectionsSeeder extends Seeder {
       {
         title: 'Correction DS Pes 2018',
         description: 'Correction DS Pes 2018',
-        filePath: 'https://api.facservice.tn/uploads/upload_3679b901e027f7a11658750486b83534.pdf',
-        stagingFilesType: 'images', filesStaging: [],
-        status: 'approved',
+        filePath: '',
+        stagingFilesType: 'images',
+        filesStaging: [
+          "https://api.facservice.tn/uploads/upload_4db4d53b9a65093b925e4e1789885b66.png",
+          "https://api.facservice.tn/uploads/upload_1da68e6922185c545c3a4010bf5ba455.png",
+          "https://api.facservice.tn/uploads/upload_bae69eb95b5951e59d6633393f9e4357.png",
+          "https://api.facservice.tn/uploads/upload_14692d23d50fd859b6ba66dc7b6ddf41.jpg"
+        ],
+        status: 'pending',
         verifiedByProf: false,
         score: 0,
         user: this.users[1]._id,
         document: this.documents[3]._id
       }
-
     ]
   }
 }
