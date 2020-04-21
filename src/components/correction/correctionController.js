@@ -290,6 +290,9 @@ export async function update(req, res) {
       if (!document.hasCorrection && req.body.status == "approved") {
         document.hasCorrection = true;
         await document.save();
+      }
+
+      if (correction.status != "approved" && req.body.status == "approved") {
         correction.filePath = createPDF(correction.filesStaging, correction.title);
       }
 
