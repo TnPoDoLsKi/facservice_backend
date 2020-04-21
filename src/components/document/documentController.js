@@ -867,7 +867,7 @@ function createPDF(files, title) {
 
   pdfDoc.pipe(
     fs.createWriteStream(
-      "public/documents/" + title + ".pdf"
+      "public/pdfs/" + title + ".pdf"
     ),
     {
       encoding: "utf16"
@@ -876,7 +876,7 @@ function createPDF(files, title) {
 
   pdfDoc.end();
 
-  let filePath = "https://facservice.tn/documents/" + title + ".pdf"
+  let filePath = "https://api.facservice.tn/documents/" + title + ".pdf"
 
   return filePath
 }
