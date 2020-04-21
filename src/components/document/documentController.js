@@ -851,7 +851,7 @@ function createPDF(files, title) {
 
   let content = files.map(item => {
     return {
-      image: path.join(__dirname, "../../public", item.replace(HOST, "")),
+      image: path.join(__dirname, "../../../public", item.replace(HOST, "")),
       width: 595,
       height: 842
     }
