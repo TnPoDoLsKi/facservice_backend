@@ -3,6 +3,7 @@ import _ from "lodash";
 import Fuse from "fuse.js";
 import PdfPrinter from "pdfmake";
 import { Document, Major, Subject } from "../../config/models";
+import { HOST } from '../config/env'
 
 export async function getAll(req, res) {
   try {
@@ -845,7 +846,7 @@ function createPDF(files, title) {
 
   let content = files.map(item => {
     return {
-      image: "public" + item.replace("https://facservice.tn", ""),
+      image: "public" + item.replace(HOST, ""),
       width: 595,
       height: 842
     }
@@ -863,7 +864,7 @@ function createPDF(files, title) {
   };
 
   let pdfDoc = printer.createPdfKitDocument(docDefinition);
-  
+
   pdfDoc.pipe(
     fs.createWriteStream(
       "public/documents/" + title + ".pdf"
