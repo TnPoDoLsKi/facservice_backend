@@ -1,7 +1,9 @@
+import fs from "fs";
 import _ from "lodash";
-import { Correction, Document } from "../../config/models";
 import PdfPrinter from "pdfmake";
+
 import { HOST } from '../../config/env'
+import { Correction, Document } from "../../config/models";
 
 export async function getAll(req, res) {
   try {
