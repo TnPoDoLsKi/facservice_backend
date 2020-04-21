@@ -3,7 +3,7 @@ import _ from "lodash";
 import Fuse from "fuse.js";
 import PdfPrinter from "pdfmake";
 import { Document, Major, Subject } from "../../config/models";
-import { HOST } from '../config/env'
+import { HOST } from '../../config/env'
 
 export async function getAll(req, res) {
   try {
