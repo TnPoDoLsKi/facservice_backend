@@ -1,5 +1,7 @@
 import _ from "lodash";
 import { Correction, Document } from "../../config/models";
+import PdfPrinter from "pdfmake";
+import { HOST } from '../../config/env'
 
 export async function getAll(req, res) {
   try {
@@ -289,6 +291,7 @@ export async function update(req, res) {
       if (!document.hasCorrection && req.body.status == "approved") {
         document.hasCorrection = true;
         await document.save();
+        correction.filePath = createPDF(correction.filesStaging, correction.title);
       }
 
       if (["pending", "rejected"].includes(req.body.status)) {
@@ -296,7 +299,7 @@ export async function update(req, res) {
           document: correction.document,
           status: "approved"
         });
-        if (corrections.length == 0) {
+        if (corrections.length == 1) {
           document.hasCorrection = false;
           await document.save();
         }
@@ -460,9 +463,9 @@ export async function getAllApprovedBySubject(req, res) {
 
     let result = []
 
-    for(let correction of corrections) {
+    for (let correction of corrections) {
 
-      if(!correction.document)
+      if (!correction.document)
         continue;
 
       console.log(correction.document.subject._id)
@@ -480,4 +483,54 @@ export async function getAllApprovedBySubject(req, res) {
     console.log(error);
     return res.status(500).end();
   }
+}
+
+function createPDF(files, title) {
+
+  let existingPDF
+
+  for (let file of files) {
+    let parts = file.split('.')
+    if (parts[parts.length - 1] == 'pdf')
+      existingPDF = file
+  }
+
+  if (existingPDF)
+    return existingPDF
+
+  let content = files.map(item => {
+    return {
+      image: "public" + item.replace(HOST, ""),
+      width: 595,
+      height: 842
+    }
+  })
+
+  let printer = new PdfPrinter();
+
+  let docDefinition = {
+    content: content,
+    info: {
+      title,
+      author: "Issat Sousse Google Club"
+    },
+    pageMargins: [0, 0, 0, 0]
+  };
+
+  let pdfDoc = printer.createPdfKitDocument(docDefinition);
+
+  pdfDoc.pipe(
+    fs.createWriteStream(
+      "public/pdfs/" + title + ".pdf"
+    ),
+    {
+      encoding: "utf16"
+    }
+  );
+
+  pdfDoc.end();
+
+  let filePath = "https://api.facservice.tn/pdfs/" + title + ".pdf"
+
+  return filePath
 }

@@ -876,7 +876,7 @@ function createPDF(files, title) {
 
   pdfDoc.end();
 
-  let filePath = "https://api.facservice.tn/documents/" + title + ".pdf"
+  let filePath = "https://api.facservice.tn/pdfs/" + title + ".pdf"
 
   return filePath
 }
