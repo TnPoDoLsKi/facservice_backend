@@ -1,7 +1,9 @@
 import fs from "fs";
 import _ from "lodash";
+import path from "path";
 import Fuse from "fuse.js";
 import PdfPrinter from "pdfmake";
+
 import { Document, Major, Subject } from "../../config/models";
 import { HOST } from '../../config/env'
 
@@ -844,9 +846,12 @@ function createPDF(files, title) {
   if (existingPDF)
     return existingPDF
 
+  console.log(__dirname + "../../public");
+
+
   let content = files.map(item => {
     return {
-      image: "public" + item.replace(HOST, ""),
+      image: path.join(__dirname, "../../public", item.replace(HOST, "")),
       width: 595,
       height: 842
     }
