@@ -885,7 +885,7 @@ async function mergePDFs(files, title) {
 
   files = files.map(item => path.join(__dirname, "../../../public", item.replace(HOST, "")))
 
-  await merge(files, path.join(__dirname, "../../../public/pdfs/" + title + ".pdf"))
+  await PDFMerge(files, path.join(__dirname, "../../../public/pdfs/" + title + ".pdf"))
 
   const filePath = "https://api.facservice.tn/pdfs/" + title + ".pdf"
 
