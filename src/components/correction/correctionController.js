@@ -696,7 +696,7 @@ function createPDF(files, title) {
 
   pdfDoc.pipe(
     fs.createWriteStream(
-      "public/pdfs/" + title + ".pdf"
+      path.join(__dirname, "../../../public/pdfs/" + title + ".pdf")
     ),
     {
       encoding: "utf16"
