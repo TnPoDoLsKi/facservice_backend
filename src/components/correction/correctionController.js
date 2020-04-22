@@ -2,6 +2,7 @@ import fs from "fs";
 import _ from "lodash";
 import path from "path";
 import PdfPrinter from "pdfmake";
+import PDFMerge from "easy-pdf-merge";
 
 import { HOST } from '../../config/env'
 import { Correction, Document } from "../../config/models";
@@ -300,7 +301,11 @@ export async function update(req, res) {
       }
 
       if (correction.status != "approved" && req.body.status == "approved") {
-        correction.filePath = createPDF(correction.filesStaging, correction.title);
+        if (correction.stagingFilesType == 'images')
+          correction.filePath = createPDF(correction.filesStaging, correction.title)
+        else if (correction.stagingFilesType == 'pdfs') {
+          correction.filePath = await mergePDFs(correction.filesStaging, correction.title)
+        }
       }
 
       if (["pending", "rejected"].includes(req.body.status)) {
@@ -666,17 +671,6 @@ export async function getAllPendingByDocument(req, res) {
 
 function createPDF(files, title) {
 
-  let existingPDF
-
-  for (let file of files) {
-    let parts = file.split('.')
-    if (parts[parts.length - 1] == 'pdf')
-      existingPDF = file
-  }
-
-  if (existingPDF)
-    return existingPDF
-
   let content = files.map(item => {
     return {
       image: path.join(__dirname, "../../../public", item.replace(HOST, "")),
@@ -710,6 +704,22 @@ function createPDF(files, title) {
   pdfDoc.end();
 
   let filePath = "https://api.facservice.tn/pdfs/" + title + ".pdf"
+
+  return filePath
+}
+
+async function mergePDFs(files, title) {
+
+  files = files.map(item => path.join(__dirname, "../../../public", item.replace(HOST, "")))
+
+  await PDFMerge(files, path.join(__dirname, "../../../public/pdfs/" + title + ".pdf"), err => {
+    if (err) {
+      return console.log(err)
+    }
+    console.log('Successfully merged!')
+  })
+
+  const filePath = "https://api.facservice.tn/pdfs/" + title + ".pdf"
 
   return filePath
 }
