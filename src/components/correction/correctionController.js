@@ -280,6 +280,10 @@ export async function update(req, res) {
       correction.document = req.body.document;
     }
 
+    if (req.body.filesStaging) {
+      correction.filesStaging = req.body.filesStaging
+    }
+
     if (req.body.status) {
       let document = await Document.findOne({
         _id: correction.document

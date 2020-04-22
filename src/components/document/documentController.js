@@ -562,6 +562,10 @@ export async function update(req, res) {
       currentDocument.session = req.body.session;
     }
 
+    if (req.body.filesStaging) {
+      currentDocument.filesStaging = req.body.filesStaging
+    }
+
     if (req.body.status) {
       if (!["pending", "approved", "rejected"].includes(req.body.status))
         return res.status(400).json({ error: "wrong document status" });
