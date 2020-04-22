@@ -3,7 +3,7 @@ import _ from "lodash";
 import path from "path";
 import Fuse from "fuse.js";
 import PdfPrinter from "pdfmake";
-import PDFMerge from "pdf-merge";
+import PDFMerge from "easy-pdf-merge";
 
 import { Document, Major, Subject } from "../../config/models";
 import { HOST } from '../../config/env'
@@ -885,7 +885,7 @@ async function mergePDFs(files, title) {
 
   files = files.map(item => path.join(__dirname, "../../../public", item.replace(HOST, "")))
 
-  await PDFMerge(files, { output: `${__dirname}/${title}.pdf` })
+  await merge(files, path.join(__dirname, "../../../public/pdfs/" + title + ".pdf"))
 
   const filePath = "https://api.facservice.tn/pdfs/" + title + ".pdf"
 
