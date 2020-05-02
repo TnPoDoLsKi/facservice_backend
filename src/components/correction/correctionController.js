@@ -323,6 +323,7 @@ export async function update(req, res) {
     }
 
     correction.verifiedByProf = req.body.verifiedByProf
+    correction.description = req.body.description
 
     await correction.save();
 
