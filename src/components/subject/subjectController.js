@@ -278,7 +278,7 @@ export async function update(req, res) {
 
     if (req.body.name) subject.name = req.body.name;
 
-    if (req.body.description) subject.description = req.body.description;
+    // if (req.body.description) to allow null value subject.description = req.body.description;
 
     if (req.body.semestre) {
       if (req.body.semestre != 1 && req.body.semestre != 2)

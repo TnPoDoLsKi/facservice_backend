@@ -311,7 +311,7 @@ export async function update(req, res) {
 
     if (req.body.name) major.name = req.body.name;
 
-    if (req.body.description) major.description = req.body.description;
+    // if (req.body.description) to allow null value major.description = req.body.description;
 
     if (req.body.level) {
       const level = await Level.findOne({ _id: req.body.level });

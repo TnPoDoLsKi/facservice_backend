@@ -177,7 +177,7 @@ export async function update(req, res) {
 
     if (req.body.name) level.name = req.body.name;
 
-    if (req.body.description) level.description = req.body.description;
+    // if (req.body.description) to allow null value level.description = req.body.description;
 
     if (req.body.formation) {
       const formation = await Formation.findOne({ _id: req.body.formation });

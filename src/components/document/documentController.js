@@ -535,8 +535,8 @@ export async function update(req, res) {
 
     if (req.body.title) currentDocument.title = req.body.title;
 
-    if (req.body.description)
-      currentDocument.description = req.body.description;
+    // if (req.body.description) to allow null value
+    currentDocument.description = req.body.description;
 
     if (req.body.year) {
       if (isNaN(req.body.year))

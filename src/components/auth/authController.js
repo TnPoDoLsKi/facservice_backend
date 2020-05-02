@@ -207,7 +207,6 @@ export async function activeAccount(req, res) {
   }
 }
 
-
 /**
  * @api {get} /verifyAccess Verify Access
  * @apiName Verify Access

@@ -131,7 +131,7 @@ export async function update(req, res) {
         error: "formation not found !"
       });
 
-    if (req.body.description) formation.description = req.body.description;
+    // if (req.body.description) to allow null value formation.description = req.body.description;
 
     if (req.body.name) formation.name = req.body.name;
 
