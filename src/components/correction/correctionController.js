@@ -322,9 +322,7 @@ export async function update(req, res) {
       correction.status = req.body.status;
     }
 
-    if (req.body.verifiedByProf) {
-      correction.verifiedByProf = req.body.verifiedByProf
-    }
+    correction.verifiedByProf = req.body.verifiedByProf
 
     await correction.save();
 
