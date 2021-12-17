@@ -7,7 +7,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "seeds": "md-seed run",
-    "start": "babel-node src/index.js",
+    "start": "babel-node ./src/",
     "lint": "eslint --fix **/*.js",
     "docs": "node ./node_modules/apidoc/bin/apidoc -i src/ -o public/apidoc/",
     "build": "node ./node_modules/babel-cli/bin/babel.js src --out-dir build --copy-files",
