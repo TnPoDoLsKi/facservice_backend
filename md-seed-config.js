@@ -1,5 +1,5 @@
 import mongooseLib from 'mongoose'
-import { apps } from './ecosystem.config'
+import { MONGODB_URI } from './src/config/env'
 
 import FormationsSeeder from './seeders/formations.seeder'
 import LevelsSeeder from './seeders/levels.seeder'
@@ -15,7 +15,7 @@ mongooseLib.Promise = global.Promise
 export const mongoose = mongooseLib
 
 // Export the mongodb url
-export const mongoURL = apps[0].env.MONGODB_URI
+export const mongoURL = "mongodb+srv://facservice:facservice@cluster0.fuo82.mongodb.net/facservice?retryWrites=true&w=majority"
 
 // Seeders List - order is important
 

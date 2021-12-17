@@ -29,7 +29,7 @@ class UsersSeeder extends Seeder {
         email: 'wiemdridi@gmail.com',
         firstName: 'Wiem',
         lastName: 'Dridi',
-        hashedPassword: '$2b$10$.ORz5/1guqRdR5eC9cXy1eWoUyKCuNwvqfsShGUlVfR.X0c27k6h.',
+        hashedPassword: '$2a$10$JMxz3VTAqhi3KDcew4N8xujKRBXHWsbnvsa8cSVk0r1KJgUY01/ii',
         type: 'student',
         major: this.major[3]._id,
         activated: true
@@ -38,7 +38,7 @@ class UsersSeeder extends Seeder {
         email: 'lamissmessaoudi@gmail.com',
         firstName: 'Lamiss',
         lastName: 'Messaoudi',
-        hashedPassword: '$2b$10$.ORz5/1guqRdR5eC9cXy1eWoUyKCuNwvqfsShGUlVfR.X0c27k6h.',
+        hashedPassword: '$2a$10$JMxz3VTAqhi3KDcew4N8xujKRBXHWsbnvsa8cSVk0r1KJgUY01/ii',
         type: 'student',
         major: this.major[3]._id,
         activated: true
@@ -47,7 +47,7 @@ class UsersSeeder extends Seeder {
         email: 'mouna@gmail.com',
         firstName: 'Mouna',
         lastName: 'Ammar',
-        hashedPassword: '$2b$10$.ORz5/1guqRdR5eC9cXy1eWoUyKCuNwvqfsShGUlVfR.X0c27k6h.',
+        hashedPassword: '$2a$10$JMxz3VTAqhi3KDcew4N8xujKRBXHWsbnvsa8cSVk0r1KJgUY01/ii',
         type: 'student',
         major: this.major[4]._id,
         activated: true
@@ -58,7 +58,7 @@ class UsersSeeder extends Seeder {
         email: 'waelben7@gmail.com',
         firstName: 'Wael',
         lastName: 'Ben Taleb',
-        hashedPassword: '$2b$10$.ORz5/1guqRdR5eC9cXy1eWoUyKCuNwvqfsShGUlVfR.X0c27k6h.',
+        hashedPassword: '$2a$10$JMxz3VTAqhi3KDcew4N8xujKRBXHWsbnvsa8cSVk0r1KJgUY01/ii',
         type: 'admin',
         major: this.major[3]._id,
         activated: true
@@ -67,7 +67,7 @@ class UsersSeeder extends Seeder {
         email: 'sofien.msddak@gmail.com',
         firstName: 'Sofien',
         lastName: 'Msaddak',
-        hashedPassword: '$2b$10$.ORz5/1guqRdR5eC9cXy1eWoUyKCuNwvqfsShGUlVfR.X0c27k6h.',
+        hashedPassword: '$2a$10$JMxz3VTAqhi3KDcew4N8xujKRBXHWsbnvsa8cSVk0r1KJgUY01/ii',
         type: 'admin',
         major: this.major[4]._id,
         activated: true
@@ -76,7 +76,7 @@ class UsersSeeder extends Seeder {
         email: 'bassem.karbia.dev@gmail.com',
         firstName: 'Bassem',
         lastName: 'Karbia',
-        hashedPassword: '$2b$10$.ORz5/1guqRdR5eC9cXy1eWoUyKCuNwvqfsShGUlVfR.X0c27k6h.',
+        hashedPassword: '$2a$10$JMxz3VTAqhi3KDcew4N8xujKRBXHWsbnvsa8cSVk0r1KJgUY01/ii',
         type: 'admin',
         major: this.major[3]._id,
         activated: true
@@ -85,7 +85,7 @@ class UsersSeeder extends Seeder {
         email: 'medazizbouchrit@gmail.com',
         firstName: 'Azzi',
         lastName: 'Bouchrit',
-        hashedPassword: '$2b$10$.ORz5/1guqRdR5eC9cXy1eWoUyKCuNwvqfsShGUlVfR.X0c27k6h.',
+        hashedPassword: '$2a$10$JMxz3VTAqhi3KDcew4N8xujKRBXHWsbnvsa8cSVk0r1KJgUY01/ii',
         type: 'admin',
         major: this.major[3]._id,
         activated: true
