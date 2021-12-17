@@ -4,7 +4,6 @@
 package-lock.json
 
 ecosystem.config.js
-/public
 
 # compiled output
 /dist
@@ -13,7 +12,6 @@ ecosystem.config.js
 
 # dependencies
 /node_modules
-/public/node_modules
 
 # IDEs and editors
 /.idea
