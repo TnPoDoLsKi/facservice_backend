@@ -5,4 +5,4 @@ export const DB =
 export const SECRET =
   process.env.SECRET || "thisisaverysecurestringtonotbeinghacked";
 export const HOST =
-  process.env.HOST || "http://localhost:3000";
+  process.env.HOST || "http://localhost:3000"; 
